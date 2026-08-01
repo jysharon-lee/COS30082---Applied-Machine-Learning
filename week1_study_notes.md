@@ -1,7 +1,9 @@
 # 📘 Week 1 Study Notes: Introduction to Machine Learning
 
 > **Course:** COS30082 — Applied Machine Learning
+
 > **Topic:** Basics of Machine Learning
+
 > **Prepared for:** Someone with zero prior ML knowledge
 
 ---
@@ -648,7 +650,7 @@ Each label is **one-hot encoded** — represented as a vector of 10 numbers:
 #### Step 2: Network Structure
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/10e31cb1-5231-407a-b836-e2a76378165d" width=600>
+  <img src="https://github.com/user-attachments/assets/52101c17-c7c5-423b-b235-bfdcbe8774f3" width=600>
 </p>
 
 The network structure uses **matrix multiplication** and **vector addition**:
