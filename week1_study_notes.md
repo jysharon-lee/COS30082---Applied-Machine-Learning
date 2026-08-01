@@ -65,7 +65,11 @@ To make a computer "understand" visual data, researchers have traditionally extr
 | **Venation** | Vein patterns (in leaves, for instance) | Parallel veins vs. branching veins |
 
 ### Example: Identifying Leaf Species
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6ddc1301-fa60-4c98-bc77-8b2ea4cd999f" width="45%">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/2ab59482-b359-4c3c-99f1-858f9c0d3754" width="45%">
+</p>
 Imagine you have two types of leaves:
 - **Leaf A** (species: *Q. acutissima*) — has jagged, serrated edges
 - **Leaf B** (species: *Q. × hispanica*) — has smooth, rounded edges
@@ -320,10 +324,14 @@ graph TD
 2. The algorithm learns the mapping from inputs → outputs
 3. You test it on **new, unseen data** (testing data) to see if it learned correctly
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
+</p>
+
 **Example:** Teaching a model to distinguish apples from oranges:
 - Training data: 100 photos of apples (labeled "apple") + 100 photos of oranges (labeled "orange")
 - The model learns features that distinguish them (color, shape, texture)
-- Test: Show it a new fruit photo → it predicts "apple" or "orange"
+- Test: Show it a new fruit photo, for example apple → it predicts either "apple" or "orange"
 
 #### Regression (Supervised)
 
@@ -464,6 +472,10 @@ Performance
 
 ### Example: Plant Disease Detection
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0bdd75b6-ce7c-42f6-8831-8597e2c6e1c1" width=1000>
+</p>
+
 **Traditional ML approach:**
 1. Collect plant images
 2. Human expert manually designs features: shape descriptors (HOG), texture patterns (LBP), color histograms
@@ -502,11 +514,24 @@ Where:
 
 **Backpropagation** is the process by which neural networks learn from their mistakes:
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=ovCyBmlrZGg">
+    <img
+      src="https://img.youtube.com/vi/ovCyBmlrZGg/maxresdefault.jpg"
+      alt="Understand more about Backpropagation here!"
+      width="850">
+  </a>
+</p>
+
+<p align="center">
+<b>▶ Click the thumbnail above to watch the full demonstration on YouTube.</b>
+</p>
+
 1. **Forward pass:** Data flows through the network, layer by layer, to produce a prediction
 2. **Calculate error:** Compare the prediction to the actual answer using a **loss function**
 3. **Backward pass:** Trace back through the network to find which weights contributed most to the error
 4. **Update weights:** Adjust the weights slightly to reduce the error
-5. **Repeat:** Do this thousands of times until the error is very small
+5. **Repeat:** Fine-tune the error on the networks until the error is very small
 
 ### Loss Functions (How Error is Measured)
 
