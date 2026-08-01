@@ -708,7 +708,7 @@ Three things to define:
 > [!IMPORTANT]
 > **The 10 things to remember from Week 1:**
 
-1. **Computer Vision** teaches computers to understand images and videos like how humans see and think
+1. **Computer Vision** teaches computers to understand images and videos
 2. **AI ⊃ ML ⊃ DL** — they're nested concepts, each more specific
 3. **Machine Learning** is about learning patterns from data, not writing rules by hand
 4. The ML algorithm finds a hypothesis function $g$ that approximates the unknown true function $f$
