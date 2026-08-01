@@ -70,6 +70,7 @@ To make a computer "understand" visual data, researchers have traditionally extr
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="https://github.com/user-attachments/assets/2ab59482-b359-4c3c-99f1-858f9c0d3754" width="45%">
 </p>
+
 Imagine you have two types of leaves:
 - **Leaf A** (species: *Q. acutissima*) — has jagged, serrated edges
 - **Leaf B** (species: *Q. × hispanica*) — has smooth, rounded edges
@@ -324,11 +325,12 @@ graph TD
 2. The algorithm learns the mapping from inputs → outputs
 3. You test it on **new, unseen data** (testing data) to see if it learned correctly
 
+**Example:** Teaching a model to distinguish apples from oranges:
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
 </p>
 
-**Example:** Teaching a model to distinguish apples from oranges:
 - Training data: 100 photos of apples (labeled "apple") + 100 photos of oranges (labeled "orange")
 - The model learns features that distinguish them (color, shape, texture)
 - Test: Show it a new fruit photo, for example apple → it predicts either "apple" or "orange"
@@ -450,20 +452,9 @@ The "Learning" part means the algorithm adjusts its internal parameters (**weigh
 
 ### Performance vs. Data Amount
 
-```
-Performance
-    ↑
-    |          ___________________  ← Deep Learning (keeps improving)
-    |        /
-    |       /  ___________________  ← Traditional ML (plateaus)
-    |      / /
-    |     //
-    |    //
-    |   /
-    |  /
-    | /
-    +-----------------------------→ Amount of data
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/10e31cb1-5231-407a-b836-e2a76378165d" width=600>
+</p>
 
 > [!TIP]
 > **Rule of thumb:**
@@ -512,8 +503,6 @@ Where:
 
 ### How Learning Happens: Backpropagation
 
-**Backpropagation** is the process by which neural networks learn from their mistakes:
-
 <p align="center">
   <a href="https://www.youtube.com/watch?v=ovCyBmlrZGg">
     <img
@@ -524,8 +513,10 @@ Where:
 </p>
 
 <p align="center">
-<b>▶ Click the thumbnail above to watch the full demonstration on YouTube.</b>
+<b>☝️ Click the thumbnail above to watch the full demonstration on YouTube.</b>
 </p>
+
+**Backpropagation** is the process by which neural networks learn from their mistakes:
 
 1. **Forward pass:** Data flows through the network, layer by layer, to produce a prediction
 2. **Calculate error:** Compare the prediction to the actual answer using a **loss function**
@@ -656,6 +647,10 @@ Each label is **one-hot encoded** — represented as a vector of 10 numbers:
 
 #### Step 2: Network Structure
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/10e31cb1-5231-407a-b836-e2a76378165d" width=600>
+</p>
+
 The network structure uses **matrix multiplication** and **vector addition**:
 
 $$\mathbf{t} = \mathbf{W} \cdot \mathbf{x} + \mathbf{b}$$
@@ -673,12 +668,20 @@ $$\text{softmax}(t_i) = \frac{e^{t_i}}{\sum_j e^{t_j}}$$
 
 #### Step 3: Network Compilation
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c38e725c-827e-493e-b888-da1700019548" width=600>
+</p>
+
 Three things to define:
 1. **Loss function:** Measures how wrong the predictions are (e.g., cross-entropy)
 2. **Optimizer:** The algorithm that updates weights to reduce error (e.g., Adam, SGD)
 3. **Metrics:** What to monitor during training (e.g., accuracy)
 
 #### Step 4: Model Training
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9c7566bc-cc73-45ac-b40c-9b83e148aa5c" width=600>
+</p>
 
 - Use `model.fit()` in TensorFlow
 - Data is trained in **batches** (small groups of samples at a time)
@@ -687,6 +690,10 @@ Three things to define:
 > **Example:** If you have 60,000 images and a batch size of 100, one epoch = 600 batches. Training for 10 epochs = going through all 60,000 images 10 times.
 
 #### Step 5: Model Evaluation
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2783acde-7b7d-469e-9d78-983d5c1062d6" width=600>
+</p>
 
 - Use `model.evaluate()` in TensorFlow
 - Compare predictions on the 10,000 test images against their true labels
@@ -699,7 +706,7 @@ Three things to define:
 > [!IMPORTANT]
 > **The 10 things to remember from Week 1:**
 
-1. **Computer Vision** teaches computers to understand images and videos
+1. **Computer Vision** teaches computers to understand images and videos like how humans see and think
 2. **AI ⊃ ML ⊃ DL** — they're nested concepts, each more specific
 3. **Machine Learning** is about learning patterns from data, not writing rules by hand
 4. The ML algorithm finds a hypothesis function $g$ that approximates the unknown true function $f$
