@@ -45,11 +45,21 @@ A **regression problem** is when you want the machine to predict a **continuous 
 ### Examples
 
 **Regression problems (predicting numbers):**
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f4e8b28f-96ae-4466-8c0e-55644ea1ea09" width=600>
+</p>
+
 - What is the **price** of this house? → $450,000
 - What is the **age** of this person? → 32 years old
 - What is the **weight** of this fish? → 4.5 kg
 
 **NOT regression problems (these are classification):**
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990" width=600>
+</p>
+
 - Is this person a boy or a girl? → "boy" (a category)
 - Is this email spam? → "yes" or "no" (a category)
 
@@ -62,7 +72,7 @@ A **regression problem** is when you want the machine to predict a **continuous 
 
 ### What is Linear Regression?
 
-**Linear Regression** is a machine learning algorithm that finds the **straight line** (or flat surface) that best describes the relationship between input variables and an output variable.
+**Linear Regression** is a supervised learning algorithm that finds the **straight line** (or flat surface) that best describes the relationship between a dependent, $y$ and one or more independent, $x$ variables.
 
 ### Key Concepts
 
@@ -74,7 +84,11 @@ A **regression problem** is when you want the machine to predict a **continuous 
 
 ### Analogy
 
-> Imagine plotting the heights and weights of your classmates on a graph. You'd notice taller people tend to weigh more. **Linear regression draws the best straight line** through all those dots. Once you have that line, you can predict: *"If someone is 180 cm tall, they probably weigh about \_\_ kg."*
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f31b2e1a-d4f5-4615-8c9e-64267f43988e" width=600>
+</p>
+
+> The heights and weights of your classmates on a graph are plotted graphically. Notice that taller people tend to weigh more. **Linear regression draws the best fit straight line** through all those dots. Once you have that line, you can predict: *"If someone is 180 cm tall, they probably weigh about 106 kg."*
 
 ### Two Types of Linear Regression
 
@@ -93,16 +107,33 @@ The core equation of simple linear regression is:
 
 $$h_\theta(x) = \theta_0 + \theta_1 x$$
 
-| Symbol | Name | What It Represents | Analogy |
-|--------|------|--------------------|---------|
-| $h_\theta(x)$ | Hypothesis function | The predicted output | Your best guess |
-| $\theta_0$ | Bias (intercept) | Where the line crosses the y-axis | The "starting point" |
-| $\theta_1$ | Weight (coefficient) | The slope — how much $y$ changes per unit of $x$ | The "steepness" of the relationship |
-| $x$ | Input feature | The independent variable | What you measure |
+Following the slope-intercept form::
+
+$$
+\boxed{
+\underbrace{h_\theta(x)}_{y}
+=
+\underbrace{\theta_1}_{m}x
++
+\underbrace{\theta_0}_{c}
+}
+$$
+
+where:
+| Symbol | Equivalent | Name | What It Represents | Analogy |
+|--------|------------|------|--------------------|---------|
+| $h_\theta(x)$ | $y$ | Hypothesis function | The predicted output (dependent variable) | Your model's best prediction or best-fit line |
+| $\theta_0$ | $c$ | Bias (y-intercept) | Where the line crosses the y-axis | The "starting point" of the line |
+| $\theta_1$ | $m$ | Weight (slope/gradient) | How much the prediction changes for every unit increase in $x$ | The "steepness" of the line |
+| $x$ | $x$ | Input feature/value | The independent variable used to make predictions | The value you measure or provide |
 
 ### Real-World Example: Fish Dimensions
 
 A biologist studies **sea bream fish** and collects data on their height ($x$) and width ($y$):
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b83f552e-e6ee-43e1-9784-dea98dd1cfb4" width=600>
+</p>
 
 | Height ($x$) | Width ($y$) |
 |-------------|------------|
@@ -111,6 +142,10 @@ A biologist studies **sea bream fish** and collects data on their height ($x$) a
 | 12.38 | 4.70 |
 | 12.73 | 4.46 |
 | 12.44 | 5.13 |
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/dcf952cb-ead1-43a0-b469-b50067187cf9" width=600>
+</p>
 
 When plotted, these points show a **positive relationship**: as height increases, width also tends to increase.
 
