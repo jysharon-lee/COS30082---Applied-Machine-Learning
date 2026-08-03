@@ -57,7 +57,9 @@ A **regression problem** is when you want the machine to predict a **continuous 
 **NOT regression problems (these are classification):**
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990" width=600>
+  <img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990" width="45%">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/afc2e0ce-bef0-4699-ac0a-a112ec57f80f" width="45%">
 </p>
 
 - Is this person a boy or a girl? → "boy" (a category)
@@ -88,7 +90,7 @@ A **regression problem** is when you want the machine to predict a **continuous 
   <img src="https://github.com/user-attachments/assets/f31b2e1a-d4f5-4615-8c9e-64267f43988e" width=600>
 </p>
 
-> The heights and weights of your classmates on a graph are plotted graphically. Notice that taller people tend to weigh more. **Linear regression draws the best fit straight line** through all those dots. Once you have that line, you can predict: *"If someone is 180 cm tall, they probably weigh about 106 kg."*
+> The heights and weights of your classmates on a graph are plotted graphically. Notice that taller people tend to weigh more ~~(yes it's me)~~. **Linear regression draws the best fit straight line** through all those dots. Once you have that line, you can predict: *"If Sharon is 180 cm tall, she probably weighs about 108 kg."*
 
 ### Two Types of Linear Regression
 
@@ -109,15 +111,7 @@ $$h_\theta(x) = \theta_0 + \theta_1 x$$
 
 Following the slope-intercept form::
 
-$$
-\boxed{
-\underbrace{h_\theta(x)}_{y}
-=
-\underbrace{\theta_1}_{m}x
-+
-\underbrace{\theta_0}_{c}
-}
-$$
+$$\boxed{\underbrace{h_\theta(x)}_{y}=\underbrace{\theta_1}_{m}x+\underbrace{\theta_0}_{c}}$$
 
 where:
 | Symbol | Equivalent | Name | What It Represents | Analogy |
@@ -151,16 +145,17 @@ When plotted, these points show a **positive relationship**: as height increases
 
 ### Using the Trained Model
 
-Suppose the algorithm finds: $\theta_0 = 0.261$ and $\theta_1 = 0.340$
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/95b0791c-3b5e-46dc-88cb-7c7892d1acfc" width=600>
+</p>
+
+Suppose the algorithm finds the solution where $\theta_0 = 0.261$ and $\theta_1 = 0.340$
 
 Now you can predict the width of a fish with height $x = 15$:
 
 $$h_\theta(15) = 0.261 + 0.340 \times 15 = 0.261 + 5.1 = 5.361$$
 
 **Prediction:** A fish with height 15 has an estimated width of **5.361**.
-
-> [!TIP]
-> Think of it like the equation for a straight line from school math: $y = mx + c$, where $m$ is the slope and $c$ is the y-intercept. In ML, we just use different letters: $\theta_1$ for slope and $\theta_0$ for intercept.
 
 ### The Big Question
 
@@ -180,9 +175,9 @@ We want to find the line that is **closest to all the data points.** But what do
 
 ### The Cost Function (Least Squares)
 
-We measure how "wrong" our line is by calculating the **sum of squared errors** — the total squared distance between each actual data point and the predicted point on the line:
+We measure how "wrong" our line is by calculating the **sum of squared errors** — the total squared distance between each actual data point and the predicted data point on the line:
 
-$$J(\theta_0, \theta_1) = \sum_{n=1}^{N} \left( y_n - h_\theta(x_n) \right)^2 = \sum_{n=1}^{N} \left( y_n - (\theta_0 + \theta_1 x_n) \right)^2$$
+$$J(\theta_0, \theta_1) = \sum_{n=1}^{N} \left( y^(n) - h_\theta(x^(n)) \right)^2 = \sum_{n=1}^{N} \left( y^(n) - (\theta_0 + \theta_1 x^(n)) \right)^2$$
 
 ### Breaking This Down
 
@@ -211,23 +206,15 @@ We want to find $\theta_0$ and $\theta_1$ that make $J$ as **small as possible**
 
 ### The Convex Bowl Shape
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/994d756e-51af-4884-9e63-91aebd532a2c" width=600>
+</p>
+
 The cost function $J(\theta_0, \theta_1)$ forms a **bowl shape** (convex function). This is great news because:
 - There is exactly **one global minimum** (one lowest point)
 - No matter where you start, you can always find the best answer
 - There are no "false bottoms" (local minima) to get stuck in
-
-```
-     J(θ)
-      ↑
-      |  \           /
-      |   \         /
-      |    \       /
-      |     \     /
-      |      \___/  ← Global minimum (best θ values)
-      |
-      +------------------→ θ
-```
-
+  
 ### Solving with Calculus
 
 To find the minimum, we take partial derivatives and set them to zero:
@@ -236,9 +223,9 @@ $$\frac{\partial J}{\partial \theta_0} = 0 \quad \text{and} \quad \frac{\partial
 
 After solving (the calculus is done for you), we get:
 
-$$\theta_0 = \frac{1}{N} \left[ \sum_{n=1}^{N} y_n - \theta_1 \sum_{n=1}^{N} x_n \right]$$
+$$\theta_0 = \frac{1}{N} \left[ \sum_{n=1}^{N} y^(n) - \theta_1 \sum_{n=1}^{N} x^(n) \right]$$
 
-$$\theta_1 = \frac{N \sum_{n=1}^{N} x_n y_n - \sum_{n=1}^{N} x_n \sum_{n=1}^{N} y_n}{N \sum_{n=1}^{N} x_n^2 - \left(\sum_{n=1}^{N} x_n\right)^2}$$
+$$\theta_1 = \frac{N \sum_{n=1}^{N} x^(n) y^(n) - \sum_{n=1}^{N} x^(n) \sum_{n=1}^{N} y^(n)}{N \sum_{n=1}^{N} (x^(n))^2 - \left(\sum_{n=1}^{N} (x^(n))\right)^2}$$
 
 > [!NOTE]
 > You don't need to memorize these formulas! The key idea is: **OLS gives you a direct, one-step formula to compute the best parameters.** No iteration needed.
@@ -274,7 +261,7 @@ $$\theta_0 = \frac{1}{3}[11 - 1.5 \times 6] = \frac{1}{3}[11 - 9] = \frac{2}{3} 
 
 ### A Cleaner Way to Write OLS
 
-When you have many features, writing out individual partial derivatives becomes messy. The **Normal Equation** packages everything into one elegant matrix formula:
+When you have many features, writing out individual partial derivatives becomes messy. That's when **Normal Equation** comes into handy: packages everything into one elegant matrix formula:
 
 $$\theta = (X^T X)^{-1} X^T y$$
 
@@ -291,9 +278,9 @@ $$\theta = (X^T X)^{-1} X^T y$$
 
 For simple linear regression with data $(x_1, y_1), (x_2, y_2), (x_3, y_3)$:
 
-$$X = \begin{bmatrix} 1 & x_1 \\ 1 & x_2 \\ 1 & x_3 \end{bmatrix}, \quad y = \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix}$$
-
-The column of 1s is added because $\theta_0 \times 1 = \theta_0$ (the intercept term).
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c0fc4b7d-e0ba-40b1-9a99-1df51079311c" width=600>
+</p>
 
 ### Analogy
 
@@ -313,7 +300,7 @@ Unlike OLS (which gives you the answer directly), Gradient Descent **gradually i
 
 For Gradient Descent, we use the **Mean Squared Error (MSE)**, which normalizes by $2N$:
 
-$$J(\theta_0, \theta_1) = \frac{1}{2N} \sum_{n=1}^{N} \left( h_\theta(x_n) - y_n \right)^2$$
+$$J(\theta_0, \theta_1) = \frac{1}{2N} \sum_{n=1}^{N} \left( h_\theta(x^(n)) - y^(n) \right)^2$$
 
 > The $\frac{1}{2N}$ factor is for mathematical convenience — it makes the derivative cleaner.
 
@@ -354,7 +341,23 @@ flowchart TD
     E -- Yes --> F["✅ Done! Use final θ₀, θ₁"]
 ```
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cccca464-cc3b-4f7d-879d-99a6d8465375" width=1000>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/66483d47-b51b-4639-813e-90488cafb16d" width=1000>
+</p>
+
 ### Why the Gradient Tells You the Right Direction
+
+<p align="center">
+  <em>Visual representation on how gradient descent works</em>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/227d7e53-4b2f-437b-b42b-50690833547f" width=600>
+</p>
 
 The gradient ($\frac{\partial J}{\partial \theta}$) tells you **both the direction and the steepness** of the slope:
 
@@ -399,27 +402,12 @@ The **learning rate** ($\alpha$) controls the step size:
 | **Just right** | Reaches the minimum efficiently | Steady confident strides |
 | **Too large** | Overshoots the minimum, bounces around, may never converge (loss explodes!) | Giant leaps that jump over the valley |
 
-### Visual Comparison
-
-```
-Too Small (α = 0.001):               Too Large (α = 10):
-    J(θ)                                 J(θ)
-     |  \     /                           |  \     /
-     |   . . . . . . → (slow!)           |   \   / ← bouncing!
-     |              \                     |    X
-     |               .                    |   / \
-     |                \_                  |  /   \ 
-     +----------→ θ                      +----------→ θ
-
-Just Right (α = 0.01):
-    J(θ)
-     |  \     /
-     |   \   /
-     |    . .
-     |     .
-     |     _ ← converged!
-     +----------→ θ
-```
+---TO BE ADDED IN TEXT---
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="45%">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/a11f874c-d6ab-4832-87d0-c4d5ef6ad19a" width="45%">
+</p>
 
 > [!TIP]
 > **Practical advice:** Start with a learning rate of **0.01** or **0.001**. If training is too slow, increase it. If the loss is exploding (going up instead of down), decrease it. Common values: 0.001, 0.01, 0.1.
