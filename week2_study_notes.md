@@ -458,7 +458,7 @@ The **learning rate** ($\alpha$) controls the step size:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="100%">
+<img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="100%" height="460">
 
 <br>
 
@@ -471,7 +471,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/4319cf72-45c8-4e1b-89aa-b7e992122f1b" height="100%">
+<img src="https://github.com/user-attachments/assets/4319cf72-45c8-4e1b-89aa-b7e992122f1b" width="380" height="460">
 
 <br>
 
@@ -484,7 +484,7 @@ The model takes balanced step sizes, converging smoothly and efficiently toward 
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/088a1e4f-a368-4c90-a7c4-b337ce09a1bc" width="100%">
+<img src="https://github.com/user-attachments/assets/088a1e4f-a368-4c90-a7c4-b337ce09a1bc" width="100%" height="460">
 
 <br>
 
@@ -676,17 +676,17 @@ graph LR
 <h3>🔵 Underfitting</h3>
 
 <b>📋 Training Summary at Degree = 1</b><br>
-<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="100%">
+<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="300">
 
 <br><br>
 
 <b>📈 Regression Model</b><br>
-<img src="https://github.com/user-attachments/assets/a41e3abc-5af3-4afe-b24c-6b12bdca976e" width="100%">
+<img src="https://github.com/user-attachments/assets/a41e3abc-5af3-4afe-b24c-6b12bdca976e" width="100%" height="300">
 
 <br><br>
 
 <b>📉 Learning Curve</b><br>
-<img src="https://github.com/user-attachments/assets/7068a44a-2530-4bd3-99e2-f179b7c61415" width="100%">
+<img src="https://github.com/user-attachments/assets/7068a44a-2530-4bd3-99e2-f179b7c61415" width="100%" height="300">
 
 <br><br>
 The model is too simple to capture the nonlinear relationship in the data. Both the training and testing errors remain relatively high, indicating high bias and poor generalization.
@@ -698,17 +698,17 @@ The model is too simple to capture the nonlinear relationship in the data. Both 
 <h3>🟢 Good Fit</h3>
 
 <b>📋 Training Summary at Degree = 3</b><br>
-<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%" height="100%">
+<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%" height="300">
 
 <br><br>
 
 <b>📈 Regression Model</b><br>
-<img src="https://github.com/user-attachments/assets/647576ab-5a03-494d-a236-7e6c0094201a" width="100%">
+<img src="https://github.com/user-attachments/assets/647576ab-5a03-494d-a236-7e6c0094201a" width="100%" height="300">
 
 <br><br>
 
 <b>📉 Learning Curve</b><br>
-<img src="https://github.com/user-attachments/assets/9353b0fd-9385-433b-87f0-fb96f1a2ef51" width="100%">
+<img src="https://github.com/user-attachments/assets/9353b0fd-9385-433b-87f0-fb96f1a2ef51" width="100%" height="300">
 
 <br><br>
 The model successfully captures the underlying trend while maintaining good generalization. Training and testing errors decrease together and remain close.
@@ -720,17 +720,17 @@ The model successfully captures the underlying trend while maintaining good gene
 <h3>🔴 Overfitting</h3>
 
 <b>📋 Training Summary at Degree = 19</b><br>
-<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%" height="100%">
+<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%" height="300">
 
 <br><br>
 
 <b>📈 Regression Model</b><br>
-<img src="https://github.com/user-attachments/assets/967ba482-c098-4202-88c7-00a2a3e50e49" width="100%">
+<img src="https://github.com/user-attachments/assets/967ba482-c098-4202-88c7-00a2a3e50e49" width="100%" height="300">
 
 <br><br>
 
 <b>📉 Learning Curve</b><br>
-<img src="https://github.com/user-attachments/assets/4c060cf2-1171-4761-8d45-dcb0c5c29bc3" width="100%">
+<img src="https://github.com/user-attachments/assets/4c060cf2-1171-4761-8d45-dcb0c5c29bc3" width="100%" height="300">
 
 <br><br>
 The model memorizes the training data, resulting in very low training error but significantly higher testing error due to poor generalization.
@@ -794,7 +794,7 @@ Regularization says: *"You can fit the data, but keep your weights small!"*
 | Type | Name | Regularization Term | What It Does |
 |------|------|-------------------|-------------|
 | **L2** | Ridge Regression | $\lambda \sum_{j=1}^{M} \theta_j^2$ | Shrinks weights toward zero (but never exactly zero) |
-| **L1** | Lasso Regression | $\lambda \sum_{j=1}^{M} |\theta_j| \right$ | Forces some weights to become exactly zero, effectively performs feature selection |
+| **L1** | Lasso Regression | [$\lambda \sum_{j=1}^{M} |\theta_j| \right$] | Forces some weights to become exactly zero, effectively performs feature selection |
 
 ---
 
@@ -943,13 +943,13 @@ $$\theta_j \leftarrow \theta_j + \alpha \frac{\lambda}{N} - \alpha \left[\frac{1
 > - Ivan: **20%**
 > - Mark: **20%**
 >
-> - Everyone stays in the team, but the workload becomes more evenly distributed.
-> - **In machine learning:** all features remain, but their weights are reduced.
+> Everyone stays in the team, but the workload becomes more evenly distributed.
+> **In machine learning:** all features remain, but their weights are reduced.
 > 
 > #### 🟥 L1 Regularization — Sack the Non-Contributors
 >
 > Sir Almon decides to **sack teammates who aren't or didn't contribute enough** so that only the most valuable contributors remain.
-> Out of the scale of ⭐⭐⭐⭐⭐, which teammates are performing with ⭐⭐⭐⭐⭐ being the hard worker and ⭐ being the slacker?
+> Out of ⭐⭐⭐⭐⭐, which one of these teammates are well-performing? With ⭐⭐⭐⭐⭐ being the hard worker and ⭐ being the slacker?
 > - 👩 Sharon ⭐⭐⭐⭐⭐
 > - 👨 Henry  ⭐⭐⭐⭐ ☆
 > - 🧔‍♂️ Ivan   ⭐ ☆ ☆ ☆ ☆
@@ -987,6 +987,7 @@ If you try using linear regression for this, the predicted values could go below
 <p align="center">
   <img src="https://github.com/user-attachments/assets/04e4c7c0-cb16-44a9-b0d1-60792ec1d368" width=1000 height=250>
 </p>
+
 ---
 
 ## 16. Key Takeaways
