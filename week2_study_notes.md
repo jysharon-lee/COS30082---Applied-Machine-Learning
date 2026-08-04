@@ -458,7 +458,7 @@ The **learning rate** ($\alpha$) controls the step size:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="100%" height="460">
+<img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="100%" height="300">
 
 <br>
 
@@ -471,7 +471,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/0854a173-acc4-44a5-ab84-4b05d94d2633" width="100%" height="460">
+<img src="https://github.com/user-attachments/assets/0854a173-acc4-44a5-ab84-4b05d94d2633" width="100%" height="300">
 
 <br>
 
@@ -484,7 +484,7 @@ The model takes balanced step sizes, converging smoothly and efficiently toward 
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/088a1e4f-a368-4c90-a7c4-b337ce09a1bc" width="100%" height="460">
+<img src="https://github.com/user-attachments/assets/088a1e4f-a368-4c90-a7c4-b337ce09a1bc" width="100%" height="300">
 
 <br>
 
