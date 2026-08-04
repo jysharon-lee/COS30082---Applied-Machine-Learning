@@ -62,9 +62,7 @@ A **regression problem** is when you want the machine to predict a **continuous 
 <td align="center" valign="top">
   <div align="center">
     <img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990"
-         height="250">
-    <br><br>
-    <b>Classification</b>
+         height="300">
   </div>
 </td>
 
@@ -73,9 +71,7 @@ A **regression problem** is when you want the machine to predict a **continuous 
 <td align="center" valign="top">
   <div align="center">
     <img src="https://github.com/user-attachments/assets/afc2e0ce-bef0-4699-ac0a-a112ec57f80f"
-         height="250">
-    <br><br>
-    <b>Spam Detection</b>
+         height="300">
   </div>
 </td>
 
