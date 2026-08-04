@@ -471,7 +471,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/17fd22b8-e4db-48fa-b527-be3f7053ebf0" width="100%" height="250">
+<img src="https://github.com/user-attachments/assets/ee77d19e-267d-4626-9c2f-33daf1b98dfe" width="100%" height="300">
 
 <br>
 
@@ -698,7 +698,7 @@ The model is too simple to capture the nonlinear relationship in the data. Both 
 <h3>🟢 Good Fit</h3>
 
 <b>📋 Training Summary at Degree = 3</b><br>
-<img src="https://github.com/user-attachments/assets/89e79cfe-b2ca-4622-91c8-38d9d560b9a2" width="100%" height="250">
+<img src="https://github.com/user-attachments/assets/15727242-5031-43eb-849e-7b28d0cc025e" width="100%" height="250">
 
 <br><br>
 
