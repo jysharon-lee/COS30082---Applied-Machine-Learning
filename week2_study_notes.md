@@ -471,7 +471,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/0854a173-acc4-44a5-ab84-4b05d94d2633" width="100%" height="300">
+<img src="https://github.com/user-attachments/assets/0854a173-acc4-44a5-ab84-4b05d94d2633" width="100%" height="250">
 
 <br>
 
@@ -835,9 +835,9 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 <table align="center">
 <tr>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="247">
+<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="240">
 
 <br>
 
@@ -845,9 +845,9 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="247">
+<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="250">
 
 <br>
 
@@ -855,9 +855,9 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="247">
+<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="240">
 
 <br>
 
