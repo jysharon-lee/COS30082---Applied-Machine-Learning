@@ -59,32 +59,29 @@ A **regression problem** is when you want the machine to predict a **continuous 
 <table align="center">
 <tr>
 
-<td align="center">
-
-<img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990"
-     height="260">
-
-<br>
-
-**Classification**
-
+<td align="center" valign="top">
+  <div align="center">
+    <img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990"
+         height="250">
+    <br><br>
+    <b>Classification</b>
+  </div>
 </td>
 
 <td width="40"></td>
 
-<td align="center">
-
-<img src="https://github.com/user-attachments/assets/afc2e0ce-bef0-4699-ac0a-a112ec57f80f"
-     height="260">
-
-<br>
-
-**Spam Detection**
-
+<td align="center" valign="top">
+  <div align="center">
+    <img src="https://github.com/user-attachments/assets/afc2e0ce-bef0-4699-ac0a-a112ec57f80f"
+         height="250">
+    <br><br>
+    <b>Spam Detection</b>
+  </div>
 </td>
 
 </tr>
 </table>
+
 - Is this person a boy or a girl? → "boy" (a category)
 - Is this email spam? → "yes" or "no" (a category)
 
