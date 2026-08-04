@@ -794,7 +794,7 @@ Regularization says: *"You can fit the data, but keep your weights small!"*
 | Type | Name | Regularization Term | What It Does |
 |------|------|-------------------|-------------|
 | **L2** | Ridge Regression | $\lambda \sum_{j=1}^{M} \theta_j^2$ | Shrinks weights toward zero (but never exactly zero) |
-| **L1** | Lasso Regression | $\lambda \sum_{j=1}^{M} |\theta_j|$ | Forces some weights to become exactly zero, effectively performs feature selection |
+| **L1** | Lasso Regression | $\lambda \sum_{j=1}^{M} \lvert \theta_j \rvert$ | Forces some weights to become exactly zero, effectively performs feature selection |
 
 ---
 
@@ -837,7 +837,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="100%">
+<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="247">
 
 <br>
 
@@ -847,7 +847,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="100%">
+<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="247">
 
 <br>
 
@@ -857,7 +857,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="100%">
+<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="247">
 
 <br>
 
