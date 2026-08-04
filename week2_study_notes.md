@@ -671,12 +671,12 @@ graph LR
 
 <tr>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
 <h3>🔵 Underfitting</h3>
 
 <b>📋 Training Summary at Degree = 1</b><br>
-<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="280">
+<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="250">
 
 <br><br>
 
@@ -693,12 +693,12 @@ The model is too simple to capture the nonlinear relationship in the data. Both 
 
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
 <h3>🟢 Good Fit</h3>
 
 <b>📋 Training Summary at Degree = 3</b><br>
-<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%" height="280">
+<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%" height="250">
 
 <br><br>
 
@@ -715,12 +715,12 @@ The model successfully captures the underlying trend while maintaining good gene
 
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
 <h3>🔴 Overfitting</h3>
 
 <b>📋 Training Summary at Degree = 19</b><br>
-<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%" height="280">
+<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%" height="250">
 
 <br><br>
 
