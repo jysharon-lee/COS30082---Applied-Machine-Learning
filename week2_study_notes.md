@@ -56,12 +56,35 @@ A **regression problem** is when you want the machine to predict a **continuous 
 
 **NOT regression problems (these are classification):**
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990" width="45%">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/user-attachments/assets/afc2e0ce-bef0-4699-ac0a-a112ec57f80f" width="45%">
-</p>
+<table align="center">
+<tr>
 
+<td align="center">
+
+<img src="https://github.com/user-attachments/assets/06dd0ba5-feed-4269-b036-1925b957c990"
+     height="260">
+
+<br>
+
+**Classification**
+
+</td>
+
+<td width="40"></td>
+
+<td align="center">
+
+<img src="https://github.com/user-attachments/assets/afc2e0ce-bef0-4699-ac0a-a112ec57f80f"
+     height="260">
+
+<br>
+
+**Spam Detection**
+
+</td>
+
+</tr>
+</table>
 - Is this person a boy or a girl? → "boy" (a category)
 - Is this email spam? → "yes" or "no" (a category)
 
@@ -109,7 +132,7 @@ The core equation of simple linear regression is:
 
 $$h_\theta(x) = \theta_0 + \theta_1 x$$
 
-Following the slope-intercept form::
+Following the slope-intercept form:
 
 $$\boxed{\underbrace{h_\theta(x)}_{y}=\underbrace{\theta_1}_{m}x+\underbrace{\theta_0}_{c}}$$
 
