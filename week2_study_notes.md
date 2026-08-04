@@ -271,7 +271,7 @@ Given 3 data points: $(1, 2)$, $(2, 4)$, $(3, 5)$
 | $\sum x^{(n)}$ | $1 + 2 + 3 = 6$ |
 | $\sum y^{(n)}$ | $2 + 4 + 5 = 11$ |
 | $\sum x^{(n)} y^{(n)}$ | $(1)(2) + (2)(4) + (3)(5) = 2 + 8 + 15 = 25$ |
-| $\sum x^{(n)}^2$ | $1 + 4 + 9 = 14$ |
+| $\sum (x^{(n)})^2$ | $1 + 4 + 9 = 14$ |
 
 **Step 2: Calculate $\theta_1$**
 
@@ -462,7 +462,7 @@ The **learning rate** ($\alpha$) controls the step size:
 
 <br>
 
-### **① Too Small**
+### **Too Small**
 **Learning Rate:** α = **0.001**
 
 Tiny updates are made in each iteration, causing the model to converge very slowly and requiring many iterations to reach the minimum.
@@ -475,7 +475,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <br>
 
-### **② Just Right**
+### **Just Right**
 **Learning Rate:** α = **0.1**
 
 The model takes balanced step sizes, converging smoothly and efficiently toward the global minimum without overshooting.
@@ -488,7 +488,7 @@ The model takes balanced step sizes, converging smoothly and efficiently toward 
 
 <br>
 
-### **③ Too Large**
+### **Too Large**
 **Learning Rate:** α = **1.0**
 
 The updates are excessively large, causing the model to overshoot the minimum repeatedly. Training may oscillate or even diverge instead of converging.
