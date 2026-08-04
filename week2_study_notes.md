@@ -471,7 +471,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/4319cf72-45c8-4e1b-89aa-b7e992122f1b" width="380" height="460">
+<img src="https://github.com/user-attachments/assets/0854a173-acc4-44a5-ab84-4b05d94d2633" width="100%" height="460">
 
 <br>
 
@@ -676,7 +676,7 @@ graph LR
 <h3>🔵 Underfitting</h3>
 
 <b>📋 Training Summary at Degree = 1</b><br>
-<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="300">
+<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="280">
 
 <br><br>
 
@@ -698,7 +698,7 @@ The model is too simple to capture the nonlinear relationship in the data. Both 
 <h3>🟢 Good Fit</h3>
 
 <b>📋 Training Summary at Degree = 3</b><br>
-<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%" height="300">
+<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%" height="280">
 
 <br><br>
 
@@ -720,7 +720,7 @@ The model successfully captures the underlying trend while maintaining good gene
 <h3>🔴 Overfitting</h3>
 
 <b>📋 Training Summary at Degree = 19</b><br>
-<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%" height="300">
+<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%" height="280">
 
 <br><br>
 
@@ -794,7 +794,7 @@ Regularization says: *"You can fit the data, but keep your weights small!"*
 | Type | Name | Regularization Term | What It Does |
 |------|------|-------------------|-------------|
 | **L2** | Ridge Regression | $\lambda \sum_{j=1}^{M} \theta_j^2$ | Shrinks weights toward zero (but never exactly zero) |
-| **L1** | Lasso Regression | [$\lambda \sum_{j=1}^{M} |\theta_j| \right$] | Forces some weights to become exactly zero, effectively performs feature selection |
+| **L1** | Lasso Regression | $\lambda \sum_{j=1}^{M} |\theta_j|$ | Forces some weights to become exactly zero, effectively performs feature selection |
 
 ---
 
@@ -837,7 +837,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="250">
+<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="100%">
 
 <br>
 
@@ -847,7 +847,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="250">
+<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="100%">
 
 <br>
 
@@ -857,7 +857,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="250">
+<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="100%">
 
 <br>
 
@@ -903,7 +903,7 @@ The only difference from Ridge is using $|\theta_j|$ (absolute value) instead of
 
 | Aspect | Ridge (L2) | Lasso (L1) |
 |--------|-----------|-----------|
-| Regularization term | $\lambda \sum \theta_j^2$ | $\lambda \sum_{j=1}^{M} |\theta_j| \right$ |
+| Regularization term | $\lambda \sum \theta_j^2$ | $\lambda \sum_{j=1}^{M} |\theta_j|$ |
 | Weight shrinkage | Shrinks weights toward zero but **never exactly zero** | Can shrink weights **to exactly zero** |
 | Feature selection | No — keeps all features | Yes — removes unimportant features |
 | Best for | When all features contribute somewhat | When you suspect many features are irrelevant |
@@ -912,7 +912,7 @@ The only difference from Ridge is using $|\theta_j|$ (absolute value) instead of
 
 The derivative of $|\theta_j|$ depends on the sign of $\theta_j$:
 
-$$\frac{d|\theta_j|}{d\theta_j}=\begin{cases}1, & \text{if } \theta_j > 0 \\ -1, & \text{if } \theta_j < 0\end{cases}$$
+$$\frac{d|\theta_j|}{d\theta_j}=\begin{cases}1, & \text{if } \theta_j > 0 ; -1, & \text{if } \theta_j < 0\end{cases}$$
 
 **When $\theta_j > 0$:** 
 $$\theta_j \leftarrow \theta_j - \alpha \frac{\lambda}{N} - \alpha \left[\frac{1}{N} \sum_{n=1}^{N} (h_\theta(x^{(n)}) - y^{(n)}) \cdot x_j^{(n)} \right]$$
