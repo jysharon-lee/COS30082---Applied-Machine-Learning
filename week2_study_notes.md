@@ -124,7 +124,7 @@ A **regression problem** is when you want the machine to predict a **continuous 
 **Simple Linear Regression (SLR)** is a one-to-one statistical technique that handles **only ONE input feature** (independent variables, $x$) to predict one dependent output ($y$ variable).
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/aec8198c-5655-45e2-a14a-b3b36b0a60af" width=600 height=300>
+  <img src="https://github.com/user-attachments/assets/aec8198c-5655-45e2-a14a-b3b36b0a60af">
 </p>
 
 <p align="center">
@@ -212,9 +212,9 @@ $$J(\theta_0, \theta_1) = \sum_{n=1}^{N} \left( y^{(n)} - h_\theta(x^{(n)}) \rig
 ### Breaking This Down
 
 For each data point:
-1. **Predict** the output using the current line: $h_\theta(x_n) = \theta_0 + \theta_1 x_n$
-2. **Calculate the error** (residual): $y_n - h_\theta(x_n)$ — the gap between actual and predicted
-3. **Square it** to make all errors positive: $(y_n - h_\theta(x_n))^2$
+1. **Predict** the output using the current line: $h_\theta(x^{(n)}) = \theta_0 + \theta_1 x^{(n)}$
+2. **Calculate the error** (residual): $y^{(n)} - h_\theta(x^{(n)})$ — the gap between actual and predicted
+3. **Square it** to make all errors positive: $(y^{(n)} - h_\theta(x^{(n)}))^2$
 4. **Sum up** all the squared errors across all $N$ data points
 
 ### Worked Example
@@ -268,10 +268,10 @@ Given 3 data points: $(1, 2)$, $(2, 4)$, $(3, 5)$
 
 | | Value |
 |---|---|
-| $\sum x_n$ | $1 + 2 + 3 = 6$ |
-| $\sum y_n$ | $2 + 4 + 5 = 11$ |
-| $\sum x_n y_n$ | $(1)(2) + (2)(4) + (3)(5) = 2 + 8 + 15 = 25$ |
-| $\sum x_n^2$ | $1 + 4 + 9 = 14$ |
+| $\sum x^{(n)}$ | $1 + 2 + 3 = 6$ |
+| $\sum y^{(n)}$ | $2 + 4 + 5 = 11$ |
+| $\sum x^{(n)} y^{(n)}$ | $(1)(2) + (2)(4) + (3)(5) = 2 + 8 + 15 = 25$ |
+| $\sum x^{(n)}^2$ | $1 + 4 + 9 = 14$ |
 
 **Step 2: Calculate $\theta_1$**
 
@@ -461,6 +461,7 @@ The **learning rate** ($\alpha$) controls the step size:
 <img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="100%">
 
 <br>
+
 ### **① Too Small**
 **Learning Rate:** α = **0.001**
 
@@ -470,9 +471,10 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/558538b4-4b80-45fa-9872-7201720f3276" width="100%">
+<img src="https://github.com/user-attachments/assets/4319cf72-45c8-4e1b-89aa-b7e992122f1b" width="100%">
 
 <br>
+
 ### **② Just Right**
 **Learning Rate:** α = **0.1**
 
@@ -485,6 +487,7 @@ The model takes balanced step sizes, converging smoothly and efficiently toward 
 <img src="https://github.com/user-attachments/assets/088a1e4f-a368-4c90-a7c4-b337ce09a1bc" width="100%">
 
 <br>
+
 ### **③ Too Large**
 **Learning Rate:** α = **1.0**
 
@@ -504,7 +507,7 @@ The updates are excessively large, causing the model to overshoot the minimum re
 **Multiple Linear Regression (MLR)** is a many-to-one statistical technique that extends simple linear regression to handle **multiple input features** (independent variables, $x$) to predict one dependent output ($y$ variable).
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
+  <img src="https://github.com/user-attachments/assets/2451a2b5-e402-4f68-9322-1099286393cb">
 </p>
 
 <p align="center">
@@ -522,7 +525,7 @@ where $x_0 = 1$ (a constant, so that $\theta_0$ acts as the bias/intercept).
 ### Real-World Example: Fish Width Prediction
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/f5ba8ef0-b36e-4ac5-b561-bfd153ed382c" width=600 height=300>
+  <img src="https://github.com/user-attachments/assets/f5ba8ef0-b36e-4ac5-b561-bfd153ed382c" width=600 height=500>
 </p>
 
 Instead of using only **height** to predict width, we use diagonal length, total length, body height and weight as multiple input features (independent variables, $x_M$):
