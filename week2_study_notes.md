@@ -456,7 +456,7 @@ The **learning rate** ($\alpha$) controls the step size:
 <table align="center">
 <tr>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
 <img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="100%" height="300">
 
@@ -469,7 +469,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
 <img src="https://github.com/user-attachments/assets/ee77d19e-267d-4626-9c2f-33daf1b98dfe" width="100%" height="300">
 
@@ -482,7 +482,7 @@ The model takes balanced step sizes, converging smoothly and efficiently toward 
 
 </td>
 
-<td align="center" width="33%">
+<td align="center" width="33%" valign="top">
 
 <img src="https://github.com/user-attachments/assets/088a1e4f-a368-4c90-a7c4-b337ce09a1bc" width="100%" height="300">
 
@@ -676,7 +676,7 @@ graph LR
 <h3>🔵 Underfitting</h3>
 
 <b>📋 Training Summary at Degree = 1</b><br>
-<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="250">
+<img src="https://github.com/user-attachments/assets/4c8a1f89-5d5d-4fe1-a38d-9d35e05add32" width="100%" height="250">
 
 <br><br>
 
@@ -837,7 +837,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="500">
+<img src="https://github.com/user-attachments/assets/e935e8fc-88da-4555-afc3-42f9ad6563a8" width="100%">
 
 <br>
 
@@ -847,7 +847,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="250">
+<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%">
 
 <br>
 
@@ -857,7 +857,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="260">
+<img src="https://github.com/user-attachments/assets/8b38f8b9-34d2-4b87-8579-e170b40dffde" width="100%">
 
 <br>
 
