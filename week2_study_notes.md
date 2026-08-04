@@ -903,7 +903,7 @@ The only difference from Ridge is using $|\theta_j|$ (absolute value) instead of
 
 | Aspect | Ridge (L2) | Lasso (L1) |
 |--------|-----------|-----------|
-| Regularization term | $\lambda \sum \theta_j^2$ | $\lambda \sum_{j=1}^{M} |\theta_j|$ |
+| Regularization term | $\lambda \sum \theta_j^2$ | $\lambda \sum_{j=1}^{M} \lvert \theta_j \rvert$ |
 | Weight shrinkage | Shrinks weights toward zero but **never exactly zero** | Can shrink weights **to exactly zero** |
 | Feature selection | No — keeps all features | Yes — removes unimportant features |
 | Best for | When all features contribute somewhat | When you suspect many features are irrelevant |
