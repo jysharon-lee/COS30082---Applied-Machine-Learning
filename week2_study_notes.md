@@ -22,7 +22,7 @@
 12. [Regularization](#12-regularization)
 13. [Ridge Regression (L2 Regularization)](#13-ridge-regression-l2-regularization)
 14. [Lasso Regression (L1 Regularization)](#14-lasso-regression-l1-regularization)
-15. [Preview: What Comes Next (Logistic Regression)](#15-preview-whats-next-logistic-regression)
+15. [Preview: What Comes Next (Logistic Regression)](#15-whats-next-logistic-regression)
 16. [Key Takeaways](#16-key-takeaways)
 17. [Glossary](#17-glossary)
 
@@ -471,7 +471,7 @@ Tiny updates are made in each iteration, causing the model to converge very slow
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/4319cf72-45c8-4e1b-89aa-b7e992122f1b" height="425">
+<img src="https://github.com/user-attachments/assets/4319cf72-45c8-4e1b-89aa-b7e992122f1b" height="100%">
 
 <br>
 
@@ -673,10 +673,10 @@ graph LR
 
 <td align="center" width="33%">
 
-<h3>🔴 Underfitting</h3>
+<h3>🔵 Underfitting</h3>
 
 <b>📋 Training Summary at Degree = 1</b><br>
-<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%">
+<img src="https://github.com/user-attachments/assets/2134f6b7-f526-4e9d-b849-e3d84283853c" width="100%" height="100%">
 
 <br><br>
 
@@ -689,7 +689,6 @@ graph LR
 <img src="https://github.com/user-attachments/assets/7068a44a-2530-4bd3-99e2-f179b7c61415" width="100%">
 
 <br><br>
-
 The model is too simple to capture the nonlinear relationship in the data. Both the training and testing errors remain relatively high, indicating high bias and poor generalization.
 
 </td>
@@ -699,7 +698,7 @@ The model is too simple to capture the nonlinear relationship in the data. Both 
 <h3>🟢 Good Fit</h3>
 
 <b>📋 Training Summary at Degree = 3</b><br>
-<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%">
+<img src="https://github.com/user-attachments/assets/05720066-7824-45b3-98e2-f522b5020788" width="100%" height="100%">
 
 <br><br>
 
@@ -712,17 +711,16 @@ The model is too simple to capture the nonlinear relationship in the data. Both 
 <img src="https://github.com/user-attachments/assets/9353b0fd-9385-433b-87f0-fb96f1a2ef51" width="100%">
 
 <br><br>
-
 The model successfully captures the underlying trend while maintaining good generalization. Training and testing errors decrease together and remain close.
 
 </td>
 
 <td align="center" width="33%">
 
-<h3>🔵 Overfitting</h3>
+<h3>🔴 Overfitting</h3>
 
 <b>📋 Training Summary at Degree = 19</b><br>
-<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%">
+<img src="https://github.com/user-attachments/assets/ad80e014-58dc-49bb-b085-73282a80778a" width="100%" height="100%">
 
 <br><br>
 
@@ -735,7 +733,6 @@ The model successfully captures the underlying trend while maintaining good gene
 <img src="https://github.com/user-attachments/assets/4c060cf2-1171-4761-8d45-dcb0c5c29bc3" width="100%">
 
 <br><br>
-
 The model memorizes the training data, resulting in very low training error but significantly higher testing error due to poor generalization.
 
 </td>
@@ -746,7 +743,7 @@ The model memorizes the training data, resulting in very low training error but 
 
 ### Summary Table between Underfitting, Good Fit, and Overfitting
 
-| Aspect | 🔴 Underfitting | 🟢 Good Fit | 🔵 Overfitting |
+| Aspect | 🔵 Underfitting | 🟢 Good Fit | 🔴 Overfitting |
 |--------|-----------------|------------|----------------|
 | **What it is** | Model is too simple to capture the underlying pattern | Model captures the general pattern without memorizing the data | Model is too complex and memorizes the training data instead of learning general patterns |
 | **Training Performance** | Poor | Good | Excellent |
@@ -797,7 +794,7 @@ Regularization says: *"You can fit the data, but keep your weights small!"*
 | Type | Name | Regularization Term | What It Does |
 |------|------|-------------------|-------------|
 | **L2** | Ridge Regression | $\lambda \sum_{j=1}^{M} \theta_j^2$ | Shrinks weights toward zero (but never exactly zero) |
-| **L1** | Lasso Regression | $\lambda \sum_{j=1}^{M}\left|\theta_j\right|$ | Forces some weights to become exactly zero, effectively performs feature selection |
+| **L1** | Lasso Regression | $\lambda \sum_{j=1}^{M} |\theta_j| \right$ | Forces some weights to become exactly zero, effectively performs feature selection |
 
 ---
 
@@ -817,8 +814,8 @@ $$J(\theta) = \frac{1}{2N} \left[ \sum_{n=1}^{N} (h_\theta(x^{(n)}) - y^{(n)})^2
 
 > [!NOTE]
 > The cost function has **two competing objectives**:
-> - **Fit the training data accurately** by minimizing the prediction error.
-> - **Keep the model simple** by preventing excessively large weights.
+> - **Fit the training data accurately** by minimizing the prediction error (First Term).
+> - **Keep the model simple** by preventing excessively large weights (Second Term).
 >
 > The regularization parameter **λ** acts like a **control knob**, determining the balance between these two objectives.
 
@@ -840,7 +837,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%">
+<img src="https://github.com/user-attachments/assets/b4d192e9-0751-4363-858d-454cd8cdf24f" width="100%" height="250">
 
 <br>
 
@@ -850,7 +847,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%">
+<img src="https://github.com/user-attachments/assets/fb72de24-4505-45a4-a4e0-6b8dc4f6c533" width="100%" height="250">
 
 <br>
 
@@ -860,7 +857,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 <td align="center" width="33%">
 
-<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%">
+<img src="https://github.com/user-attachments/assets/446019b4-2f77-4c47-a0a2-eb8863409401" width="100%" height="250">
 
 <br>
 
@@ -870,6 +867,7 @@ Consider $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$:
 
 </tr>
 </table>
+
 | Scenario | What Happens | Result |
 |---|---|---|
 | **No regularization** ($\lambda = 0$) | $\theta_2$ and $\theta_3$ can be large | Complex, wiggly curve (overfitting) |
@@ -905,7 +903,7 @@ The only difference from Ridge is using $|\theta_j|$ (absolute value) instead of
 
 | Aspect | Ridge (L2) | Lasso (L1) |
 |--------|-----------|-----------|
-| Regularization term | $\lambda \sum \theta_j^2$ | $\lambda \sum_{j=1}^{M}\left|\theta_j\right|$ |
+| Regularization term | $\lambda \sum \theta_j^2$ | $\lambda \sum_{j=1}^{M} |\theta_j| \right$ |
 | Weight shrinkage | Shrinks weights toward zero but **never exactly zero** | Can shrink weights **to exactly zero** |
 | Feature selection | No — keeps all features | Yes — removes unimportant features |
 | Best for | When all features contribute somewhat | When you suspect many features are irrelevant |
@@ -914,7 +912,7 @@ The only difference from Ridge is using $|\theta_j|$ (absolute value) instead of
 
 The derivative of $|\theta_j|$ depends on the sign of $\theta_j$:
 
-$$\frac{d|\theta_j|}{d\theta_j}=\begin{cases}1, & \text{if } \theta_j > 0 \\-1, & \text{if } \theta_j < 0\end{cases}$$
+$$\frac{d|\theta_j|}{d\theta_j}=\begin{cases}1, & \text{if } \theta_j > 0 \\ -1, & \text{if } \theta_j < 0\end{cases}$$
 
 **When $\theta_j > 0$:** 
 $$\theta_j \leftarrow \theta_j - \alpha \frac{\lambda}{N} - \alpha \left[\frac{1}{N} \sum_{n=1}^{N} (h_\theta(x^{(n)}) - y^{(n)}) \cdot x_j^{(n)} \right]$$
@@ -936,44 +934,40 @@ $$\theta_j \leftarrow \theta_j + \alpha \frac{\lambda}{N} - \alpha \left[\frac{1
 > - Ivan: **15%**
 > - Mark: **10%**
 >
-> The project leader decides that no one person should carry most of the project.
+> Sir Almon, the project leader decides that no one person should carry most of the project ~~(and ensure everyone gets to secure jobs :D）~~.
 >
-> **After balancing**
+> **After balancing/reducing**
 >
 > - Sharon: **35%**
 > - Henry: **25%**
 > - Ivan: **20%**
 > - Mark: **20%**
 >
-> Everyone stays in the team, but the workload becomes more evenly distributed.
-> **In machine learning:** all features remain, but their weights are reduced.
+> - Everyone stays in the team, but the workload becomes more evenly distributed.
+> - **In machine learning:** all features remain, but their weights are reduced.
 > 
 > #### 🟥 L1 Regularization — Sack the Non-Contributors
 >
-> Henry decides to **sack teammates who aren't or didn't contribute enough** so that only the most valuable contributors remain.
+> Sir Almon decides to **sack teammates who aren't or didn't contribute enough** so that only the most valuable contributors remain.
 > Out of the scale of ⭐⭐⭐⭐⭐, which teammates are performing with ⭐⭐⭐⭐⭐ being the hard worker and ⭐ being the slacker?
-> 👩 Sharon ⭐⭐⭐⭐⭐
-> 👨 Henry  ⭐⭐⭐⭐ ☆
-> 🧔‍♂️ Ivan   ⭐ ☆ ☆ ☆ ☆
-> 👨‍🦱 Mark   ⭐ ☆ ☆ ☆ ☆
+> - 👩 Sharon ⭐⭐⭐⭐⭐
+> - 👨 Henry  ⭐⭐⭐⭐ ☆
+> - 🧔‍♂️ Ivan   ⭐ ☆ ☆ ☆ ☆
+> - 👨‍🦱 Mark   ⭐ ☆ ☆ ☆ ☆
 >
 > The project manager decides to sack the teammates who contributed very little.
 >
 > **Remaining team**
->
 > ✅ Sharon
->
 > ✅ Henry
->
 > ~~❌ Ivan~~
->
 > ~~❌ Mark~~
 >
 > **🧠 Machine Learning:** Features with little importance have their weights reduced to **exactly zero**, effectively removing them from the model.
 >
 > **💡 Memory Trick:**  
-> **L2:** Everyone stays, but everyone's influence is reduced.
-> **L1:** Sack the teammates who contribute the least.
+> - **L2:** Everyone stays, but everyone's influence is reduced.
+> - **L1:** Sack the teammates who contribute the least.
 ---
 
 ## 15. What's Next (Logistic Regression)
@@ -987,11 +981,11 @@ If you try using linear regression for this, the predicted values could go below
 **Logistic Regression** solves this by using a special S-shaped curve (sigmoid function) that squashes predictions into the range $[0, 1]$.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/fce1b6c4-6e30-45d4-8f12-7e8c3d7ace2a" width=1000 height=300>
+  <img src="https://github.com/user-attachments/assets/fce1b6c4-6e30-45d4-8f12-7e8c3d7ace2a" width=1000 height=500>
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/04e4c7c0-cb16-44a9-b0d1-60792ec1d368" width=1000 height=300>
+  <img src="https://github.com/user-attachments/assets/04e4c7c0-cb16-44a9-b0d1-60792ec1d368" width=1000 height=250>
 </p>
 ---
 
