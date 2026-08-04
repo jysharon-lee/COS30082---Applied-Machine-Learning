@@ -14,14 +14,14 @@
 4. [Optimization Method 1: Ordinary Least Squares (OLS)](#4-optimization-method-1-ordinary-least-squares-ols)
 5. [The Normal Equation](#5-the-normal-equation)
 6. [Optimization Method 2: Gradient Descent](#6-optimization-method-2-gradient-descent)
-7. [How the Learning Rate Affects Training](#7-how-the-learning-rate-affects-training)
-8. [Multiple Linear Regression](#8-multiple-linear-regression)
-9. [Polynomial Regression](#9-polynomial-regression)
-10. [Overfitting and Underfitting](#10-overfitting-and-underfitting)
-11. [Regularization](#11-regularization)
-12. [Ridge Regression (L2 Regularization)](#12-ridge-regression-l2-regularization)
-13. [Lasso Regression (L1 Regularization)](#13-lasso-regression-l1-regularization)
-14. [Normal Equation vs Gradient Descent](#14-normal-equation-vs-gradient-descent)
+7. [Normal Equation vs Gradient Descent](#7-normal-equation-vs-gradient-descent)
+8. [How the Learning Rate Affects Training](#8-how-the-learning-rate-affects-training)
+9. [Multiple Linear Regression](#9-multiple-linear-regression)
+10. [Polynomial Regression](#10-polynomial-regression)
+11. [Overfitting and Underfitting](#11-overfitting-and-underfitting)
+12. [Regularization](#12-regularization)
+13. [Ridge Regression (L2 Regularization)](#13-ridge-regression-l2-regularization)
+14. [Lasso Regression (L1 Regularization)](#14-lasso-regression-l1-regularization)
 15. [Preview: What Comes Next (Logistic Regression)](#15-preview-what-comes-next-logistic-regression)
 16. [Key Takeaways](#16-key-takeaways)
 17. [Glossary](#17-glossary)
@@ -90,7 +90,7 @@ A **regression problem** is when you want the machine to predict a **continuous 
 
 ### What is Linear Regression?
 
-**Linear Regression** is a supervised learning algorithm that finds the **straight line** (or flat surface) that best describes the relationship between a dependent, $y$ and one or more independent, $x$ variables.
+**Linear Regression** is a supervised learning algorithm that finds the **straight line** (or flat surface) that best describes the relationship between **a dependent, $y$** and **one or more independent, $x$** variables.
 
 ### Key Concepts
 
@@ -119,6 +119,18 @@ A **regression problem** is when you want the machine to predict a **continuous 
 
 ## 3. Simple Linear Regression
 
+### What It Is
+
+**Simple Linear Regression (SLR)** is a one-to-one statistical technique that handles **only ONE input feature** (independent variables, $x$) to predict one dependent output ($y$ variable).
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/aec8198c-5655-45e2-a14a-b3b36b0a60af" width=600 height=300>
+</p>
+
+<p align="center">
+  <em>1 independent variable (IV) to 1 dependent variable (DV) relationship</em>
+</p>
+
 ### The Equation
 
 The core equation of simple linear regression is:
@@ -145,13 +157,17 @@ A biologist studies **sea bream fish** and collects data on their height ($x$) a
   <img src="https://github.com/user-attachments/assets/b83f552e-e6ee-43e1-9784-dea98dd1cfb4" width=600>
 </p>
 
+<div align="center">
+
 | Height ($x$) | Width ($y$) |
-|-------------|------------|
+|:------------:|:-----------:|
 | 11.52 | 4.02 |
 | 12.48 | 4.31 |
 | 12.38 | 4.70 |
 | 12.73 | 4.46 |
 | 12.44 | 5.13 |
+
+</div>
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/dcf952cb-ead1-43a0-b469-b50067187cf9" width=600>
@@ -165,9 +181,7 @@ When plotted, these points show a **positive relationship**: as height increases
   <img src="https://github.com/user-attachments/assets/95b0791c-3b5e-46dc-88cb-7c7892d1acfc" width=600>
 </p>
 
-Suppose the algorithm finds the solution where $\theta_0 = 0.261$ and $\theta_1 = 0.340$
-
-Now you can predict the width of a fish with height $x = 15$:
+Suppose the algorithm finds the solution where $\theta_0 = 0.261$ and $\theta_1 = 0.340$, you can now predict the width of a fish with height $x = 15$:
 
 $$h_\theta(15) = 0.261 + 0.340 \times 15 = 0.261 + 5.1 = 5.361$$
 
@@ -193,7 +207,7 @@ We want to find the line that is **closest to all the data points.** But what do
 
 We measure how "wrong" our line is by calculating the **sum of squared errors** — the total squared distance between each actual data point and the predicted data point on the line:
 
-$$J(\theta_0, \theta_1) = \sum_{n=1}^{N} \left( y^(n) - h_\theta(x^(n)) \right)^2 = \sum_{n=1}^{N} \left( y^(n) - (\theta_0 + \theta_1 x^(n)) \right)^2$$
+$$J(\theta_0, \theta_1) = \sum_{n=1}^{N} \left( y^{(n)} - h_\theta(x^{(n)}) \right)^2 = \sum_{n=1}^{N} \left( y^{(n)} - (\theta_0 + \theta_1 x^{(n)}) \right)^2$$
 
 ### Breaking This Down
 
@@ -239,9 +253,9 @@ $$\frac{\partial J}{\partial \theta_0} = 0 \quad \text{and} \quad \frac{\partial
 
 After solving (the calculus is done for you), we get:
 
-$$\theta_0 = \frac{1}{N} \left[ \sum_{n=1}^{N} y^(n) - \theta_1 \sum_{n=1}^{N} x^(n) \right]$$
+$$\theta_0 = \frac{1}{N} \left[ \sum_{n=1}^{N} y^{(n)} - \theta_1 \sum_{n=1}^{N} x^{(n)} \right]$$
 
-$$\theta_1 = \frac{N \sum_{n=1}^{N} x^(n) y^(n) - \sum_{n=1}^{N} x^(n) \sum_{n=1}^{N} y^(n)}{N \sum_{n=1}^{N} (x^(n))^2 - \left(\sum_{n=1}^{N} (x^(n))\right)^2}$$
+$$\theta_1 = \frac{N \sum_{n=1}^{N} x^{(n)} y^{(n)} - \sum_{n=1}^{N} x^{(n)} \sum_{n=1}^{N} y^{(n)}}{N \sum_{n=1}^{N} x^{(n)})^2 - \left(\sum_{n=1}^{N} x^{(n)}\right)^2}$$
 
 > [!NOTE]
 > You don't need to memorize these formulas! The key idea is: **OLS gives you a direct, one-step formula to compute the best parameters.** No iteration needed.
@@ -316,7 +330,7 @@ Unlike OLS (which gives you the answer directly), Gradient Descent **gradually i
 
 For Gradient Descent, we use the **Mean Squared Error (MSE)**, which normalizes by $2N$:
 
-$$J(\theta_0, \theta_1) = \frac{1}{2N} \sum_{n=1}^{N} \left( h_\theta(x^(n)) - y^(n) \right)^2$$
+$$J(\theta_0, \theta_1) = \frac{1}{2N} \sum_{n=1}^{N} \left( h_\theta(x^{(n)}) - y^{(n)} \right)^2$$
 
 > The $\frac{1}{2N}$ factor is for mathematical convenience — it makes the derivative cleaner.
 
@@ -408,33 +422,94 @@ tmp1 ← θ₁ − α · ∂J/∂θ₁     // the gradient calculation for θ₁
 
 ---
 
-## 7. How the Learning Rate Affects Training
+## 7. Normal Equation vs Gradient Descent
+
+### When to Use Which?
+
+| Aspect | Normal Equation | Gradient Descent |
+|--------|----------------|-----------------|
+| **Approach** | Direct calculation (one step) | Iterative (many steps) |
+| **Learning rate** | Not needed ✅ | Must be tuned ⚠️ |
+| **Iterations** | None — single computation | Many iterations needed |
+| **Speed with few features** ($M < 1000$) | Fast ✅ | Slower |
+| **Speed with many features** ($M > 10000$) | Very slow ❌ | Still efficient ✅ |
+| **Matrix inversion** | Requires $(X^T X)^{-1}$ — expensive! | Not needed ✅ |
+| **Non-invertible $X^T X$** | Fails if features are redundant | Still works ✅ |
+
+### Rule of Thumb
+
+> - **Few features** (up to hundreds or low thousands): Use the **Normal Equation** — faster, no hyperparameters
+> - **Many features** (thousands to millions): Use **Gradient Descent** — scales much better
+
+---
+
+## 8. How the Learning Rate Affects Training
 
 The **learning rate** ($\alpha$) controls the step size:
 
-| Learning Rate | Effect | Visualization |
+| Learning Rate | Effect | Easier Representation |
 |---|---|---|
-| **Too small** | Takes forever to reach the minimum — very slow convergence | Tiny baby steps down the hill |
-| **Just right** | Reaches the minimum efficiently | Steady confident strides |
-| **Too large** | Overshoots the minimum, bounces around, may never converge (loss explodes!) | Giant leaps that jump over the valley |
+| **🐢 Too small** | Takes forever to reach the minimum — very slow convergence | Slow but safe |
+| **✅ Just right** | Reaches the minimum efficiently | Fast and stable |
+| **🚀 Too large** | Overshoots the minimum, bounces around, may never converge (loss explodes!) | Fast but unstable |
 
----TO BE ADDED IN TEXT---
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="45%">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/user-attachments/assets/a11f874c-d6ab-4832-87d0-c4d5ef6ad19a" width="45%">
-</p>
+<table align="center">
+<tr>
+
+<td align="center" width="33%">
+
+<img src="https://github.com/user-attachments/assets/0ed205e1-77f0-47d2-a135-b0a3f16924c9" width="100%">
+
+<br>
+### **① Too Small**
+**Learning Rate:** α = **0.001**
+
+Tiny updates are made in each iteration, causing the model to converge very slowly and requiring many iterations to reach the minimum.
+
+</td>
+
+<td align="center" width="33%">
+
+<img src="https://github.com/user-attachments/assets/558538b4-4b80-45fa-9872-7201720f3276" width="100%">
+
+<br>
+### **② Just Right**
+**Learning Rate:** α = **0.1**
+
+The model takes balanced step sizes, converging smoothly and efficiently toward the global minimum without overshooting.
+
+</td>
+
+<td align="center" width="33%">
+
+<img src="https://github.com/user-attachments/assets/088a1e4f-a368-4c90-a7c4-b337ce09a1bc" width="100%">
+
+<br>
+### **③ Too Large**
+**Learning Rate:** α = **1.0**
+
+The updates are excessively large, causing the model to overshoot the minimum repeatedly. Training may oscillate or even diverge instead of converging.
+
+</td></tr></table>
 
 > [!TIP]
 > **Practical advice:** Start with a learning rate of **0.01** or **0.001**. If training is too slow, increase it. If the loss is exploding (going up instead of down), decrease it. Common values: 0.001, 0.01, 0.1.
 
 ---
 
-## 8. Multiple Linear Regression
+## 9. Multiple Linear Regression
 
 ### What It Is
 
-**Multiple Linear Regression (MLR)** extends simple linear regression to handle **multiple input features** (independent variables).
+**Multiple Linear Regression (MLR)** is a many-to-one statistical technique that extends simple linear regression to handle **multiple input features** (independent variables, $x$) to predict one dependent output ($y$ variable).
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
+</p>
+
+<p align="center">
+  <em>3 independent variables (IV) to 1 dependent variable (DV) relationship</em>
+</p>
 
 Instead of one $x$, you have $x_1, x_2, \ldots, x_M$.
 
@@ -446,8 +521,14 @@ where $x_0 = 1$ (a constant, so that $\theta_0$ acts as the bias/intercept).
 
 ### Real-World Example: Fish Width Prediction
 
-Instead of using only **height** to predict width, we use **5 features**:
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f5ba8ef0-b36e-4ac5-b561-bfd153ed382c" width=600 height=300>
+</p>
 
+Instead of using only **height** to predict width, we use diagonal length, total length, body height and weight as multiple input features (independent variables, $x_M$):
+
+<div align="center">
+  
 | Feature | Variable | Example Value |
 |---------|----------|---------------|
 | Height | $x_1$ | 11.52 |
@@ -456,6 +537,8 @@ Instead of using only **height** to predict width, we use **5 features**:
 | Body Height | $x_4$ | 23.2 |
 | Weight | $x_5$ | 242 |
 | **Width (output)** | **$y$** | **4.02** |
+  
+</div>
 
 The hypothesis becomes:
 
@@ -463,12 +546,12 @@ $$h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \theta_4
 
 ### Analogy
 
-> Simple linear regression is like predicting your exam score using **only** the number of hours you studied. Multiple linear regression is like predicting it using hours studied **AND** hours of sleep **AND** number of practice questions done **AND** attendance rate. More information → better prediction!
+> Simple linear regression is like predicting your exam score using **only** the number of hours you studied. Multiple linear regression is like predicting it using number of hours studied, hours of sleep, number of practice questions done **AND** attendance rate. The more the information, the better the prediction is!
 
 ### Important Assumption
 
 > [!IMPORTANT]
-> MLR assumes the independent variables are **not too highly correlated** with each other (no multicollinearity). For example, height ($x_1$) and weight ($x_5$) should not be too strongly correlated. If they are, the model becomes unstable.
+> MLR assumes the independent variables are **not too highly correlated** with each other. For example, height ($x_1$) and weight ($x_5$) should not be too strongly correlated. If they are, the model becomes unstable.
 
 ### Optimization
 
@@ -476,16 +559,16 @@ The same two methods work for MLR:
 
 **Normal Equation:**
 $$\theta = (X^T X)^{-1} X^T y$$
-where $X$ is now an $N \times (M+1)$ matrix.
+where $X$ is a $N \times (M+1)$ matrix and $y$ is a $N \times 1$ matrix.
 
 **Gradient Descent:**
 $$\theta_j \leftarrow \theta_j - \alpha \frac{\partial J}{\partial \theta_j} \quad \text{for } j = 0, 1, \ldots, M$$
 
-All $\theta_j$ values are updated simultaneously at each iteration.
+All $\theta_j$ values are updated simultaneously for each iteration.
 
 ---
 
-## 9. Polynomial Regression
+## 10. Polynomial Regression
 
 ### The Problem: What If the Data Isn't Linear?
 
@@ -493,6 +576,8 @@ Sometimes, a straight line simply **can't capture** the relationship between $x$
 
 ### Example
 
+<div align="center">
+  
 | $x$ | $y$ |
 |-----|------|
 | 0.368 | 0.667 |
@@ -501,7 +586,17 @@ Sometimes, a straight line simply **can't capture** the relationship between $x$
 | 0.468 | 0.563 |
 | 0.502 | 1.792 |
 
-If you plot this data, a straight line ($h_\theta(x) = \theta_0 + \theta_1 x$) would be a poor fit.
+</div>
+
+If you plot this data, a straight line ($h_\theta(x) = \theta_0 + \theta_1 x$) would be a poor fit as attached on the diagram below.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/518fb78c-d5c7-4c79-9987-09e5ff440119" width=600>
+</p>
+
+<p align="center">
+  <em>Poor line fit</em>
+</p>
 
 ### The Solution: Add Polynomial Terms
 
@@ -514,6 +609,14 @@ Instead of fitting a straight line, we fit a **curve** by adding powers of $x$:
 | 3 (Cubic) | $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$ | S-curve |
 | 4 (Quartic) | $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3 + \theta_4 x^4$ | More complex curve |
 | $M$ | $h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \ldots + \theta_M x^M$ | Very flexible curve |
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/daccf94a-6c17-4a93-8103-6c844c167a9d" width=1000>
+</p>
+
+<p align="center">
+  <em>Adding powers of x to fit the best curve</em>
+</p>
 
 ### The Clever Trick: It's Still "Linear" Regression!
 
@@ -528,6 +631,10 @@ $$h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3$$
 $$h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3$$
 
 where $x_1 = x$, $x_2 = x^2$, $x_3 = x^3$.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/220d9e83-2415-4004-a8a1-9384a236839b" width=600>
+</p>
 
 The model is **linear in the parameters** ($\theta_0, \theta_1, \theta_2, \theta_3$) even though it's nonlinear in $x$. This means we can use the same OLS/Gradient Descent methods!
 
@@ -546,7 +653,7 @@ Now you can apply multiple linear regression with two features ($x_1$ and $x_2$)
 
 ---
 
-## 10. Overfitting and Underfitting
+## 11. Overfitting and Underfitting
 
 ### The Two Extremes
 
@@ -604,7 +711,7 @@ graph LR
 
 ---
 
-## 11. Regularization
+## 12. Regularization
 
 ### What Is Regularization?
 
@@ -625,7 +732,7 @@ Regularization says: *"You can fit the data, but keep your weights small!"*
 
 ---
 
-## 12. Ridge Regression (L2 Regularization)
+## 13. Ridge Regression (L2 Regularization)
 
 ### The Modified Cost Function
 
@@ -677,7 +784,7 @@ Notice the term $(1 - \alpha \frac{\lambda}{N})$ — it **shrinks** $\theta_j$ s
 
 ---
 
-## 13. Lasso Regression (L1 Regularization)
+## 14. Lasso Regression (L1 Regularization)
 
 ### The Modified Cost Function
 
@@ -715,27 +822,6 @@ $$\theta_j \leftarrow \theta_j + \alpha \frac{\lambda}{N} - \alpha \left[\frac{1
 > **Ridge** is like telling a band: "Everyone play quieter" — all instruments get softer, but none are removed.
 >
 > **Lasso** is like telling a band: "Some of you aren't contributing — stop playing entirely." It identifies and removes the least important instruments (features).
-
----
-
-## 14. Normal Equation vs Gradient Descent
-
-### When to Use Which?
-
-| Aspect | Normal Equation | Gradient Descent |
-|--------|----------------|-----------------|
-| **Approach** | Direct calculation (one step) | Iterative (many steps) |
-| **Learning rate** | Not needed ✅ | Must be tuned ⚠️ |
-| **Iterations** | None — single computation | Many iterations needed |
-| **Speed with few features** ($M < 1000$) | Fast ✅ | Slower |
-| **Speed with many features** ($M > 10000$) | Very slow ❌ | Still efficient ✅ |
-| **Matrix inversion** | Requires $(X^T X)^{-1}$ — expensive! | Not needed ✅ |
-| **Non-invertible $X^T X$** | Fails if features are redundant | Still works ✅ |
-
-### Rule of Thumb
-
-> - **Few features** (up to hundreds or low thousands): Use the **Normal Equation** — faster, no hyperparameters
-> - **Many features** (thousands to millions): Use **Gradient Descent** — scales much better
 
 ---
 
