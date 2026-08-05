@@ -876,6 +876,10 @@ src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6b
 
 Unlike One-vs-All (which trains separate models), Softmax trains **one model** that outputs probabilities for **all classes at once**, and these probabilities **always sum to 1**.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/58fffa9d-41e8-4a96-8641-848d0f55da02" width=600>
+</p>
+
 ### The Softmax Function
 
 Given raw scores $z = [z_1, z_2, \ldots, z_k]$ for $k$ classes, the softmax function converts them into probabilities:
