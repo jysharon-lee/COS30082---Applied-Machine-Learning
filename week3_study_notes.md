@@ -59,7 +59,7 @@ Suppose we want to classify patients as **obese** (1) or **non-obese** (0) based
 
 <td align="center" width="50%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/116a9fca-e554-4c39-8263-953304ec9437" width="100%" height="300">
+<img src="https://github.com/user-attachments/assets/72d4403f-ba5a-4824-acf9-64920e5c1b6e" width="100%" height="300">
 
 <br>
 
@@ -209,7 +209,7 @@ $$h_\theta(x) = P(y = 1 \mid x; \theta)$$
 <tr>
   <th align="center">Prediction</th>
   <th align="center">In Words</th>
-  <th align="center">Visualization</th>
+  <th align="center">Visualization<br>(🟢 = testing data)</th>
 </tr>
 
 <tr>
@@ -218,7 +218,7 @@ $$h_\theta(x) = P(y = 1 \mid x; \theta)$$
   </td>
 
   <td>
-    There is a <b>91% probability</b> that this patient is obese.<br>
+    There is a <b>91% probability</b> that this patient is obese ($y = 1$).<br>
     Therefore, predict <b>obese</b>.
   </td>
 
@@ -236,7 +236,7 @@ $$h_\theta(x) = P(y = 1 \mid x; \theta)$$
   </td>
 
   <td>
-    There is a <b>30% probability</b> that this patient is obese.<br>
+    There is a <b>30% probability</b> that this patient is obese ($y = 0$).<br>
     Therefore, predict <b>non-obese</b>.
   </td>
 
@@ -255,7 +255,8 @@ $$h_\theta(x) = P(y = 1 \mid x; \theta)$$
 
   <td>
     The prediction is exactly <b>50%</b>.<br>
-    This lies at the <b>decision boundary</b>.
+    This lies at the <b>decision boundary</b>.<br>
+    Since most logistic regression models classify using $h_\theta(x) \geq 0.5$, the prediction is obese ($y = 1%).
   </td>
 
   <td align="center">
@@ -267,12 +268,6 @@ $$h_\theta(x) = P(y = 1 \mid x; \theta)$$
 </tr>
 
 </table>
-
-| $h_\theta(x)$ | In Words |
-|----------------|----------|
-| $h_\theta(x) = 0.91$ | "There's a **91% probability** this patient is obese" → Predict **obese** |
-| $h_\theta(x) = 0.30$ | "There's a **30% probability** this patient is obese" → Predict **non-obese** |
-| $h_\theta(x) = 0.50$ | "It's a coin flip — **50/50**" → Right at the decision boundary |
 
 ### The Complement Rule
 
@@ -328,12 +323,13 @@ $$-1.033 + 0.192x = 0$$
 $$x = \frac{1.033}{0.192} = 5.38$$
 
 **Result:** The decision boundary is at $x = 5.38$.
-- If sepal length $\geq 5.38$ → predict **versicolor** ($y = 1$)
-- If sepal length $< 5.38$ → predict **setosa** ($y = 0$)
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/986f2ddd-7812-416d-beba-a5581cf31142">
 </p>
+
+- If sepal length $\geq 5.38$ → predict **versicolor** ($y = 1$)
+- If sepal length $< 5.38$ → predict **setosa** ($y = 0$)
 
 > **Analogy:** The decision boundary is like the **border between two countries** on a map. If you're on the left side, you're in "setosa land." If you're on the right side, you're in "versicolor land."
 
@@ -343,6 +339,18 @@ With two features ($x_1$ = sepal length, $x_2$ = sepal width), the decision boun
 
 $$z = \theta_0 + \theta_1 x_1 + \theta_2 x_2 = 0$$
 
+<div align="center">
+  
+| Sample | Sepal Length ($x_1$) (cm) | Sepal Width ($x_2$) (cm) | Species | Target ($y$) |
+|:------:|:-------------------------:|:------------------------:|:-------:|:------------:|
+| 1 | 5.1 | 3.5 | Setosa | 0 |
+| 2 | 4.9 | 3.0 | Setosa | 0 |
+| 3 | 6.7 | 3.1 | Versicolor | 1 |
+| 4 | 5.4 | 3.7 | Setosa | 0 |
+| 5 | 6.0 | 2.2 | Versicolor | 1 |
+
+</div>
+
 Suppose $\theta_0 = -0.588$, $\theta_1 = 0.225$, $\theta_2 = -0.205$. The boundary is:
 
 $$-0.588 + 0.225 x_1 - 0.205 x_2 = 0$$
@@ -351,7 +359,11 @@ Rearranging:
 
 $$x_2 = \frac{0.225}{0.205} x_1 - \frac{0.588}{0.205} \approx 1.098 x_1 - 2.868$$
 
-This is a **straight line** on the $x_1$-$x_2$ plot that divides the flowers into two groups.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6b756990-74a0-451d-b3a6-038737d6b461" width=600>
+</p>
+
+This is a **straight line** on the $x_1 - x_2$ plot that divides the flowers into two groups.
 
 ---
 
@@ -371,6 +383,37 @@ Just like polynomial regression (Week 2), we can add higher-order features:
 | **Circle / Ellipse** | $z = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_1^2 + \theta_4 x_2^2$ | A tumor surrounded by healthy tissue |
 | **Complex curves** | $z = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_1^2 + \theta_4 x_1^2 x_2 + \theta_5 x_1^2 x_2^2 + \ldots$ | More intricate patterns |
 
+<table align="center">
+<tr>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/e2e9ee52-253e-4a74-a5d6-16da3e525bd1">
+
+<br>
+
+### Circular / Elliptical Boundary 
+
+<br>
+
+Adding quadratic features such as **$x_1^2$** and **$x_2^2$** allows Logistic Regression to classify data enclosed within a circular region.
+
+</td>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/999d64fe-7ef6-4eaa-86b5-a8f0775acd15">
+
+<br>
+
+### Complex Curve Boundary
+
+<br>
+
+Introducing additional polynomial terms (e.g., **$x_1x_2$**, **$x_1^2x_2$**, **$x_1x_2^2$**) enables the model to learn highly flexible decision boundaries for more complex datasets.
+
+</td></tr></table>
+
 > **Analogy:** A straight decision boundary is like dividing a room with a straight wall. A non-linear boundary is like dividing a room with a curved wall — you can create more complex shapes (circles, waves) to properly separate the groups.
 
 ---
@@ -380,8 +423,8 @@ Just like polynomial regression (Week 2), we can add higher-order features:
 | Aspect | Linear Regression | Logistic Regression |
 |--------|------------------|-------------------|
 | **Purpose** | Regression (predict numbers) | Classification (predict categories) |
-| **Output** | Any real number (−∞ to +∞) | Probability between 0 and 1 |
 | **Shape** | Straight line | S-shaped curve (sigmoid) |
+| **Output** | Any real number (−∞ to +∞) | Probability between 0 and 1 |
 | **Dependent variable ($y$)** | Continuous (e.g., 45.3, 102.7) | Discrete (e.g., 0 or 1) |
 | **Requires linear relationship?** | Yes | No |
 | **Loss function** | Mean Squared Error (MSE) | Log-Loss (Cross-Entropy) |
@@ -395,26 +438,19 @@ Just like polynomial regression (Week 2), we can add higher-order features:
 
 In linear regression, we used **Mean Squared Error (MSE)**:
 
-$$J(\theta) = \frac{1}{2N} \sum_{n=1}^{N} (h_\theta(x_n) - y_n)^2$$
+$$J(\theta) = \frac{1}{2N} \sum_{n=1}^{N} (h_\theta(x^{(n)}) - y^{(n)})^2$$
 
 **Can we use the same formula for logistic regression?** 
 
 **No!** Because $h_\theta(x)$ now contains the sigmoid function (which is non-linear), plugging it into MSE creates a **non-convex** cost function with many local minima:
 
-```
-Non-convex (BAD):              Convex (GOOD):
-J(θ)                           J(θ)
-  |  /\    /\                    |  \         /
-  | /  \  /  \  /\               |   \       /
-  |/    \/    \/  \              |    \     /
-  |                \             |     \___/  ← one global minimum
-  +--------→ θ                  +--------→ θ
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d67bcab9-b98c-4c81-8a88-8fd0cacf5a06" width=600>
+</p>
 
-Multiple local minima!          One clear minimum!
-Gradient descent can            Gradient descent always
-get stuck at a fake             finds the best answer.
-"bottom."
-```
+<p align="center">
+  <em>Multiple local minima! Gradient descent can get stuck at a fake "bottom."</em>
+</p>
 
 > **Analogy:** Imagine hiking down a mountain in fog (gradient descent). With MSE + logistic regression, the landscape has many **valleys** (local minima), and you might stop at a small valley thinking you've reached the bottom, when the real bottom is somewhere else entirely. We need a cost function that creates a **smooth bowl** with just one bottom.
 
@@ -428,7 +464,7 @@ We need a different cost function that IS convex. This is where **Maximum Likeli
 
 ### The Intuition: What Is "Likelihood"?
 
-**Likelihood** measures how well a model (with specific parameters $\theta$) explains the observed data.
+**Likelihood** measures how well a model (with specific parameters $\theta$) explains the observed data. In other words, it measures how good the fit fits into the statistical model to a sample of data for given unknown parametric values.
 
 > **Analogy: The Detective Story 🔍**
 >
@@ -454,13 +490,13 @@ $$P(y \mid x; \theta) = h_\theta(x)^y \times (1 - h_\theta(x))^{1-y}$$
 
 Multiply the probabilities of all $N$ data points together:
 
-$$LL(\theta) = \prod_{n=1}^{N} h_\theta(x_n)^{y_n} \times (1 - h_\theta(x_n))^{1-y_n}$$
+$$\sum_{n=1}^{N} h_\theta\left(x^{(n)}\right)^{y^{(n)}} \left(1-h_\theta\left(x^{(n)}\right)\right)^{1-y^{(n)}}$$
 
 **Step 3: Take the logarithm (Log Likelihood)**
 
 Multiplying many tiny probabilities leads to extremely small numbers (numerical underflow). Taking the logarithm converts products into sums, which is much easier to work with:
 
-$$\log LL(\theta) = \sum_{n=1}^{N} \left[ y_n \log(h_\theta(x_n)) + (1 - y_n) \log(1 - h_\theta(x_n)) \right]$$
+$$\log\!\left(LL(\theta)\right) =\sum_{n=1}^{N}\left[y^{(n)}\log\!\left(h_\theta\!\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\!\left(1-h_\theta\!\left(x^{(n)}\right)\right)\right]$$
 
 ### A Simple Worked Example
 
@@ -509,7 +545,11 @@ Higher (closer to 0) is better! The good model is indeed much better.
 
 Since gradient descent **minimizes** a function, we flip the sign: instead of **maximizing** the log likelihood, we **minimize** the **negative** log likelihood:
 
-$$J(\theta) = -\frac{1}{N} \sum_{n=1}^{N} \left[ y_n \log(h_\theta(x_n)) + (1 - y_n) \log(1 - h_\theta(x_n)) \right]$$
+$$
+J(\theta)=-\log\!\left(LL(\theta)\right)=-\sum_{n=1}^{N}\left[y^{(n)}\log\!\left(h_\theta\!\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\!\left(1h_\theta\!\left(x^{(n)}\right)\right)\right]$$
+
+$$
+J(\theta)= -\sum_{n=1}^{N}\left[\underbrace{y^{(n)}\log\!\left(h_\theta\!\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=1\mid x;\theta)}+\underbrace{\left(1-y^{(n)}\right)\log\!\left(1h_\theta\!\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=0\mid x;\theta)}\right]$$
 
 This is called **Log-Loss** or **Binary Cross-Entropy** — the standard cost function for logistic regression.
 
@@ -519,6 +559,10 @@ The cost for a **single** data point has two cases:
 
 #### Case 1: Actual label $y = 1$ → Cost = $-\log(h_\theta(x))$
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/75266049-b606-492e-b65e-4815c96b0225" width=295>
+</p>
+
 | Model predicts ($h_\theta(x)$) | Cost $= -\log(h_\theta(x))$ | Interpretation |
 |---|---|---|
 | 0.99 (very confident it's 1) | $-\log(0.99) = 0.01$ | Almost no cost — great! ✅ |
@@ -526,6 +570,10 @@ The cost for a **single** data point has two cases:
 | 0.01 (very confident it's 0 — WRONG!) | $-\log(0.01) = 4.61$ | Huge cost — very wrong! ❌ |
 
 #### Case 2: Actual label $y = 0$ → Cost = $-\log(1 - h_\theta(x))$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/610fa700-5437-42b1-858b-8a4173c6e883">
+</p>
 
 | Model predicts ($h_\theta(x)$) | Cost $= -\log(1 - h_\theta(x))$ | Interpretation |
 |---|---|---|
@@ -557,9 +605,9 @@ $$\theta_j \leftarrow \theta_j - \alpha \frac{\partial J}{\partial \theta_j}$$
 
 where:
 
-$$\frac{\partial J}{\partial \theta_j} = \frac{1}{N} \sum_{n=1}^{N} (h_\theta(x_n) - y_n) \cdot x_j^{(n)}$$
+$$\frac{\partial J}{\partial \theta_j} = \frac{1}{N} \sum_{n=1}^{N} (h_\theta(x^{(n)}) - y^{(n)}) \cdot x_j^{(n)}$$
 
-### Wait — This Looks the Same as Linear Regression!
+### Wait — This looks the same as linear regression!
 
 The gradient formula **looks** the same, but there's a critical difference:
 
@@ -593,48 +641,130 @@ So far, logistic regression handles **binary** classification (2 classes). But w
 
 **Example:** Classifying Iris flowers into **setosa**, **versicolor**, and **virginica** (3 classes).
 
-### The One-vs-All (OvA) Strategy
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fcada66d-b324-43bd-b64c-4054c1de0f92">
+</p>
+
+### The One-vs-All (OvA) Binary Logistic Regression Strategy
 
 **Idea:** Break the multiclass problem into **multiple binary problems**. For each class, train a separate logistic regression that asks: *"Is it THIS class, or not?"*
 
-### Step by Step (with 3 Iris species)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/00876a77-19f9-4ae5-b7ca-984007e5b075" width=600>
+</p>
 
-**Round 1: Is it setosa?**
-- Relabel: setosa → 1, everything else (versicolor, virginica) → 0
-- Train a binary classifier: $h_\theta^{(\text{set})}(x) = P(y = \text{setosa} \mid x)$
+<table align="center">
 
-**Round 2: Is it versicolor?**
-- Relabel: versicolor → 1, everything else → 0
-- Train a binary classifier: $h_\theta^{(\text{vers})}(x) = P(y = \text{versicolor} \mid x)$
+<tr>
 
-**Round 3: Is it virginica?**
-- Relabel: virginica → 1, everything else → 0
-- Train a binary classifier: $h_\theta^{(\text{virg})}(x) = P(y = \text{virginica} \mid x)$
+<th width="33%">
+🌸 Round 1<br>
+Is it Setosa?
+</th>
 
-### Making a Prediction
+<th width="33%">
+🌺 Round 2<br>
+Is it Versicolor?
+</th>
 
-For a new flower, run all 3 classifiers and pick the one with the **highest probability**:
+<th width="33%">
+🌼 Round 3<br>
+Is it Virginica?
+</th>
 
-$$\text{prediction} = \arg\max_c \; h_\theta^{(c)}(x)$$
+</tr>
 
-### Worked Example
+<tr>
 
-A new flower with sepal length = 5.8 and sepal width = 2.7:
+<td align="center">
 
-| Classifier | Probability |
-|---|---|
-| $h_\theta^{(\text{set})}(x)$ = P(setosa) | **0.15** |
-| $h_\theta^{(\text{vers})}(x)$ = P(versicolor) | **0.72** |
-| $h_\theta^{(\text{virg})}(x)$ = P(virginica) | **0.58** |
+$$
+h_\theta^{(\mathrm{set})}(x)
+=
+P(y=\mathrm{setosa}\mid x;\theta)
+$$
 
-**Highest probability → versicolor (0.72)**. Prediction: **versicolor** 🌸
+<img src="https://github.com/user-attachments/assets/6a841fb1-4549-4b5a-a7d9-7a7a9b39d58e" width="100%">
+
+<br>
+
+<img src="https://github.com/user-attachments/assets/8624101a-4a4f-49d2-aabb-4b9c95669471" width="100%">
+
+<b>Relabel</b>
+
+setosa → <b>1</b><br>
+others → <b>0</b>
+
+</td>
+
+<td align="center">
+
+$$
+h_\theta^{(\mathrm{vers})}(x)
+=
+P(y=\mathrm{versicolor}\mid x;\theta)
+$$
+
+<img src="https://github.com/user-attachments/assets/0fa3018e-ae11-4c6a-b44b-6d5743984829" width="100%">
+
+<br>
+
+<img src="https://github.com/user-attachments/assets/f2518f85-138c-468a-89de-f38702093541" width="100%">
+
+<b>Relabel</b>
+
+versicolor → <b>1</b><br>
+others → <b>0</b>
+
+</td>
+
+<td align="center">
+
+$$
+h_\theta^{(\mathrm{virg})}(x)
+=
+P(y=\mathrm{virginica}\mid x;\theta)
+$$
+
+<img src="https://github.com/user-attachments/assets/cbcd84c4-97fb-4c5a-bfbc-7d0b47cf24d6" width="100%">
+
+<br>
+
+<img src="https://github.com/user-attachments/assets/93fb9faa-ceee-4c63-a400-8d239fd5405b" width="100%">
+
+<b>Relabel</b>
+
+virginica → <b>1</b><br>
+others → <b>0</b>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="3" align="center">
+
+<h3>🌱 Testing a New Flower</h3>
+
+<img src="https://github.com/user-attachments/assets/1f8d4ddf-1610-4435-97f0-1ad78d66ca49" width="75%">
+
+<br><br>
+
+The new flower is evaluated by **all three binary classifiers**.
+
+<img src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6ba0f1" width="100%">
+
+Since $$\max_c h_\theta^{(c)}(x) = h_\theta^{(\mathrm{vers})}(x)$$, the flower is classified as **Versicolor** ✅
+
+</td></tr></table>
 
 > **Analogy: Job Interview Panels 🏢**
 > 
 > Imagine 3 separate interview panels, each representing one company. Each panel evaluates you and gives a score (probability) for how well you fit their company. At the end, you go with the company that gave you the highest score. That's One-vs-All!
 
 > [!NOTE]
-> **Limitation:** The probabilities from OvA classifiers don't necessarily add up to 1 (notice 0.15 + 0.72 + 0.58 = 1.45). This is because each classifier was trained independently. For proper probabilities, use **Softmax Regression** (next section).
+> **Limitation:** The probabilities from OvA classifiers don't necessarily add up to 1. This is because each classifier was trained independently. For proper probabilities, use **Softmax Regression** (next section).
 
 ---
 
@@ -704,123 +834,211 @@ $$z = [z_{\text{set}}, z_{\text{vers}}, z_{\text{virg}}] = [2.0, 1.0, 0.1]$$
 
 For softmax regression, the cost function uses the **categorical cross-entropy**:
 
-$$J(\theta) = -\frac{1}{N} \sum_{n=1}^{N} \sum_{c=1}^{k} \mathbb{1}\{y_n = c\} \cdot \log\left(\frac{e^{z_c}}{\sum_{i=1}^{k} e^{z_i}}\right)$$
+$$J(\theta) = -\sum_{c=1}^{K}\mathbf{1}\{y = c\}\log\left(\frac{e^{z_c}}{\sum_{i=1}^{K} e^{z_i}}\right)$$
 
-Where $\mathbb{1}\{y_n = c\}$ is an **indicator function** — it equals 1 if the actual class is $c$, and 0 otherwise.
+Where ${y = c\}$ is an **indicator function** — it equals 1 if the actual class is $c$, and 0 otherwise.
 
 ### What the Indicator Does (Simple Explanation)
 
 The indicator function acts like a **spotlight**: it only "turns on" the cost for the correct class, and ignores all the other classes.
 
 **Example:** If the actual label is setosa ($y = 1$):
-- $\mathbb{1}\{y = \text{setosa}\} = 1$ → include this term ✅
-- $\mathbb{1}\{y = \text{versicolor}\} = 0$ → ignore ❌
-- $\mathbb{1}\{y = \text{virginica}\} = 0$ → ignore ❌
+- $\text{setosa}\} = 1$ → include this term ✅
+- $\text{versicolor}\} = 0$ → ignore ❌
+- $\text{virginica}\} = 0$ → ignore ❌
 
 So the cost becomes: $-\log(P(\text{setosa}))$
 
 If the model predicted P(setosa) = 0.8, cost = $-\log(0.8) = 0.097$ (low — good!)
+
 If the model predicted P(setosa) = 0.05, cost = $-\log(0.05) = 1.301$ (high — bad!)
 
 ---
 
-## 15. Gradient Descent Variations
+# 🚀 15. Gradient Descent Variations
 
-### The Problem: How Much Data Per Update?
+Gradient Descent updates the model parameters **iteratively** to minimize the cost function.
 
-In gradient descent, we compute the gradient and update the weights. But **how many training examples** should we use to compute each gradient update?
+The main difference between the three variants lies in **how many training examples are used before updating the model parameters**.
 
-There are three strategies:
+| Gradient Descent Variant | Number of Training Examples Used | Parameter Update |
+|-------------------------|----------------------------------|------------------|
+| **Batch Gradient Descent** | Entire dataset (N samples) | Once per epoch |
+| **Stochastic Gradient Descent (SGD)** | One sample | After every sample |
+| **Mini-batch Gradient Descent** ⭐ | Small batch (e.g. 16, 32, 64 samples) | After every mini-batch |
+
+---
+
+## 📊 Comparison Overview
+
+| Feature | Batch GD | Mini-batch GD ⭐ | Stochastic GD |
+|----------|:-------:|:---------------:|:-------------:|
+| Samples per update | Entire dataset | Small batch | Single sample |
+| Update frequency | Low | Medium | High |
+| Convergence | Stable | Stable with slight noise | Noisy |
+| Memory usage | High | Medium | Low |
+| Speed | Slow | Fast | Very Fast |
+| Suitable for large datasets | ❌ | ✅ | ✅ |
+| Commonly used today | ❌ | ✅ | ⚠️ Sometimes |
+
+---
+
+## 📈 Visual Comparison
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/3f54982f-212b-4334-aa17-aba700909827" width="75%">
+</p>
+
+| Method | Observation |
+|---------|-------------|
+| 🟡 **Batch Gradient Descent** | Smooth and stable path toward the minimum, but requires many computations per update. |
+| 🔴 **Mini-batch Gradient Descent** | Small fluctuations while maintaining fast convergence. This provides the best trade-off between speed and stability. |
+| 🟠 **Stochastic Gradient Descent** | Highly noisy updates due to using one sample at a time. Although unstable, the noise may help escape poor local minima. |
+
+> ⭐ **Mini-batch Gradient Descent is the preferred optimization method in modern Machine Learning and Deep Learning.**
+
+---
 
 ### 15.1 Batch Gradient Descent
 
-**Uses ALL training data** for each weight update.
+Uses **the entire training dataset** before updating the model parameters.
 
-```
-Repeat {
-    Compute cost over ALL N training examples
-    Update weights once
-}
+<p align="center">
+<img src="https://github.com/user-attachments/assets/0736738b-f156-44a2-b175-2f0d56caecbe" width="80%">
+</p>
+
+### Update Process
+
+```text
+Entire Dataset
+      │
+      ▼
+Compute Cost
+      │
+      ▼
+Compute Gradient
+      │
+      ▼
+Update Parameters
 ```
 
-> **Analogy: The careful chef 👨‍🍳** — Tastes EVERY dish in the restaurant before deciding to change the recipe. Very thorough, but takes forever if you have 10,000 dishes.
+### Chef Analogy 👨‍🍳
+
+> A careful chef tastes **every dish in the restaurant** before changing the recipe.
+>
+> The decision is very reliable but takes a long time when thousands of dishes are served.
 
 | ✅ Advantages | ❌ Disadvantages |
-|---|---|
-| Stable, smooth convergence | Very slow for large datasets |
-| Computationally efficient per epoch | Entire dataset must fit in memory |
-| | Can get stuck at suboptimal solutions |
+|---------------|------------------|
+| Stable gradient | Slow for large datasets |
+| Smooth convergence | Entire dataset must fit into memory |
+| Fewer updates per epoch | May converge to a less optimal solution |
 
-### 15.2 Stochastic Gradient Descent (SGD)
+---
 
-**Uses ONE training example** for each weight update.
+### 15.2 Mini-batch Gradient Descent ⭐
 
+Splits the training dataset into **small batches** and updates the parameters after processing each batch.
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/1eb30253-2c00-4836-9c38-e34d4c2f3f75" width="80%">
+</p>
+
+### Update Process
+
+```text
+Batch 1
+██████████
+     │
+     ▼
+Update
+
+Batch 2
+██████████
+     │
+     ▼
+Update
+
+Batch 3
+██████████
+     │
+     ▼
+Update
 ```
-Repeat {
-    Shuffle dataset randomly
-    For each example n = 1, 2, ..., N {
-        Compute cost for this ONE example
-        Update weights immediately
-    }
-}
-```
 
-> **Analogy: The impulsive chef 👨‍🍳** — Changes the recipe after tasting EACH dish. Very responsive and fast, but the recipe keeps changing wildly — sometimes improving, sometimes getting worse. It's chaotic but eventually converges.
+### Chef Analogy 👨‍🍳
+
+> A smart chef tastes **10 dishes at a time** before adjusting the recipe.
+>
+> This balances speed and accuracy, making it the preferred strategy.
 
 | ✅ Advantages | ❌ Disadvantages |
-|---|---|
-| Very fast updates → faster learning | Noisy — cost jumps around a lot |
-| Noise helps escape local minima | Harder to converge to the exact minimum |
-| Memory efficient (one example at a time) | More computational overhead overall |
+|---------------|------------------|
+| Best balance between speed and stability | Additional hyperparameter (batch size) |
+| Better generalization | |
+| Resource efficient | |
+| Most commonly used today ⭐ | |
 
-### 15.3 Mini-Batch Gradient Descent ⭐
+---
 
-**Uses a small batch (e.g., 10, 32, 64 examples)** for each weight update. This is the **most commonly used** method in practice.
+### 15.3 Stochastic Gradient Descent (SGD)
 
+Uses **only one training example** before immediately updating the model parameters.
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/29ec109e-2fbd-465c-930d-28d033493e27" width="80%">
+</p>
+
+### Update Process
+
+```text
+Example 1
+    │
+    ▼
+Update
+
+Example 2
+    │
+    ▼
+Update
+
+Example 3
+    │
+    ▼
+Update
 ```
-Repeat {
-    Shuffle dataset randomly
-    For i = 1, 11, 21, ..., N-9 (batches of 10) {
-        Compute cost for this batch of 10 examples
-        Update weights once
-    }
-}
-```
 
-> **Analogy: The smart chef 👨‍🍳** — Tastes a **sample of 10 dishes** before adjusting the recipe. Not as thorough as tasting everything, but much faster. Not as chaotic as tasting just one dish. It's the best of both worlds!
+### Chef Analogy 👨‍🍳
+
+> An impulsive chef changes the recipe **after tasting every single dish**.
+>
+> Learning becomes very fast but also noisy because the recipe constantly changes.
 
 | ✅ Advantages | ❌ Disadvantages |
-|---|---|
-| Best balance of speed and stability | Extra hyperparameter to tune (batch size) |
-| Some noise helps avoid local minima | |
-| Memory efficient | |
-| Most commonly used in practice ⭐ | |
+|---------------|------------------|
+| Very fast updates | Noisy convergence |
+| Can escape poor local minima | Harder to reach the exact minimum |
+| Memory efficient | Computationally expensive due to frequent updates |
 
-### Visual Comparison
+---
 
-```
-Cost J(θ)                                     
-  |                                           
-  |  ╲                                        
-  |   ╲                                       
-  |    ╲‥‥‥‥‥‥‥‥╲   ← Batch (smooth)         
-  |     ╲          ╲                          
-  |  ∿∿∿∿∿∿∿∿∿∿╲   ← Mini-batch (some wobble)
-  |  ∿∿∿∿∿∿∿∿∿∿∿∿╲                          
-  |∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿╲ ← SGD (very noisy)      
-  +──────────────────→ Iterations              
-```
+# 🎯 Which One Should I Use?
 
-### Summary Comparison Table
+| Scenario | Recommended Method |
+|----------|--------------------|
+| Small dataset | Batch Gradient Descent |
+| Modern Machine Learning | ⭐ Mini-batch Gradient Descent |
+| Online / Streaming data | Stochastic Gradient Descent |
 
-| Aspect | Batch | Mini-Batch | SGD |
-|--------|-------|-----------|-----|
-| **Data per update** | All $N$ examples | A small batch (e.g., 32) | 1 example |
-| **Updates per epoch** | 1 | $N / \text{batch\_size}$ | $N$ |
-| **Speed** | Slowest | Moderate ⭐ | Fastest per update |
-| **Stability** | Most stable | Moderate ⭐ | Most noisy |
-| **Memory** | Needs entire dataset | Needs one batch | Needs one example |
-| **Preferred?** | For small datasets | **Yes — most commonly used** ⭐ | Rarely alone |
+---
+
+## 💡 Memory Trick
+
+👨‍🍳 **Batch GD:** Taste **every dish** before changing the recipe.
+
+👨‍🍳 **Mini-batch GD:** Taste **a sample of dishes** before changing the recipe.
+
+👨‍🍳 **SGD:** Taste **one dish** and immediately change the recipe.
 
 > [!IMPORTANT]
 > **Mini-Batch Gradient Descent is the preferred method in practice.** Common batch sizes are **32, 64, 128, or 256**. It combines the stability of Batch GD with the speed of SGD.
