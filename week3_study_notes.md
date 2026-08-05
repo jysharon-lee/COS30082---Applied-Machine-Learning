@@ -559,7 +559,7 @@ The cost for a **single** data point has two cases:
 
 <div align="center">
   
-| Model predicts ($h_\theta(x)$) | Cost $= -\log(h_\theta(x))$ | Interpretation |
+| Model predicts $h_\theta(x)$ | Cost $= -\log(h_\theta(x))$ | Interpretation |
 |---|---|---|
 | 0.99 (very confident it's 1) | $-\log(0.99) = 0.01$ | Almost no cost — great! ✅ |
 | 0.5 (unsure) | $-\log(0.5) = 0.69$ | Moderate cost ⚠️ |
@@ -575,7 +575,7 @@ The cost for a **single** data point has two cases:
 
 <div align="center">
   
-| Model predicts ($h_\theta(x)$) | Cost $= -\log(1 - h_\theta(x))$ | Interpretation |
+| Model predicts $h_\theta(x)$ | Cost $= -\log(1 - h_\theta(x))$ | Interpretation |
 |---|---|---|
 | 0.01 (confident it's 0) | $-\log(0.99) = 0.01$ | Almost no cost — great! ✅ |
 | 0.5 (unsure) | $-\log(0.5) = 0.69$ | Moderate cost ⚠️ |
@@ -802,13 +802,12 @@ Others → <b>0</b>
 
 </td></tr></table>
 
-<table align="center" width="85%">
+<table align="center" width="100%">
 
 <tr>
 <th align="center">
 
 🌱 Testing a New Flower
-
 </th>
 </tr>
 
@@ -816,10 +815,9 @@ Others → <b>0</b>
 <td align="center">
 
 <img
-src="https://github.com/user-attachments/assets/1f8d4ddf-1610-4435-97f0-1ad78d66ca49" width="45%">
+src="https://github.com/user-attachments/assets/1f8d4ddf-1610-4435-97f0-1ad78d66ca49" width="50%">
 
-<br><br>
-
+<br>
 <i>A new Iris flower is presented to the trained classifiers.</i>
 
 </td>
@@ -841,7 +839,6 @@ The flower is evaluated by
 src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6ba0f1" width="70%">
 
 <br>
-
 <i>🟢 Green point represents the new flower.</i>
 
 </td>
@@ -852,15 +849,12 @@ src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6b
 
 <b>Prediction Rule</b>
 
-<br>
-
 <i>max</i><sub>c</sub>
 <i>h</i><sub>θ</sub><sup>(c)</sup>(x)
 =
 <i>h</i><sub>θ</sub><sup>(vers)</sup>(x)
 
 <br>
-
 ✅ <b>Final Prediction: Versicolor</b>
 
 </td></tr></table>
@@ -940,7 +934,7 @@ $$z = [z_{\text{set}}, z_{\text{vers}}, z_{\text{virg}}] = [2.0, 1.0, 0.1]$$
 
 For softmax regression, the cost function uses the **categorical cross-entropy**:
 
-$$J(\theta) = -\sum_{c=1}^{K}\mathbf{1}\{y = c\}\log\left(\frac{e^{z_c}}{\sum_{i=1}^{K} e^{z_i}}\right)$$
+$$J(\theta) = -\sum_{c=1}^{K}\{y = c\}\log\left(\frac{e^{z_c}}{\sum_{i=1}^{K} e^{z_i}}\right)$$
 
 Where ${y = c\}$ is an **indicator function** — it equals 1 if the actual class is $c$, and 0 otherwise.
 
@@ -1015,6 +1009,8 @@ Uses **the entire training dataset** before updating the model parameters.
 
 ### Update Process
 
+<div align="center">
+  
 ```text
 Entire Dataset
       │
@@ -1027,6 +1023,8 @@ Compute Gradient
       ▼
 Update Parameters
 ```
+
+</div>
 
 ### Chef Analogy 👨‍🍳
 
@@ -1052,6 +1050,9 @@ Splits the training dataset into **small batches** and updates the parameters af
 
 ### Update Process
 
+<div align="center">
+
+
 ```text
 Batch 1
 ██████████
@@ -1071,6 +1072,8 @@ Batch 3
      ▼
 Update
 ```
+
+</div>
 
 ### Chef Analogy 👨‍🍳
 
@@ -1097,6 +1100,8 @@ Uses **only one training example** before immediately updating the model paramet
 
 ### Update Process
 
+<div align="center">
+
 ```text
 Example 1
     │
@@ -1113,6 +1118,8 @@ Example 3
     ▼
 Update
 ```
+
+</div>
 
 ### Chef Analogy 👨‍🍳
 
