@@ -393,9 +393,6 @@ Just like polynomial regression (Week 2), we can add higher-order features:
 <br>
 
 ### Circular / Elliptical Boundary 
-
-<br>
-
 Adding quadratic features such as **$x_1^2$** and **$x_2^2$** allows Logistic Regression to classify data enclosed within a circular region.
 
 </td>
@@ -407,9 +404,6 @@ Adding quadratic features such as **$x_1^2$** and **$x_2^2$** allows Logistic Re
 <br>
 
 ### Complex Curve Boundary
-
-<br>
-
 Introducing additional polynomial terms (e.g., **$x_1x_2$**, **$x_1^2x_2$**, **$x_1x_2^2$**) enables the model to learn highly flexible decision boundaries for more complex datasets.
 
 </td></tr></table>
@@ -496,13 +490,13 @@ $$\sum_{n=1}^{N} h_\theta\left(x^{(n)}\right)^{y^{(n)}} \left(1-h_\theta\left(x^
 
 Multiplying many tiny probabilities leads to extremely small numbers (numerical underflow). Taking the logarithm converts products into sums, which is much easier to work with:
 
-$$\log\!\left(LL(\theta)\right) =\sum_{n=1}^{N}\left[y^{(n)}\log\!\left(h_\theta\!\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\!\left(1-h_\theta\!\left(x^{(n)}\right)\right)\right]$$
+$$\log\left(LL(\theta)\right) =\sum_{n=1}^{N}\left[y^{(n)}\log\left(h_\theta\!\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\left(1-h_\theta\left(x^{(n)}\right)\right)\right]$$
 
 ### A Simple Worked Example
 
 Suppose we have 3 patients and our model produces these predictions:
 
-| Patient | Actual ($y$) | Model's prediction ($h_\theta(x)$) |
+| Patient | Actual ($y$) | Model's prediction $h_\theta(x)$ |
 |---------|-------------|-------------------------------------|
 | 1 | 1 (obese) | 0.9 |
 | 2 | 0 (non-obese) | 0.2 |
@@ -518,7 +512,7 @@ Patient 3 ($y=1$): $\log(0.8) = -0.223$
 
 Now compare with a **bad model** that predicts:
 
-| Patient | Actual ($y$) | Bad model's prediction ($h_\theta(x)$) |
+| Patient | Actual ($y$) | Bad model's prediction $h_\theta(x)$ |
 |---------|-------------|------------------------------------------|
 | 1 | 1 (obese) | 0.3 |
 | 2 | 0 (non-obese) | 0.8 |
@@ -546,10 +540,10 @@ Higher (closer to 0) is better! The good model is indeed much better.
 Since gradient descent **minimizes** a function, we flip the sign: instead of **maximizing** the log likelihood, we **minimize** the **negative** log likelihood:
 
 $$
-J(\theta)=-\log\!\left(LL(\theta)\right)=-\sum_{n=1}^{N}\left[y^{(n)}\log\!\left(h_\theta\!\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\!\left(1h_\theta\!\left(x^{(n)}\right)\right)\right]$$
+J(\theta)=-\log\left(LL(\theta)\right)=-\sum_{n=1}^{N}\left[y^{(n)}\log\left(h_\theta\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\left(1h_\theta\left(x^{(n)}\right)\right)\right]$$
 
 $$
-J(\theta)= -\sum_{n=1}^{N}\left[\underbrace{y^{(n)}\log\!\left(h_\theta\!\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=1\mid x;\theta)}+\underbrace{\left(1-y^{(n)}\right)\log\!\left(1h_\theta\!\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=0\mid x;\theta)}\right]$$
+J(\theta)= -\sum_{n=1}^{N}\left[\underbrace{y^{(n)}\log\left(h_\theta\!\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=1\mid x;\theta)}+\underbrace{\left(1-y^{(n)}\right)\log\left(1h_\theta\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=0\mid x;\theta)}\right]$$
 
 This is called **Log-Loss** or **Binary Cross-Entropy** — the standard cost function for logistic regression.
 
@@ -563,11 +557,15 @@ The cost for a **single** data point has two cases:
   <img src="https://github.com/user-attachments/assets/75266049-b606-492e-b65e-4815c96b0225" width=295>
 </p>
 
+<div align="center">
+  
 | Model predicts ($h_\theta(x)$) | Cost $= -\log(h_\theta(x))$ | Interpretation |
 |---|---|---|
 | 0.99 (very confident it's 1) | $-\log(0.99) = 0.01$ | Almost no cost — great! ✅ |
 | 0.5 (unsure) | $-\log(0.5) = 0.69$ | Moderate cost ⚠️ |
 | 0.01 (very confident it's 0 — WRONG!) | $-\log(0.01) = 4.61$ | Huge cost — very wrong! ❌ |
+
+</div>
 
 #### Case 2: Actual label $y = 0$ → Cost = $-\log(1 - h_\theta(x))$
 
@@ -575,11 +573,15 @@ The cost for a **single** data point has two cases:
   <img src="https://github.com/user-attachments/assets/610fa700-5437-42b1-858b-8a4173c6e883">
 </p>
 
+<div align="center">
+  
 | Model predicts ($h_\theta(x)$) | Cost $= -\log(1 - h_\theta(x))$ | Interpretation |
 |---|---|---|
 | 0.01 (confident it's 0) | $-\log(0.99) = 0.01$ | Almost no cost — great! ✅ |
 | 0.5 (unsure) | $-\log(0.5) = 0.69$ | Moderate cost ⚠️ |
 | 0.99 (confident it's 1 — WRONG!) | $-\log(0.01) = 4.61$ | Huge cost — very wrong! ❌ |
+
+</div>
 
 ### The Key Insight
 
@@ -614,7 +616,7 @@ The gradient formula **looks** the same, but there's a critical difference:
 | | Linear Regression | Logistic Regression |
 |---|---|---|
 | $h_\theta(x)$ | $\theta_0 + \theta_1 x$ (a straight line) | $\frac{1}{1 + e^{-(\theta_0 + \theta_1 x)}}$ (sigmoid) |
-| Cost function | MSE: $\frac{1}{2N}\sum(h_\theta(x) - y)^2$ | Log-Loss: $-\frac{1}{N}\sum[y\log h + (1-y)\log(1-h)]$ |
+| Cost function | MSE: $\frac{1}{2N}\sum(h_\theta(x) - y)^2$ | Log-Loss: $-\frac{1}{N}\sum[y \log(h) + (1-y)\log(1-h)]$ |
 
 The **form** of the gradient is the same, but $h_\theta(x)$ is computed differently!
 
@@ -649,113 +651,128 @@ So far, logistic regression handles **binary** classification (2 classes). But w
 
 **Idea:** Break the multiclass problem into **multiple binary problems**. For each class, train a separate logistic regression that asks: *"Is it THIS class, or not?"*
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/00876a77-19f9-4ae5-b7ca-984007e5b075" width=600>
-</p>
-
 <table align="center">
 
 <tr>
-
-<th width="33%">
-🌸 Round 1<br>
-Is it Setosa?
-</th>
-
-<th width="33%">
-🌺 Round 2<br>
-Is it Versicolor?
-</th>
-
-<th width="33%">
-🌼 Round 3<br>
-Is it Virginica?
-</th>
-
+  <th width="33%">🌸 Round 1<br>Is it Setosa?</th>
+  <th width="33%">🌺 Round 2<br>Is it Versicolor?</th>
+  <th width="33%">🌼 Round 3<br>Is it Virginica?</th>
 </tr>
 
 <tr>
 
-<td align="center">
+<td align="center" valign="top">
 
-$$
-h_\theta^{(\mathrm{set})}(x)
-=
-P(y=\mathrm{setosa}\mid x;\theta)
-$$
+<b><i>h</i><sub>θ</sub><sup>(set)</sup>(x)</b><br>
+= P(y = setosa | x; θ)
 
-<img src="https://github.com/user-attachments/assets/6a841fb1-4549-4b5a-a7d9-7a7a9b39d58e" width="100%">
+<br><br>
+
+<img
+  src="https://github.com/user-attachments/assets/6a841fb1-4549-4b5a-a7d9-7a7a9b39d58e"
+  width="85%"
+  alt="Setosa flower">
 
 <br>
 
-<img src="https://github.com/user-attachments/assets/8624101a-4a4f-49d2-aabb-4b9c95669471" width="100%">
+<img
+  src="https://github.com/user-attachments/assets/8624101a-4a4f-49d2-aabb-4b9c95669471"
+  width="85%"
+  alt="Setosa versus all decision boundary">
 
-<b>Relabel</b>
+<br><br>
 
-setosa → <b>1</b><br>
-others → <b>0</b>
+<b>Relabel</b><br>
+Setosa → <b>1</b><br>
+Others → <b>0</b>
 
 </td>
 
-<td align="center">
+<td align="center" valign="top">
 
-$$
-h_\theta^{(\mathrm{vers})}(x)
-=
-P(y=\mathrm{versicolor}\mid x;\theta)
-$$
+<b><i>h</i><sub>θ</sub><sup>(vers)</sup>(x)</b><br>
+= P(y = versicolor | x; θ)
 
-<img src="https://github.com/user-attachments/assets/0fa3018e-ae11-4c6a-b44b-6d5743984829" width="100%">
+<br><br>
+
+<img
+  src="https://github.com/user-attachments/assets/0fa3018e-ae11-4c6a-b44b-6d5743984829"
+  width="85%"
+  alt="Versicolor flower">
 
 <br>
 
-<img src="https://github.com/user-attachments/assets/f2518f85-138c-468a-89de-f38702093541" width="100%">
+<img
+  src="https://github.com/user-attachments/assets/f2518f85-138c-468a-89de-f38702093541"
+  width="85%"
+  alt="Versicolor versus all decision boundary">
 
-<b>Relabel</b>
+<br><br>
 
-versicolor → <b>1</b><br>
-others → <b>0</b>
+<b>Relabel</b><br>
+Versicolor → <b>1</b><br>
+Others → <b>0</b>
 
 </td>
 
-<td align="center">
+<td align="center" valign="top">
 
-$$
-h_\theta^{(\mathrm{virg})}(x)
-=
-P(y=\mathrm{virginica}\mid x;\theta)
-$$
+<b><i>h</i><sub>θ</sub><sup>(virg)</sup>(x)</b><br>
+= P(y = virginica | x; θ)
 
-<img src="https://github.com/user-attachments/assets/cbcd84c4-97fb-4c5a-bfbc-7d0b47cf24d6" width="100%">
+<br><br>
+
+<img
+  src="https://github.com/user-attachments/assets/cbcd84c4-97fb-4c5a-bfbc-7d0b47cf24d6"
+  width="85%"
+  alt="Virginica flower">
 
 <br>
 
-<img src="https://github.com/user-attachments/assets/93fb9faa-ceee-4c63-a400-8d239fd5405b" width="100%">
+<img
+  src="https://github.com/user-attachments/assets/93fb9faa-ceee-4c63-a400-8d239fd5405b"
+  width="85%"
+  alt="Virginica versus all decision boundary">
 
-<b>Relabel</b>
+<br><br>
 
-virginica → <b>1</b><br>
-others → <b>0</b>
+<b>Relabel</b><br>
+Virginica → <b>1</b><br>
+Others → <b>0</b>
 
 </td>
 
 </tr>
 
 <tr>
-
 <td colspan="3" align="center">
 
 <h3>🌱 Testing a New Flower</h3>
 
-<img src="https://github.com/user-attachments/assets/1f8d4ddf-1610-4435-97f0-1ad78d66ca49" width="75%">
+<img
+  src="https://github.com/user-attachments/assets/1f8d4ddf-1610-4435-97f0-1ad78d66ca49"
+  width="65%"
+  alt="Testing a new Iris flower">
 
 <br><br>
 
-The new flower is evaluated by **all three binary classifiers**.
+The new flower is evaluated by <b>all three binary classifiers</b>.
 
-<img src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6ba0f1" width="100%">
+<br><br>
 
-Since $$\max_c h_\theta^{(c)}(x) = h_\theta^{(\mathrm{vers})}(x)$$, the flower is classified as **Versicolor** ✅
+<p align="center">
+  <em>New flower 🟢 indicated on the regression plot</em>
+</p>
+
+<img
+  src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6ba0f1"
+  width="70%"
+  alt="One versus all classification result">
+
+<br><br>
+
+Since
+<i>max</i><sub>c</sub><i>h</i><sub>θ</sub><sup>(c)</sup>(x)=<i>h</i><sub>θ</sub><sup>(vers)</sup>(x), the flower is classified as <b>Versicolor</b> ✅
 
 </td></tr></table>
 
@@ -843,9 +860,9 @@ Where ${y = c\}$ is an **indicator function** — it equals 1 if the actual clas
 The indicator function acts like a **spotlight**: it only "turns on" the cost for the correct class, and ignores all the other classes.
 
 **Example:** If the actual label is setosa ($y = 1$):
-- $\text{setosa}\} = 1$ → include this term ✅
-- $\text{versicolor}\} = 0$ → ignore ❌
-- $\text{virginica}\} = 0$ → ignore ❌
+- $\text{setosa}\ = 1$ → include this term ✅
+- $\text{versicolor}\ = 0$ → ignore ❌
+- $\text{virginica}\ = 0$ → ignore ❌
 
 So the cost becomes: $-\log(P(\text{setosa}))$
 
@@ -855,7 +872,7 @@ If the model predicted P(setosa) = 0.05, cost = $-\log(0.05) = 1.301$ (high — 
 
 ---
 
-# 🚀 15. Gradient Descent Variations
+# 15. Gradient Descent Variations
 
 Gradient Descent updates the model parameters **iteratively** to minimize the cost function.
 
@@ -936,7 +953,7 @@ Update Parameters
 
 ---
 
-### 15.2 Mini-batch Gradient Descent ⭐
+### 15.2 Mini-batch Gradient Descent 
 
 Splits the training dataset into **small batches** and updates the parameters after processing each batch.
 
