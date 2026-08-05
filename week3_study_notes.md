@@ -742,7 +742,7 @@ width="80%">
 
 <td align="center">
 
-<b>Decision Boundary</b><br><br>
+<b>Decision Boundary</b><br>
 
 <img src="https://github.com/user-attachments/assets/8624101a-4a4f-49d2-aabb-4b9c95669471"
 width="80%">
@@ -751,7 +751,7 @@ width="80%">
 
 <td align="center">
 
-<b>Decision Boundary</b><br><br>
+<b>Decision Boundary</b><br>
 
 <img src="https://github.com/user-attachments/assets/f2518f85-138c-468a-89de-f38702093541"
 width="80%">
@@ -760,7 +760,7 @@ width="80%">
 
 <td align="center">
 
-<b>Decision Boundary</b><br><br>
+<b>Decision Boundary</b><br>
 
 <img src="https://github.com/user-attachments/assets/93fb9faa-ceee-4c63-a400-8d239fd5405b"
 width="80%">
@@ -802,29 +802,66 @@ Others → <b>0</b>
 
 </td></tr></table>
 
-<h3>🌱 Testing a New Flower</h3>
+<table align="center" width="85%">
+
+<tr>
+<th align="center">
+
+🌱 Testing a New Flower
+
+</th>
+</tr>
+
+<tr>
+<td align="center">
 
 <img
-  src="https://github.com/user-attachments/assets/1f8d4ddf-1610-4435-97f0-1ad78d66ca49"
-  width="65%"
-  alt="Testing a new Iris flower">
+src="https://github.com/user-attachments/assets/1f8d4ddf-1610-4435-97f0-1ad78d66ca49" width="45%">
+
+<br><br>
+
+<i>A new Iris flower is presented to the trained classifiers.</i>
+
+</td>
+</tr>
+
+<tr>
+<td align="center">
+
+The flower is evaluated by
+<b>all three binary classifiers</b>.
+
+</td>
+</tr>
+
+<tr>
+<td align="center">
+
+<img
+src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6ba0f1" width="70%">
 
 <br>
 
-The new flower is evaluated by <b>all three binary classifiers</b>.
+<i>🟢 Green point represents the new flower.</i>
 
-<p align="center">
-  <em>New flower 🟢 indicated on the regression plot</em>
-</p>
+</td>
+</tr>
 
-<img
-  src="https://github.com/user-attachments/assets/519dc8e5-400a-4db5-b60d-b153bf6ba0f1"
-  width="70%"
-  alt="One versus all classification result">
+<tr>
+<td align="center">
+
+<b>Prediction Rule</b>
 
 <br>
 
-Since <i>max</i><sub>c</sub><i>h</i><sub>θ</sub><sup>(c)</sup>(x)=<i>h</i><sub>θ</sub><sup>(vers)</sup>(x), the flower is classified as <b>Versicolor</b> ✅
+<i>max</i><sub>c</sub>
+<i>h</i><sub>θ</sub><sup>(c)</sup>(x)
+=
+<i>h</i><sub>θ</sub><sup>(vers)</sup>(x)
+
+<br>
+
+✅ <b>Final Prediction: Versicolor</b>
 
 </td></tr></table>
 
