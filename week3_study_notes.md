@@ -34,7 +34,7 @@ From Week 2, we learned that **supervised learning** has two types:
 
 | Type | Output | Example Question | Example Answer |
 |------|--------|-----------------|----------------|
-| **Regression** | A continuous number | "What is this house's price?" | $450,000 |
+| **Regression** | A continuous number | "What is the price of the houses" | $450,000 |
 | **Classification** | A discrete category | "Is this email spam?" | Yes / No |
 
 **This week** we learn **Logistic Regression** — a classification algorithm. Despite having "regression" in its name, it is used for **classification** problems!
@@ -48,9 +48,36 @@ From Week 2, we learned that **supervised learning** has two types:
 
 ### The Idea: What If We Just Use a Straight Line?
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/35f03bb6-0f23-4507-ac4c-13e8d58b649e" width=600>
+</p>
+
 Suppose we want to classify patients as **obese** (1) or **non-obese** (0) based on their weight. Could we just use the linear regression line $h_\theta(x) = \theta_0 + \theta_1 x$ from Week 2?
 
-**Attempt:** Draw a straight line through the data, then use a **hard threshold** at 0.5:
+<table align="center">
+<tr>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/116a9fca-e554-4c39-8263-953304ec9437" width="100%" height="300">
+
+<br>
+
+Linear regression model mapping the independent variables (weight) to the dependent variable (obesity level), simultaneously learning the best fit line to minimize the distance between predicted value $h_\theta(x)$ and the actual value $y$.
+
+</td>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/02a1cac6-5f20-4d49-8ac6-5ed93c89f3c3" width="100%" height="300">
+
+<br>
+
+The value $h_\theta(x)$ can be classified into y value (either 0 or 1) based on Hard Threshold. The green circle indicates testing data.
+
+</td></tr></table>
+
+A straight line is drawn through the data, then use a **Hard Threshold** at 0.5:
 - If $h_\theta(x) \geq 0.5$ → predict **obese** (1)
 - If $h_\theta(x) < 0.5$ → predict **non-obese** (0)
 
@@ -58,7 +85,11 @@ Suppose we want to classify patients as **obese** (1) or **non-obese** (0) based
 
 This seems to work... until new extreme data points show up.
 
-Imagine adding a few extremely heavy obese patients to the data. The linear regression line would **tilt** to accommodate them, shifting the threshold and suddenly **misclassifying** patients who were previously classified correctly!
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cd11e718-12c9-4326-971d-cd7e8e5a3a0d" width=600>
+</p>
+
+A few extremely heavy obese patients is added to the data. The linear regression line would **tilt** to accommodate them, shifting the threshold and suddenly **misclassifying** patients who were previously classified correctly!
 
 > **Analogy:** It's like balancing a seesaw. If someone very heavy sits on one end, the whole balance point shifts. One extreme data point can ruin the entire classification.
 
@@ -68,7 +99,7 @@ Linear regression can predict **any real number** — like −0.3 or 1.7. But fo
 - A probability can't be negative (what does "−30% chance of being obese" mean?)
 - A probability can't be above 1 (what does "170% chance" mean?)
 
-We need a model where predictions are **always between 0 and 1**.
+We need a model where predictions are **always strictly between 0 and 1**.
 
 ### The Solution: Logistic Regression!
 
@@ -82,12 +113,16 @@ Instead of a straight line, we need an **S-shaped curve** that naturally stays b
 
 **Logistic Regression** is a machine learning algorithm for **classification** that predicts the **probability** that something belongs to a particular class.
 
+<div align="center">
+  
 | Feature | Description |
 |---------|------------|
 | **Purpose** | Classification (not regression!) |
 | **Output** | A probability between 0 and 1 |
 | **Binary classification** | Predicts one of two classes (0 or 1, yes or no, spam or not spam) |
 | **Core idea** | Wraps linear regression inside a sigmoid function |
+
+</div>
 
 ### The Equation
 
@@ -107,18 +142,15 @@ $$g(z) = \frac{1}{1 + e^{-z}}$$
 
 ### What It Looks Like
 
-```
-  g(z)
-  1.0 |                        _______________
-      |                      /
-  0.5 |· · · · · · · · · · /· · · · · · · · ·
-      |                  /
-  0.0 |________________/
-      +-------|---------|---------|----------→ z
-            -5         0         5
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3bef8381-1fd8-4c67-9c0a-2228f8b47952" width=600>
+</p>
 
 ### Why It's Perfect for Classification
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8ff578ab-0bb8-4512-a9b8-65dad2b452a5">
+</p>
 
 | Property | What It Means | Why It Matters |
 |----------|-------------|----------------|
@@ -172,6 +204,70 @@ $$h_\theta(x) = P(y = 1 \mid x; \theta)$$
 
 ### How to Read It
 
+<table align="center">
+
+<tr>
+  <th align="center">Prediction</th>
+  <th align="center">In Words</th>
+  <th align="center">Visualization</th>
+</tr>
+
+<tr>
+  <td align="center">
+    <b>h<sub>θ</sub>(x) = 0.91</b>
+  </td>
+
+  <td>
+    There is a <b>91% probability</b> that this patient is obese.<br>
+    Therefore, predict <b>obese</b>.
+  </td>
+
+  <td align="center">
+    <img
+      src="https://github.com/user-attachments/assets/49551958-b1cb-4d76-a24d-b48877275377"
+      alt="Logistic regression prediction of 0.91"
+      width="420">
+  </td>
+</tr>
+
+<tr>
+  <td align="center">
+    <b>h<sub>θ</sub>(x) = 0.30</b>
+  </td>
+
+  <td>
+    There is a <b>30% probability</b> that this patient is obese.<br>
+    Therefore, predict <b>non-obese</b>.
+  </td>
+
+  <td align="center">
+    <img
+      src="https://github.com/user-attachments/assets/3bd7c037-fb27-4dd9-bc8d-fe640b26c7bc"
+      alt="Logistic regression prediction of 0.30"
+      width="420">
+  </td>
+</tr>
+
+<tr>
+  <td align="center">
+    <b>h<sub>θ</sub>(x) = 0.50</b>
+  </td>
+
+  <td>
+    The prediction is exactly <b>50%</b>.<br>
+    This lies at the <b>decision boundary</b>.
+  </td>
+
+  <td align="center">
+    <img
+      src="https://github.com/user-attachments/assets/ac47fcba-ccbd-45c9-b0fc-be54570a7890"
+      alt="Logistic regression decision boundary at 0.50"
+      width="420">
+  </td>
+</tr>
+
+</table>
+
 | $h_\theta(x)$ | In Words |
 |----------------|----------|
 | $h_\theta(x) = 0.91$ | "There's a **91% probability** this patient is obese" → Predict **obese** |
@@ -207,6 +303,12 @@ A **decision boundary** is the line (or curve) that separates the data into diff
 
 We want to classify two species of Iris flowers — **setosa** ($y = 0$) and **versicolor** ($y = 1$) — based on **sepal length** ($x$):
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/81954d61-5903-4032-b22e-23ee4b88f43b" width=600>
+</p>
+
+<div align="center">
+  
 | Sepal Length ($x$) | Species | Label ($y$) |
 |---|---|---|
 | 5.1 | setosa | 0 |
@@ -214,6 +316,8 @@ We want to classify two species of Iris flowers — **setosa** ($y = 0$) and **v
 | 6.7 | versicolor | 1 |
 | 5.4 | setosa | 0 |
 | 6.0 | versicolor | 1 |
+
+</div>
 
 After training, suppose we find $\theta_0 = -1.033$ and $\theta_1 = 0.192$.
 
@@ -226,6 +330,10 @@ $$x = \frac{1.033}{0.192} = 5.38$$
 **Result:** The decision boundary is at $x = 5.38$.
 - If sepal length $\geq 5.38$ → predict **versicolor** ($y = 1$)
 - If sepal length $< 5.38$ → predict **setosa** ($y = 0$)
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/986f2ddd-7812-416d-beba-a5581cf31142">
+</p>
 
 > **Analogy:** The decision boundary is like the **border between two countries** on a map. If you're on the left side, you're in "setosa land." If you're on the right side, you're in "versicolor land."
 
