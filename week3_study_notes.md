@@ -490,7 +490,7 @@ $$\sum_{n=1}^{N} h_\theta\left(x^{(n)}\right)^{y^{(n)}} \left(1-h_\theta\left(x^
 
 Multiplying many tiny probabilities leads to extremely small numbers (numerical underflow). Taking the logarithm converts products into sums, which is much easier to work with:
 
-$$\log\left(LL(\theta)\right) =\sum_{n=1}^{N}\left[y^{(n)}\log\left(h_\theta\!\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\left(1-h_\theta\left(x^{(n)}\right)\right)\right]$$
+$$\log\left(LL(\theta)\right) =\sum_{n=1}^{N}\left[y^{(n)}\log\left(h_\theta\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\left(1-h_\theta\left(x^{(n)}\right)\right)\right]$$
 
 ### A Simple Worked Example
 
@@ -543,7 +543,7 @@ $$
 J(\theta)=-\log\left(LL(\theta)\right)=-\sum_{n=1}^{N}\left[y^{(n)}\log\left(h_\theta\left(x^{(n)}\right)\right)+\left(1-y^{(n)}\right)\log\left(1h_\theta\left(x^{(n)}\right)\right)\right]$$
 
 $$
-J(\theta)= -\sum_{n=1}^{N}\left[\underbrace{y^{(n)}\log\left(h_\theta\!\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=1\mid x;\theta)}+\underbrace{\left(1-y^{(n)}\right)\log\left(1h_\theta\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=0\mid x;\theta)}\right]$$
+J(\theta)= -\sum_{n=1}^{N}\left[\underbrace{y^{(n)}\log\left(h_\theta\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=1\mid x;\theta)}+\underbrace{\left(1-y^{(n)}\right)\log\left(1h_\theta\left(x^{(n)}\right)\right)}_{\text{Correct class: }P(y=0\mid x;\theta)}\right]$$
 
 This is called **Log-Loss** or **Binary Cross-Entropy** — the standard cost function for logistic regression.
 
@@ -653,99 +653,154 @@ So far, logistic regression handles **binary** classification (2 classes). But w
 
 <table align="center">
 
+<!-- ======================================== -->
+<!-- Row 1 : Titles -->
+<!-- ======================================== -->
+
 <tr>
-  <th width="33%">🌸 Round 1<br>Is it Setosa?</th>
-  <th width="33%">🌺 Round 2<br>Is it Versicolor?</th>
-  <th width="33%">🌼 Round 3<br>Is it Virginica?</th>
+
+<th width="33%">
+🌸 Round 1<br>
+Is it Setosa?
+</th>
+
+<th width="33%">
+🌺 Round 2<br>
+Is it Versicolor?
+</th>
+
+<th width="33%">
+🌼 Round 3<br>
+Is it Virginica?
+</th>
+
 </tr>
 
+<!-- ======================================== -->
+<!-- Row 2 : Hypothesis -->
+<!-- ======================================== -->
+
 <tr>
 
-<td align="center" valign="top">
+<td align="center">
 
 <b><i>h</i><sub>θ</sub><sup>(set)</sup>(x)</b><br>
-= P(y = setosa | x; θ)
+=P(y = setosa | x; θ)
 
-<br><br>
+</td>
 
-<img
-  src="https://github.com/user-attachments/assets/6a841fb1-4549-4b5a-a7d9-7a7a9b39d58e"
-  width="85%"
-  alt="Setosa flower">
+<td align="center">
+
+<b><i>h</i><sub>θ</sub><sup>(vers)</sup>(x)</b><br>
+=P(y = versicolor | x; θ)
+
+</td>
+
+<td align="center">
+
+<b><i>h</i><sub>θ</sub><sup>(virg)</sup>(x)</b><br>
+=P(y = virginica | x; θ)
+
+</td>
+
+</tr>
+
+<!-- ======================================== -->
+<!-- Row 3 : Flower -->
+<!-- ======================================== -->
+
+<tr>
+
+<td align="center">
+
+<img src="https://github.com/user-attachments/assets/6a841fb1-4549-4b5a-a7d9-7a7a9b39d58e"
+width="80%">
+
+</td>
+
+<td align="center">
+
+<img src="https://github.com/user-attachments/assets/0fa3018e-ae11-4c6a-b44b-6d5743984829"
+width="80%">
+
+</td>
+
+<td align="center">
+
+<img src="https://github.com/user-attachments/assets/cbcd84c4-97fb-4c5a-bfbc-7d0b47cf24d6"
+width="80%">
+
+</td>
+
+</tr>
+
+<!-- ======================================== -->
+<!-- Row 4 : Decision Boundary -->
+<!-- ======================================== -->
+
+<tr>
+
+<td align="center">
+
+<b>Decision Boundary</b><br><br>
+
+<img src="https://github.com/user-attachments/assets/8624101a-4a4f-49d2-aabb-4b9c95669471"
+width="80%">
+
+</td>
+
+<td align="center">
+
+<b>Decision Boundary</b><br><br>
+
+<img src="https://github.com/user-attachments/assets/f2518f85-138c-468a-89de-f38702093541"
+width="80%">
+
+</td>
+
+<td align="center">
+
+<b>Decision Boundary</b><br><br>
+
+<img src="https://github.com/user-attachments/assets/93fb9faa-ceee-4c63-a400-8d239fd5405b"
+width="80%">
+
+</td>
+
+</tr>
+
+<!-- ======================================== -->
+<!-- Row 5 : Relabel -->
+<!-- ======================================== -->
+
+<tr>
+
+<td align="center">
 
 <br>
 
-<img
-  src="https://github.com/user-attachments/assets/8624101a-4a4f-49d2-aabb-4b9c95669471"
-  width="85%"
-  alt="Setosa versus all decision boundary">
-
-<br><br>
-
-<b>Relabel</b><br>
 Setosa → <b>1</b><br>
 Others → <b>0</b>
 
 </td>
 
-<td align="center" valign="top">
-
-<b><i>h</i><sub>θ</sub><sup>(vers)</sup>(x)</b><br>
-= P(y = versicolor | x; θ)
-
-<br><br>
-
-<img
-  src="https://github.com/user-attachments/assets/0fa3018e-ae11-4c6a-b44b-6d5743984829"
-  width="85%"
-  alt="Versicolor flower">
+<td align="center">
 
 <br>
 
-<img
-  src="https://github.com/user-attachments/assets/f2518f85-138c-468a-89de-f38702093541"
-  width="85%"
-  alt="Versicolor versus all decision boundary">
-
-<br><br>
-
-<b>Relabel</b><br>
 Versicolor → <b>1</b><br>
 Others → <b>0</b>
 
 </td>
 
-<td align="center" valign="top">
-
-<b><i>h</i><sub>θ</sub><sup>(virg)</sup>(x)</b><br>
-= P(y = virginica | x; θ)
-
-<br><br>
-
-<img
-  src="https://github.com/user-attachments/assets/cbcd84c4-97fb-4c5a-bfbc-7d0b47cf24d6"
-  width="85%"
-  alt="Virginica flower">
+<td align="center">
 
 <br>
 
-<img
-  src="https://github.com/user-attachments/assets/93fb9faa-ceee-4c63-a400-8d239fd5405b"
-  width="85%"
-  alt="Virginica versus all decision boundary">
-
-<br><br>
-
-<b>Relabel</b><br>
 Virginica → <b>1</b><br>
 Others → <b>0</b>
 
-</td>
-
-</tr>
-
-<tr>
-<td colspan="3" align="center">
+</td></tr></table>
 
 <h3>🌱 Testing a New Flower</h3>
 
@@ -754,11 +809,9 @@ Others → <b>0</b>
   width="65%"
   alt="Testing a new Iris flower">
 
-<br><br>
+<br>
 
 The new flower is evaluated by <b>all three binary classifiers</b>.
-
-<br><br>
 
 <p align="center">
   <em>New flower 🟢 indicated on the regression plot</em>
@@ -769,10 +822,9 @@ The new flower is evaluated by <b>all three binary classifiers</b>.
   width="70%"
   alt="One versus all classification result">
 
-<br><br>
+<br>
 
-Since
-<i>max</i><sub>c</sub><i>h</i><sub>θ</sub><sup>(c)</sup>(x)=<i>h</i><sub>θ</sub><sup>(vers)</sup>(x), the flower is classified as <b>Versicolor</b> ✅
+Since <i>max</i><sub>c</sub><i>h</i><sub>θ</sub><sup>(c)</sup>(x)=<i>h</i><sub>θ</sub><sup>(vers)</sup>(x), the flower is classified as <b>Versicolor</b> ✅
 
 </td></tr></table>
 
