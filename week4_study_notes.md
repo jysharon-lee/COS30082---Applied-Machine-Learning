@@ -1,4 +1,4 @@
-# 📘 Week 4 Study Notes: Artificial Neural Networks (ANN)
+<img width="335" height="245" alt="image" src="https://github.com/user-attachments/assets/8408e7e1-fb3a-421f-818d-459349528f0a" /># 📘 Week 4 Study Notes: Artificial Neural Networks (ANN)
 
 > **Course:** COS30082 — Applied Machine Learning  
 > **Topic:** Artificial Neural Networks (ANN)  
@@ -23,9 +23,8 @@
 13. [Backpropagation Intuition](#13-backpropagation-intuition)
 14. [Random Weight Initialization](#14-random-weight-initialization)
 15. [Logistic Regression vs ANN](#15-logistic-regression-vs-ann)
-16. [Worked Example: One Forward Pass](#16-worked-example-one-forward-pass)
-17. [Key Takeaways](#17-key-takeaways)
-18. [Glossary](#18-glossary)
+16. [Key Takeaways](#16-key-takeaways)
+17. [Glossary](#17-glossary)
 
 ---
 
@@ -628,7 +627,7 @@ $$a^{(1)}=\begin{bmatrix}a_1^{(1)} \\\\a_2^{(1)} \\\\a_3^{(1)}\end{bmatrix}=\beg
 
 Add the bias unit $a_0^{(1)}=x_0=1$ to form the bias-augmented input vector:
 
-$$tilde\{a}^{(1)}=\begin{bmatrix}a_0^{(1)} \\a_1^{(1)} \\a_2^{(1)} \\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}1 \\x_1 \\x_2 \\x_3\end{bmatrix}$$
+$$\{a}^{(1)}=\begin{bmatrix}a_0^{(1)} \\\\a_1^{(1)} \\\\a_2^{(1)} \\\\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}1 \\\\x_1 \\\\x_2 \\\\x_3\end{bmatrix}$$
 
 > [!NOTE]
 > The tilde in $\tilde{a}^{(l)}$ indicates that the activation vector includes the bias unit $a_0^{(l)}=1$.
@@ -643,7 +642,7 @@ $$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrac
 
 Therefore:
 
-$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \\z_2^{(2)} \\z_3^{(2)}\end{bmatrix}$$
+$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \\\\z_2^{(2)} \\\\z_3^{(2)}\end{bmatrix}$$
 
 **Step 2: Activate the hidden neurons**
 
@@ -703,7 +702,9 @@ $$z^{(3)}=\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)
 
 The final prediction is therefore:
 
-$$h_\Theta(x)=a^{(3)}=g\left(\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}\right)$$
+$$h_\Theta(x)=a^{(3)}$$
+
+$$a^{(3)}=g\left(\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}\right)$$
 
 > **Analogy:** Forward propagation is like doing a presentation from beginning to end. The input layer represents the collected research, facts, and findings. The hidden layers filter the important information, connect related ideas, and organise them into clear slides. The output layer represents the final conclusion or message presented to the audience.
 
@@ -744,7 +745,7 @@ The prediction depends on the last hidden layer, which depends on the previous h
 </p>
 
 <p align="center">
-  <em>Forward pass:   Input  → Hidden → Output → Cost</em>
+  <em>Forward propagation:   Input  → Hidden → Output → Cost</em>
 </p>
 
 <p align="center">
@@ -752,7 +753,7 @@ The prediction depends on the last hidden layer, which depends on the previous h
 </p>
 
 <p align="center">
-  <em>Backward pass:  Input  ← Hidden ← Error  ← Cost</em>
+  <em>Backward propagation:  Input  ← Hidden ← Error  ← Cost</em>
 </p>
 
 > **Analogy:** If the final product from a production line is faulty, backpropagation inspects the last process first, then traces responsibility backwards to earlier processes.
@@ -861,7 +862,7 @@ Initialize each weight matrix $\Theta^{(l)}$ using small random values.
 
 ### Step 2: Forward Propagation
 
-For each layer:
+For each layer, calculate:
 
 $$
 z^{(l+1)}=\Theta^{(l)}a^{(l)}
@@ -875,7 +876,7 @@ Continue until $a^{(L)}=h_\Theta(x)$ is obtained.
 
 ### Step 3: Compute the Output Error
 
-For sigmoid plus cross-entropy:
+For sigmoid plus cross-entropy, calculate:
 
 $$
 \delta^{(L)}=a^{(L)}-y
@@ -907,7 +908,7 @@ $$
 
 Repeat the forward and backward passes over many epochs until the cost converges or another stopping condition is met.
 
-<div align="center">
+<div align="left">
 
 ```text
 Random Initialization
@@ -1042,6 +1043,26 @@ For standard logistic regression, the cross-entropy cost is convex. This means t
 
 For a neural network, interactions among many layers and weights create a non-convex cost surface. Different initializations may lead to different trained solutions.
 
+<table align="center">
+<tr>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/62e89cf9-8e0f-40d1-8cac-745c1137ccd5" width="100%" height="245">
+
+<br>
+Logistic Regression (Convex cost surface)
+
+</td>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/dc2141a3-3112-4f58-b740-be438bbaeb7d" width="100%" height="245">
+
+<br>
+Neural Networks (Non-convex cost surface)
+</td></tr></table>
+
 ### Which One Should You Choose?
 
 | Scenario | Recommended Starting Point |
@@ -1055,114 +1076,12 @@ For a neural network, interactions among many layers and weights create a non-co
 > [!TIP]
 > Start with logistic regression as a baseline when it is reasonable. Use an ANN when the simpler model cannot capture the required non-linear structure.
 
----
-
-## 16. Worked Example: One Forward Pass
-
-Consider a small network with:
-
-- Two inputs: $x_1=0.5$, $x_2=0.8$
-- Two hidden neurons
-- One output neuron
-- Sigmoid activation
-
-Include the bias input:
-
-$$
-a^{(1)}=\begin{bmatrix}1\\0.5\\0.8\end{bmatrix}
-$$
-
-Let:
-
-$$
-\Theta^{(1)}=
-\begin{bmatrix}
--0.4 & 0.6 & 0.2\\
-0.1 & -0.3 & 0.7
-\end{bmatrix}
-$$
-
-and:
-
-$$
-\Theta^{(2)}=
-\begin{bmatrix}
--0.2 & 0.9 & -0.5
-\end{bmatrix}
-$$
-
-### Step 1: Hidden Weighted Inputs
-
-$$
-z^{(2)}=\Theta^{(1)}a^{(1)}
-$$
-
-For the first hidden neuron:
-
-$$
-z_1^{(2)}=-0.4+0.6(0.5)+0.2(0.8)=0.06
-$$
-
-For the second hidden neuron:
-
-$$
-z_2^{(2)}=0.1-0.3(0.5)+0.7(0.8)=0.51
-$$
-
-### Step 2: Hidden Activations
-
-$$
-a_1^{(2)}=g(0.06)\approx0.515
-$$
-
-$$
-a_2^{(2)}=g(0.51)\approx0.625
-$$
-
-Add the bias:
-
-$$
-\tilde{a}^{(2)}=\begin{bmatrix}1\\0.515\\0.625\end{bmatrix}
-$$
-
-### Step 3: Output Weighted Input
-
-$$
-z^{(3)}=-0.2+0.9(0.515)-0.5(0.625)
-$$
-
-$$
-z^{(3)}\approx-0.049
-$$
-
-### Step 4: Final Prediction
-
-$$
-h_\Theta(x)=g(-0.049)\approx0.488
-$$
-
-Using a threshold of 0.5:
-
-$$
-0.488<0.5\Rightarrow\hat{y}=0
-$$
-
-**Interpretation:** The network estimates a **48.8% probability** of the positive class and therefore predicts class 0.
-
-### Dimension Check
-
-| Operation | Dimensions | Result |
-|-----------|------------|--------|
-| $\Theta^{(1)}a^{(1)}$ | $(2\times3)(3\times1)$ | $2\times1$ |
-| Add hidden bias | 2 activations + 1 bias | $3\times1$ |
-| $\Theta^{(2)}\tilde{a}^{(2)}$ | $(1\times3)(3\times1)$ | $1\times1$ |
-
 > [!IMPORTANT]
 > Always check matrix dimensions before doing the arithmetic. Most hand-calculation errors in forward propagation come from forgetting the bias term or reversing the weight-matrix dimensions.
 
 ---
 
-## 17. Key Takeaways
+## 16. Key Takeaways
 
 > [!IMPORTANT]
 > **The 15 things to remember from Week 4:**
@@ -1185,7 +1104,7 @@ $$
 
 ---
 
-## 18. Glossary
+## 17. Glossary
 
 | Term | Definition |
 |------|-----------|
