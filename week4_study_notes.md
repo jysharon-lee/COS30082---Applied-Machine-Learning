@@ -573,9 +573,9 @@ Instead of storing the label as 1, 2, or 3, represent it as a vector:
   
 | Class | One-Hot Target $y$ |
 |-------|--------------------|
-| Dog | $\begin{bmatrix}1 \\\\0 \\\\0\end{bmatrix}$ |
-| Penguin | $\begin{bmatrix}0 \\\\1 \\\\0\end{bmatrix}$ |
-| Tiger | $h_\Theta(x)=\begin{bmatrix}0.08 \\\\0.87 \\\\0.05\end{bmatrix}$ |
+| Dog | $\left[1,0,0\right]^T$ |
+| Penguin | $\left[0,1,0\right]^T$ |
+| Tiger | $\left[0,0,1\right]^T$ |
   
 </div>
 
@@ -621,90 +621,193 @@ The activation function is applied element by element.
 
 ### Step-by-Step Forward Propagation for One Hidden Layer
 
-The ordinary input activations are the three input features:
+Consider a neural network containing:
 
-$$a^{(1)}=\begin{bmatrix}a_1^{(1)} \\\\a_2^{(1)} \\\\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}x_1 \\\\x_2 \\\\x_3\end{bmatrix}$$
+- Three input features
+- Three hidden neurons
+- One output neuron
+- A bias unit in Layers 1 and 2
 
-Add the bias unit $a_0^{(1)}=x_0=1$ to form the bias-augmented input vector:
+Forward propagation moves information from the input layer to the output layer to calculate the network prediction \(h_\Theta(x)\).
 
-$$\{a}^{(1)}=\begin{bmatrix}a_0^{(1)} \\\\a_1^{(1)} \\\\a_2^{(1)} \\\\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}1 \\\\x_1 \\\\x_2 \\\\x_3\end{bmatrix}$$
+---
 
-> [!NOTE]
-> The tilde in $\tilde{a}^{(l)}$ indicates that the activation vector includes the bias unit $a_0^{(l)}=1$.
+#### Step 1: Pass the Inputs to the Hidden Layer
 
-**Step 1: Compute the hidden-layer weighted inputs**
+The input-layer activations are the input features:
+
+$$a^{(1)}=\begin{bmatrix}x_1 \crx_2 \crx_3\end{bmatrix}$$
+
+A fixed bias unit \(a_0^{(1)}=x_0=1\) is added to form the bias-augmented input vector:
+
+$$\tilde{a}^{(1)}=\begin{bmatrix}1 \crx_1 \crx_2 \crx_3\end{bmatrix}$$
+
+The weighted inputs entering the three hidden neurons are calculated using:
 
 $$z^{(2)}=\Theta^{(1)}\tilde{a}^{(1)}$$
 
-The matrix dimensions are:
+The corresponding matrix dimensions are:
 
 $$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrace{\tilde{a}^{(1)}}_{4\times1}$$
 
+<p align="center">
+  <img
+    src="YOUR_FIRST_IMAGE_URL"
+    width="80%"
+    alt="Input features propagated to the hidden layer">
+</p>
+
+<p align="center">
+  <em>
+    The input features and bias unit are multiplied by the Layer 1
+    weight matrix to calculate the weighted inputs of the hidden neurons.
+  </em>
+</p>
+
+The resulting vector contains one weighted input for each hidden neuron:
+
+$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \crz_2^{(2)} \crz_3^{(2)}\end{bmatrix}$$
+
+---
+
+#### Step 2: Activate the Hidden Neurons
+
+The activation function \(g\) is applied element-wise to the hidden-layer weighted inputs:
+
+$$
+a^{(2)}=g\left(z^{(2)}\right)
+$$
+
 Therefore:
 
-$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \\\\z_2^{(2)} \\\\z_3^{(2)}\end{bmatrix}$$
+$$a^{(2)}=\begin{bmatrix}g\left(z_1^{(2)}\right) \crg\left(z_2^{(2)}\right) \crg\left(z_3^{(2)}\right)\end{bmatrix}=\begin{bmatrix}a_1^{(2)} \cra_2^{(2)} \cra_3^{(2)}\end{bmatrix}$$
 
-**Step 2: Activate the hidden neurons**
+<p align="center">
+  <img
+    src="YOUR_SECOND_IMAGE_URL"
+    width="80%"
+    alt="Activation of the hidden-layer neurons">
+</p>
 
-Apply the activation function element-wise:
+<p align="center">
+  <em>
+    Each hidden neuron applies the activation function to its weighted
+    input, producing the hidden-layer activations.
+  </em>
+</p>
 
-$$a^{(2)}=g\left(z^{(2)}\right)=\begin{bmatrix}g\left(z_1^{(2)}\right) \\\\g\left(z_2^{(2)}\right) \\\\g\left(z_3^{(2)}\right)\end{bmatrix}=\begin{bmatrix}a_1^{(2)} \\\\a_2^{(2)} \\\\a_3^{(2)}\end{bmatrix}$$
+For each hidden neuron:
 
-**Step 3: Add the hidden-layer bias**
+$$a_j^{(2)}=g\left(z_j^{(2)}\right),\qquad j=1,2,3$$
 
-The activation function produces only the three ordinary hidden-neuron activations. Before passing them to Layer 3, add the bias unit $a_0^{(2)}=1$:
+---
 
-$$\tilde{a}^{(2)}=\begin{bmatrix}a_0^{(2)} \\\\a_1^{(2)} \\\\a_2^{(2)} \\\\a_3^{(2)}\end{bmatrix}=\begin{bmatrix}1 \\\\a_1^{(2)} \\\\a_2^{(2)} \\\\a_3^{(2)}\end{bmatrix}$$
+#### Step 3: Add the Hidden-Layer Bias
 
-**Step 4: Compute the output-layer weighted input**
+The activation function produces only the three ordinary hidden-neuron activations. Before propagating them to Layer 3, another bias unit is added:
 
-$$z^{(3)}=\Theta^{(2)}\tilde{a}^{(2)}$$
+$$a_0^{(2)}=1$$
+
+The bias-augmented hidden-layer vector is therefore:
+
+$$\tilde{a}^{(2)}=\begin{bmatrix}1 \cra_1^{(2)} \cra_2^{(2)} \cra_3^{(2)}\end{bmatrix}$$
+
+<p align="center">
+  <img
+    src="YOUR_THIRD_IMAGE_URL"
+    width="80%"
+    alt="Hidden-layer bias added before propagation to the output layer">
+</p>
+
+<p align="center">
+  <em>
+    A fixed bias activation is added to the hidden layer before its
+    activations are passed to the output neuron.
+  </em>
+</p>
+
+> [!NOTE]
+> The tilde in \(\tilde{a}^{(l)}\) indicates that the activation vector includes the bias unit \(a_0^{(l)}=1\).
+
+---
+
+#### Step 4: Propagate to the Output Layer
+
+The output neuron combines the hidden-layer activations using the second weight matrix:
+
+$$
+z^{(3)}=\Theta^{(2)}\tilde{a}^{(2)}
+$$
 
 The matrix dimensions are:
 
 $$\underbrace{z^{(3)}}_{1\times1}=\underbrace{\Theta^{(2)}}_{1\times4}\underbrace{\tilde{a}^{(2)}}_{4\times1}$$
 
-**Step 5: Compute the final output**
+Because the network contains one output neuron, \(z^{(3)}\) is a scalar.
 
-$$a^{(3)}=g\left(z^{(3)}\right)=h_\Theta(x)$$
+The activation function is then applied:
 
-Because Layer 3 contains only one output neuron:
+$$a^{(3)}=g\left(z^{(3)}\right)$$
 
-$$a^{(3)}=a_1^{(3)}=h_\Theta(x)$$
+<p align="center">
+  <img
+    src="YOUR_FOURTH_IMAGE_URL"
+    width="80%"
+    alt="Final output produced through forward propagation">
+</p>
 
-### Expanded Hidden-Neuron Equations
+<p align="center">
+  <em>
+    The output neuron applies the activation function to its weighted
+    input, producing the final network prediction.
+  </em>
+</p>
 
-Since $a_0^{(1)}=x_0=1$, the weighted input of the first hidden neuron is:
+Therefore:
+
+$$\boxed{h_\Theta(x)=a^{(3)}=g\left(z^{(3)}\right)}$$
+
+---
+
+### Expanded Hidden-Layer Calculations
+
+For hidden neuron \(j\), the general weighted-input equation is:
+
+$$z_j^{(2)}=\theta_{j0}^{(1)}+\sum_{k=1}^{3}\theta_{jk}^{(1)}x_k$$
+
+The corresponding activation is:
+
+$$a_j^{(2)}=g\left(z_j^{(2)}\right)$$
+
+For the first hidden neuron:
 
 $$z_1^{(2)}=\theta_{10}^{(1)}+\theta_{11}^{(1)}x_1+\theta_{12}^{(1)}x_2+\theta_{13}^{(1)}x_3$$
 
-Its activation is:
-
-$$a_1^{(2)}=g\left(z_1^{(2)}\right)=g\left(\theta_{10}^{(1)}+\theta_{11}^{(1)}x_1+\theta_{12}^{(1)}x_2+\theta_{13}^{(1)}x_3\right)$$
+$$a_1^{(2)}=g\left(z_1^{(2)}\right)$$
 
 For the second hidden neuron:
 
 $$z_2^{(2)}=\theta_{20}^{(1)}+\theta_{21}^{(1)}x_1+\theta_{22}^{(1)}x_2+\theta_{23}^{(1)}x_3$$
 
-$$a_2^{(2)}=g\left(z_2^{(2)}\right)=g\left(\theta_{20}^{(1)}+\theta_{21}^{(1)}x_1+\theta_{22}^{(1)}x_2+\theta_{23}^{(1)}x_3\right)$$
+$$a_2^{(2)}=g\left(z_2^{(2)}\right)$$
 
 For the third hidden neuron:
 
 $$z_3^{(2)}=\theta_{30}^{(1)}+\theta_{31}^{(1)}x_1+\theta_{32}^{(1)}x_2+\theta_{33}^{(1)}x_3$$
 
-$$a_3^{(2)}=g\left(z_3^{(2)}\right)=g\left(\theta_{30}^{(1)}+\theta_{31}^{(1)}x_1+\theta_{32}^{(1)}x_2+\theta_{33}^{(1)}x_3\right)$$
+$$a_3^{(2)}=g\left(z_3^{(2)}\right)$$
 
-### Expanded Output-Neuron Equation
+---
 
-Since $a_0^{(2)}=1$, the output-layer weighted input is:
+### Expanded Output-Layer Calculation
+
+Since \(a_0^{(2)}=1\), the output-layer weighted input is:
 
 $$z^{(3)}=\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}$$
 
-The final prediction is therefore:
+The final prediction is:
 
-$$h_\Theta(x)=a^{(3)}$$
-
-$$a^{(3)}=g\left(\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}\right)$$
+$$h_\Theta(x)=a^{(3)}=g\left(z^{(3)}\right)$$
 
 > **Analogy:** Forward propagation is like doing a presentation from beginning to end. The input layer represents the collected research, facts, and findings. The hidden layers filter the important information, connect related ideas, and organise them into clear slides. The output layer represents the final conclusion or message presented to the audience.
 
