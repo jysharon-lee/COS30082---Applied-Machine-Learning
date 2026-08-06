@@ -287,7 +287,7 @@ Logistic Regression
 
 <td align="center" width="50%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/14653ee2-251d-4374-a70b-91d5c0cba62c" width="100%" height="288">
+<img src="https://github.com/user-attachments/assets/14653ee2-251d-4374-a70b-91d5c0cba62c" width="100%">
 
 <br>
 
@@ -574,9 +574,9 @@ Instead of storing the label as 1, 2, or 3, represent it as a vector:
   
 | Class | One-Hot Target $y$ |
 |-------|--------------------|
-| Dog | $\begin{bmatrix}1 \\\\0 \\\\0\end{bmatrix}$ |
-| Penguin | $\begin{bmatrix}0 \\\\ 1\\\\0\end{bmatrix}$ |
-| Tiger | $\begin{bmatrix}0 \\\\0 \\\\1\end{bmatrix}$ |
+| Dog | $$\begin{bmatrix}1 \\\\0 \\\\0\end{bmatrix} $$ |
+| Penguin | $$\begin{bmatrix}0 \\\\1 \\\\0\end{bmatrix} $$ |
+| Tiger | $$\begin{bmatrix}0 \\\\0 \\\\1\end{bmatrix} $$ |
   
 </div>
 
@@ -624,260 +624,86 @@ The activation function is applied element by element.
 
 The ordinary input activations are the three input features:
 
-$$a^{(1)}=\begin{bmatrix}a_1^{(1)} \\a_2^{(1)} \\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}x_1 \\x_2 \\x_3\end{bmatrix}$$
+$$a^{(1)}=\begin{bmatrix}a_1^{(1)} \\\\a_2^{(1)} \\\\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}x_1 \\\\x_2 \\\\x_3\end{bmatrix}$$
 
 Add the bias unit $a_0^{(1)}=x_0=1$ to form the bias-augmented input vector:
 
-$$
-\tilde{a}^{(1)}
-=
-\begin{bmatrix}
-a_0^{(1)} \\
-a_1^{(1)} \\
-a_2^{(1)} \\
-a_3^{(1)}
-\end{bmatrix}
-=
-\begin{bmatrix}
-1 \\
-x_1 \\
-x_2 \\
-x_3
-\end{bmatrix}
-$$
+$$tilde\{a}^{(1)}=\begin{bmatrix}a_0^{(1)} \\a_1^{(1)} \\a_2^{(1)} \\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}1 \\x_1 \\x_2 \\x_3\end{bmatrix}$$
 
 > [!NOTE]
 > The tilde in $\tilde{a}^{(l)}$ indicates that the activation vector includes the bias unit $a_0^{(l)}=1$.
 
 **Step 1: Compute the hidden-layer weighted inputs**
 
-$$
-z^{(2)}=\Theta^{(1)}\tilde{a}^{(1)}
-$$
+$$z^{(2)}=\Theta^{(1)}\tilde{a}^{(1)}$$
 
 The matrix dimensions are:
 
-$$
-\underbrace{z^{(2)}}_{3\times1}
-=
-\underbrace{\Theta^{(1)}}_{3\times4}
-\underbrace{\tilde{a}^{(1)}}_{4\times1}
-$$
+$$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrace{\tilde{a}^{(1)}}_{4\times1}$$
 
 Therefore:
 
-$$
-z^{(2)}
-=
-\begin{bmatrix}
-z_1^{(2)} \\
-z_2^{(2)} \\
-z_3^{(2)}
-\end{bmatrix}
-$$
+$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \\z_2^{(2)} \\z_3^{(2)}\end{bmatrix}$$
 
 **Step 2: Activate the hidden neurons**
 
 Apply the activation function element-wise:
 
-$$
-a^{(2)}
-=
-g\left(z^{(2)}\right)
-=
-\begin{bmatrix}
-g\left(z_1^{(2)}\right) \\
-g\left(z_2^{(2)}\right) \\
-g\left(z_3^{(2)}\right)
-\end{bmatrix}
-=
-\begin{bmatrix}
-a_1^{(2)} \\
-a_2^{(2)} \\
-a_3^{(2)}
-\end{bmatrix}
-$$
+$$a^{(2)}=g\left(z^{(2)}\right)=\begin{bmatrix}g\left(z_1^{(2)}\right) \\\\g\left(z_2^{(2)}\right) \\\\g\left(z_3^{(2)}\right)\end{bmatrix}=\begin{bmatrix}a_1^{(2)} \\\\a_2^{(2)} \\\\a_3^{(2)}\end{bmatrix}$$
 
 **Step 3: Add the hidden-layer bias**
 
 The activation function produces only the three ordinary hidden-neuron activations. Before passing them to Layer 3, add the bias unit $a_0^{(2)}=1$:
 
-$$
-\tilde{a}^{(2)}
-=
-\begin{bmatrix}
-a_0^{(2)} \\
-a_1^{(2)} \\
-a_2^{(2)} \\
-a_3^{(2)}
-\end{bmatrix}
-=
-\begin{bmatrix}
-1 \\
-a_1^{(2)} \\
-a_2^{(2)} \\
-a_3^{(2)}
-\end{bmatrix}
-$$
+$$\tilde{a}^{(2)}=\begin{bmatrix}a_0^{(2)} \\\\a_1^{(2)} \\\\a_2^{(2)} \\\\a_3^{(2)}\end{bmatrix}=\begin{bmatrix}1 \\\\a_1^{(2)} \\\\a_2^{(2)} \\\\a_3^{(2)}\end{bmatrix}$$
 
 **Step 4: Compute the output-layer weighted input**
 
-$$
-z^{(3)}=\Theta^{(2)}\tilde{a}^{(2)}
-$$
+$$z^{(3)}=\Theta^{(2)}\tilde{a}^{(2)}$$
 
 The matrix dimensions are:
 
-$$
-\underbrace{z^{(3)}}_{1\times1}
-=
-\underbrace{\Theta^{(2)}}_{1\times4}
-\underbrace{\tilde{a}^{(2)}}_{4\times1}
-$$
+$$\underbrace{z^{(3)}}_{1\times1}=\underbrace{\Theta^{(2)}}_{1\times4}\underbrace{\tilde{a}^{(2)}}_{4\times1}$$
 
 **Step 5: Compute the final output**
 
-$$
-a^{(3)}
-=
-g\left(z^{(3)}\right)
-=
-h_\Theta(x)
-$$
+$$a^{(3)}=g\left(z^{(3)}\right)=h_\Theta(x)$$
 
 Because Layer 3 contains only one output neuron:
 
-$$
-a^{(3)}=a_1^{(3)}=h_\Theta(x)
-$$
+$$a^{(3)}=a_1^{(3)}=h_\Theta(x)$$
 
 ### Expanded Hidden-Neuron Equations
 
 Since $a_0^{(1)}=x_0=1$, the weighted input of the first hidden neuron is:
 
-$$
-z_1^{(2)}
-=
-\theta_{10}^{(1)}
-+
-\theta_{11}^{(1)}x_1
-+
-\theta_{12}^{(1)}x_2
-+
-\theta_{13}^{(1)}x_3
-$$
+$$z_1^{(2)}=\theta_{10}^{(1)}+\theta_{11}^{(1)}x_1+\theta_{12}^{(1)}x_2+\theta_{13}^{(1)}x_3$$
 
 Its activation is:
 
-$$
-a_1^{(2)}
-=
-g\left(z_1^{(2)}\right)
-=
-g\left(
-\theta_{10}^{(1)}
-+
-\theta_{11}^{(1)}x_1
-+
-\theta_{12}^{(1)}x_2
-+
-\theta_{13}^{(1)}x_3
-\right)
-$$
+$$a_1^{(2)}=g\left(z_1^{(2)}\right)=g\left(\theta_{10}^{(1)}+\theta_{11}^{(1)}x_1+\theta_{12}^{(1)}x_2+\theta_{13}^{(1)}x_3\right)$$
 
 For the second hidden neuron:
 
-$$
-z_2^{(2)}
-=
-\theta_{20}^{(1)}
-+
-\theta_{21}^{(1)}x_1
-+
-\theta_{22}^{(1)}x_2
-+
-\theta_{23}^{(1)}x_3
-$$
+$$z_2^{(2)}=\theta_{20}^{(1)}+\theta_{21}^{(1)}x_1+\theta_{22}^{(1)}x_2+\theta_{23}^{(1)}x_3$$
 
-$$
-a_2^{(2)}
-=
-g\left(z_2^{(2)}\right)
-=
-g\left(
-\theta_{20}^{(1)}
-+
-\theta_{21}^{(1)}x_1
-+
-\theta_{22}^{(1)}x_2
-+
-\theta_{23}^{(1)}x_3
-\right)
-$$
+$$a_2^{(2)}=g\left(z_2^{(2)}\right)=g\left(\theta_{20}^{(1)}+\theta_{21}^{(1)}x_1+\theta_{22}^{(1)}x_2+\theta_{23}^{(1)}x_3\right)$$
 
 For the third hidden neuron:
 
-$$
-z_3^{(2)}
-=
-\theta_{30}^{(1)}
-+
-\theta_{31}^{(1)}x_1
-+
-\theta_{32}^{(1)}x_2
-+
-\theta_{33}^{(1)}x_3
-$$
+$$z_3^{(2)}=\theta_{30}^{(1)}+\theta_{31}^{(1)}x_1+\theta_{32}^{(1)}x_2+\theta_{33}^{(1)}x_3$$
 
-$$
-a_3^{(2)}
-=
-g\left(z_3^{(2)}\right)
-=
-g\left(
-\theta_{30}^{(1)}
-+
-\theta_{31}^{(1)}x_1
-+
-\theta_{32}^{(1)}x_2
-+
-\theta_{33}^{(1)}x_3
-\right)
-$$
+$$a_3^{(2)}=g\left(z_3^{(2)}\right)=g\left(\theta_{30}^{(1)}+\theta_{31}^{(1)}x_1+\theta_{32}^{(1)}x_2+\theta_{33}^{(1)}x_3\right)$$
 
 ### Expanded Output-Neuron Equation
 
 Since $a_0^{(2)}=1$, the output-layer weighted input is:
 
-$$
-z^{(3)}
-=
-\theta_{10}^{(2)}
-+
-\theta_{11}^{(2)}a_1^{(2)}
-+
-\theta_{12}^{(2)}a_2^{(2)}
-+
-\theta_{13}^{(2)}a_3^{(2)}
-$$
+$$z^{(3)}=\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}$$
 
 The final prediction is therefore:
 
-$$
-h_\Theta(x)
-=
-a^{(3)}
-=
-g\left(
-\theta_{10}^{(2)}
-+
-\theta_{11}^{(2)}a_1^{(2)}
-+
-\theta_{12}^{(2)}a_2^{(2)}
-+
-\theta_{13}^{(2)}a_3^{(2)}
-\right)
-$$
+$$h_\Theta(x)=a^{(3)}=g\left(\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}\right)$$
 
 > **Analogy:** Forward propagation is like doing a presentation from beginning to end. The input layer represents the collected research, facts, and findings. The hidden layers filter the important information, connect related ideas, and organise them into clear slides. The output layer represents the final conclusion or message presented to the audience.
 
@@ -913,14 +739,21 @@ where $\alpha$ is the learning rate.
 
 The prediction depends on the last hidden layer, which depends on the previous hidden layer, and so on. The **chain rule** lets the output error be traced backwards through these dependencies.
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b0945a47-4629-42ee-af87-c661fab5facf" width=600>
+</p>
 
-```text
-Forward pass:   Input  → Hidden → Output → Cost
-Backward pass:  Input  ← Hidden ← Error  ← Cost
-```
+<p align="center">
+  <em>Forward pass:   Input  → Hidden → Output → Cost</em>
+</p>
 
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/85fd0335-3e8c-499c-bde8-404e0dbb4ec2" width=600>
+</p>
+
+<p align="center">
+  <em>Backward pass:  Input  ← Hidden ← Error  ← Cost</em>
+</p>
 
 > **Analogy:** If the final product from a production line is faulty, backpropagation inspects the last process first, then traces responsibility backwards to earlier processes.
 
