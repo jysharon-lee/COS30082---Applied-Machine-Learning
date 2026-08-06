@@ -286,7 +286,7 @@ Logistic Regression
 
 <td align="center" width="50%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/14653ee2-251d-4374-a70b-91d5c0cba62c" width="100%">
+<img src="https://github.com/user-attachments/assets/dfc288e3-0375-48fe-a70e-2069659bba77" width="100%">
 
 <br>
 
@@ -632,27 +632,11 @@ Forward propagation moves information from the input layer to the output layer t
 
 ---
 
-#### Step 1: Pass the Inputs to the Hidden Layer
-
-The input-layer activations are the input features:
-
-$$a^{(1)}=\begin{bmatrix}x_1 \crx_2 \crx_3\end{bmatrix}$$
-
-A fixed bias unit \(a_0^{(1)}=x_0=1\) is added to form the bias-augmented input vector:
-
-$$\tilde{a}^{(1)}=\begin{bmatrix}1 \crx_1 \crx_2 \crx_3\end{bmatrix}$$
-
-The weighted inputs entering the three hidden neurons are calculated using:
-
-$$z^{(2)}=\Theta^{(1)}\tilde{a}^{(1)}$$
-
-The corresponding matrix dimensions are:
-
-$$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrace{\tilde{a}^{(1)}}_{4\times1}$$
+### Step 1: Pass the Inputs to the Hidden Layer
 
 <p align="center">
   <img
-    src="YOUR_FIRST_IMAGE_URL"
+    src="https://github.com/user-attachments/assets/eb99379d-2f01-4919-b42c-5ed96d88328e"
     width="80%"
     alt="Input features propagated to the hidden layer">
 </p>
@@ -664,27 +648,35 @@ $$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrac
   </em>
 </p>
 
+The input-layer activations are the input features:
+
+$$a^{(1)}=\begin{bmatrix}x_1 \cr
+x_2 \cr
+x_3\end{bmatrix}$$
+
+A fixed bias unit $\(a_0^{(1)}=x_0=1\)$ is added to form the bias-augmented input vector:
+
+$$\{a}^{(1)}=\begin{bmatrix}1 \cr x_1 \cr x_2 \cr x_3\end{bmatrix}$$
+
+The weighted inputs entering the three hidden neurons are calculated using:
+
+$$z^{(2)}=\Theta^{(1)}\{a}^{(1)}$$
+
+The corresponding matrix dimensions are:
+
+$$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrace{\{a}^{(1)}}_{4\times1}$$
+
 The resulting vector contains one weighted input for each hidden neuron:
 
-$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \crz_2^{(2)} \crz_3^{(2)}\end{bmatrix}$$
+$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \cr z_2^{(2)} \cr z_3^{(2)}\end{bmatrix}$$
 
 ---
 
-#### Step 2: Activate the Hidden Neurons
-
-The activation function \(g\) is applied element-wise to the hidden-layer weighted inputs:
-
-$$
-a^{(2)}=g\left(z^{(2)}\right)
-$$
-
-Therefore:
-
-$$a^{(2)}=\begin{bmatrix}g\left(z_1^{(2)}\right) \crg\left(z_2^{(2)}\right) \crg\left(z_3^{(2)}\right)\end{bmatrix}=\begin{bmatrix}a_1^{(2)} \cra_2^{(2)} \cra_3^{(2)}\end{bmatrix}$$
+### Step 2: Activate the Hidden Neurons
 
 <p align="center">
   <img
-    src="YOUR_SECOND_IMAGE_URL"
+    src="https://github.com/user-attachments/assets/d25dd289-eded-4d1e-853c-b91133fec64a"
     width="80%"
     alt="Activation of the hidden-layer neurons">
 </p>
@@ -696,25 +688,27 @@ $$a^{(2)}=\begin{bmatrix}g\left(z_1^{(2)}\right) \crg\left(z_2^{(2)}\right) \crg
   </em>
 </p>
 
+The activation function \(g\) is applied element-wise to the hidden-layer weighted inputs:
+
+$$
+a^{(2)}=g\left(z^{(2)}\right)
+$$
+
+Therefore:
+
+$$a^{(2)}=\begin{bmatrix}g\left(z_1^{(2)}\right) \cr g\left(z_2^{(2)}\right) \cr g\left(z_3^{(2)}\right)\end{bmatrix}=\begin{bmatrix}a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmatrix}$$
+
 For each hidden neuron:
 
 $$a_j^{(2)}=g\left(z_j^{(2)}\right),\qquad j=1,2,3$$
 
 ---
 
-#### Step 3: Add the Hidden-Layer Bias
-
-The activation function produces only the three ordinary hidden-neuron activations. Before propagating them to Layer 3, another bias unit is added:
-
-$$a_0^{(2)}=1$$
-
-The bias-augmented hidden-layer vector is therefore:
-
-$$\tilde{a}^{(2)}=\begin{bmatrix}1 \cra_1^{(2)} \cra_2^{(2)} \cra_3^{(2)}\end{bmatrix}$$
+### Step 3: Add the Hidden-Layer Bias
 
 <p align="center">
   <img
-    src="YOUR_THIRD_IMAGE_URL"
+    src="https://github.com/user-attachments/assets/0139ee20-4678-4693-8960-4b2a4a505626"
     width="80%"
     alt="Hidden-layer bias added before propagation to the output layer">
 </p>
@@ -726,32 +720,24 @@ $$\tilde{a}^{(2)}=\begin{bmatrix}1 \cra_1^{(2)} \cra_2^{(2)} \cra_3^{(2)}\end{bm
   </em>
 </p>
 
+The activation function produces only the three ordinary hidden-neuron activations. Before propagating them to Layer 3, another bias unit is added:
+
+$$a_0^{(2)}=1$$
+
+The bias-augmented hidden-layer vector is therefore:
+
+$$\{a}^{(2)}=\begin{bmatrix}1 \cr2 a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmatrix}$$
+
 > [!NOTE]
-> The tilde in \(\tilde{a}^{(l)}\) indicates that the activation vector includes the bias unit \(a_0^{(l)}=1\).
+> $\(\{a}^{(l)}\)$ indicates that the activation vector includes the bias unit \(a_0^{(l)}=1\).
 
 ---
 
-#### Step 4: Propagate to the Output Layer
-
-The output neuron combines the hidden-layer activations using the second weight matrix:
-
-$$
-z^{(3)}=\Theta^{(2)}\tilde{a}^{(2)}
-$$
-
-The matrix dimensions are:
-
-$$\underbrace{z^{(3)}}_{1\times1}=\underbrace{\Theta^{(2)}}_{1\times4}\underbrace{\tilde{a}^{(2)}}_{4\times1}$$
-
-Because the network contains one output neuron, \(z^{(3)}\) is a scalar.
-
-The activation function is then applied:
-
-$$a^{(3)}=g\left(z^{(3)}\right)$$
+### Step 4: Propagate to the Output Layer
 
 <p align="center">
   <img
-    src="YOUR_FOURTH_IMAGE_URL"
+    src="https://github.com/user-attachments/assets/24e4344d-ba34-4305-9db7-b0843d1d3317"
     width="80%"
     alt="Final output produced through forward propagation">
 </p>
@@ -762,6 +748,22 @@ $$a^{(3)}=g\left(z^{(3)}\right)$$
     input, producing the final network prediction.
   </em>
 </p>
+
+The output neuron combines the hidden-layer activations using the second weight matrix:
+
+$$
+z^{(3)}=\Theta^{(2)}\{a}^{(2)}
+$$
+
+The matrix dimensions are:
+
+$$\underbrace{z^{(3)}}_{1\times1}=\underbrace{\Theta^{(2)}}_{1\times4}\underbrace{\{a}^{(2)}}_{4\times1}$$
+
+Because the network contains one output neuron, \(z^{(3)}\) is a scalar.
+
+The activation function is then applied:
+
+$$a^{(3)}=g\left(z^{(3)}\right)$$
 
 Therefore:
 
