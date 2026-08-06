@@ -61,14 +61,6 @@ The classification process can be summarized as:
   <img src="https://github.com/user-attachments/assets/0e260c37-f470-4114-9732-e7010f59399c" />
 </p>
 
-<div align="center">
-
-```text
-Image → Pixel Intensities → Classification Model → Dog or Cat
-```
-
-</div>
-
 ### From Image Pixels to a Non-Linear Decision Boundary
 
 <table align="center">
@@ -98,6 +90,7 @@ Image → Pixel Intensities → Classification Model → Dog or Cat
         <img
           src="https://github.com/user-attachments/assets/2f56e895-57c8-4a3c-977c-3a590982893a"
           width="100%"
+          height="770"
           alt="Dog and cat training examples plotted using pixel features">
       </a>
     </td>
@@ -106,6 +99,7 @@ Image → Pixel Intensities → Classification Model → Dog or Cat
         <img
           src="https://github.com/user-attachments/assets/83ee8658-e669-4397-a5f8-7b3cfbd5a8a4"
           width="100%"
+          height="770"
           alt="Non-linear decision boundary separating dogs and cats">
       </a>
     </td>
@@ -117,8 +111,9 @@ Image → Pixel Intensities → Classification Model → Dog or Cat
       <b>x<sub>1</sub></b> and <b>x<sub>2</sub></b>.
     </td>
     <td align="center" valign="top">
-      Each image becomes a training point. 🔵 represents dogs, while 🔴
-      represents cats.
+      Each image becomes a training point. 
+      🔵 = Dogs
+      🔴 = Cats
     </td>
     <td align="center" valign="top">
       A non-linear decision boundary is needed to separate the two classes.
@@ -282,7 +277,7 @@ A logistic regression neuron directly maps the original inputs to the output. An
 
 <td align="center" width="50%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/eb2c1a44-cc0a-4aa9-a262-c579adef359d" width="100%">
+<img src="https://github.com/user-attachments/assets/eb2c1a44-cc0a-4aa9-a262-c579adef359d" width="100%" height="288">
 
 <br>
 
@@ -358,6 +353,65 @@ It is added to each non-output layer and has its own outgoing weights.
 | $\theta_{jk}^{(l)}$ | Weight from neuron $k$ in layer $l$ to neuron $j$ in layer $l+1$ |
 | $h_\Theta(x)$ | Network prediction |
 
+```mermaid
+flowchart LR
+    subgraph layer1["Layer 1: Input Layer"]
+        direction TB
+        B1(("Bias<br/>a₀⁽¹⁾ = 1"))
+        X1(("a₁⁽¹⁾ = x₁"))
+        X2(("a₂⁽¹⁾ = x₂"))
+        X3(("a₃⁽¹⁾ = x₃"))
+    end
+
+    subgraph layer2["Layer 2: Hidden Layer"]
+        direction TB
+        B2(("Bias<br/>a₀⁽²⁾ = 1"))
+        A1(("z₁⁽²⁾ → a₁⁽²⁾"))
+        A2(("z₂⁽²⁾ → a₂⁽²⁾"))
+        A3(("z₃⁽²⁾ → a₃⁽²⁾"))
+    end
+
+    subgraph layer3["Layer 3: Output Layer"]
+        direction TB
+        Y(("z₁⁽³⁾ → a₁⁽³⁾"))
+    end
+
+    B1 --> A1
+    B1 --> A2
+    B1 --> A3
+
+    X1 -->|"θ₁₁⁽¹⁾"| A1
+    X1 --> A2
+    X1 --> A3
+
+    X2 --> A1
+    X2 --> A2
+    X2 --> A3
+
+    X3 --> A1
+    X3 --> A2
+    X3 --> A3
+
+    B2 --> Y
+    A1 -->|"θ₁₁⁽²⁾"| Y
+    A2 --> Y
+    A3 --> Y
+
+    classDef input fill:#2563eb,stroke:#93c5fd,color:#ffffff
+    classDef hidden fill:#7c3aed,stroke:#c4b5fd,color:#ffffff
+    classDef output fill:#059669,stroke:#6ee7b7,color:#ffffff
+    classDef bias fill:#dc2626,stroke:#fca5a5,color:#ffffff
+
+    class X1,X2,X3 input
+    class A1,A2,A3 hidden
+    class Y output
+    class B1,B2 bias
+```
+
+In this network, the total number of layers is $L=3$. The values $s_1=3$, $s_2=3$, and $s_3=1$ describe the number of non-bias neurons in each layer.
+
+Each $z_i^{(l)}$ is the weighted input entering neuron $i$, while $a_i^{(l)}=g(z_i^{(l)})$ is its activation. The matrix $\Theta^{(l)}$ contains all weights connecting layer $l$ to layer $l+1$, whereas $\theta_{jk}^{(l)}$ represents one individual connection from neuron $k$ to neuron $j$.
+
 > [!NOTE]
 > Capital $\Theta$ is commonly used for a layer's complete weight matrix, while lowercase $\theta_{jk}$ represents one individual weight.
 
@@ -382,10 +436,14 @@ For 3 input neurons, 3 hidden neurons, and 1 output neuron:
   <img src="https://github.com/user-attachments/assets/6ce1e26b-5945-4dca-a5e5-da938a3d5c33" width=600>
 </p>
 
+<div align="center">
+  
 | Mapping | Destination Neurons | Source Neurons + Bias | Matrix Size |
 |---------|---------------------|-----------------------|-------------|
-| Input → Hidden | 3 | $3+1=4$ | $3\times4$ |
-| Hidden → Output | 1 | $3+1=4$ | $1\times4$ |
+| Input (Layer 1) → Hidden (Layer 2) | 3 | $3+1=4$ | $3\times4$ |
+| Hidden (Layer 2) → Output (Layer 3) | 1 | $3+1=4$ | $1\times4$ |
+
+</div>
 
 ### Parameter Count
 
@@ -402,12 +460,16 @@ $$
 
 ### Important Terminology
 
+<div align="center">
+  
 | Symbol | Meaning |
 |--------|---------|
 | $K$ | Number of output neurons/classes |
 | $L$ | Total number of network layers |
 | $s_l$ | Number of non-bias neurons in layer $l$ |
 | $m$ or $N$ | Number of training examples |
+
+</div>
 
 ### Binary Classification Cost
 
@@ -451,27 +513,29 @@ $$
 
 Instead of manually selecting polynomial terms, the network learns which combinations of inputs help reduce the prediction error.
 
+<div align="center">
+  
 | Model | Feature Representation |
 |-------|------------------------|
 | Logistic Regression | Uses the supplied features directly |
 | ANN with hidden layers | Learns new features from the supplied features |
 
+</div>
+
 ### Deeper Networks
 
 A deeper network contains more than one hidden layer:
 
-<div align="center">
-
-```text
-Input → Hidden Layer 1 → Hidden Layer 2 → Output
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8acd6117-ee5e-40eb-a7e6-a04ffa58829a" width=1000>
+</p>
 
 As information travels deeper through the network, representations can become increasingly abstract.
 
 For image classification, a simplified interpretation is:
 
+<div align="center">
+  
 | Layer | Possible Learned Feature |
 |-------|--------------------------|
 | Early hidden layer | Edges and colour changes |
@@ -479,18 +543,10 @@ For image classification, a simplified interpretation is:
 | Deeper hidden layer | Complete object parts or shapes |
 | Output layer | Dog, cat, or another class |
 
+</div>
+
 > [!IMPORTANT]
 > The network is not explicitly told to detect an edge or an ear. These useful intermediate features are learned through training.
-
-### Why Non-Linear Activation Is Essential
-
-If every layer used only a linear activation, several stacked layers would still collapse into one linear transformation:
-
-$$
-W_3(W_2(W_1x))=(W_3W_2W_1)x
-$$
-
-Therefore, non-linear activation functions are what allow a neural network to learn a genuinely non-linear hypothesis.
 
 ---
 
@@ -514,11 +570,15 @@ $$
 
 Instead of storing the label as 1, 2, or 3, represent it as a vector:
 
+<div align="center">
+  
 | Class | One-Hot Target $y$ |
 |-------|--------------------|
-| Dog | $\begin{bmatrix}1\\0\\0\end{bmatrix}$ |
-| Penguin | $\begin{bmatrix}0\\1\\0\end{bmatrix}$ |
-| Tiger | $\begin{bmatrix}0\\0\\1\end{bmatrix}$ |
+| Dog | $\begin{bmatrix}1 \\\\0 \\\\0\end{bmatrix}$ |
+| Penguin | $\begin{bmatrix}0 \\\\ 1\\\\0\end{bmatrix}$ |
+| Tiger | $\begin{bmatrix}0 \\\\0 \\\\1\end{bmatrix}$ |
+  
+</div>
 
 Only the position belonging to the correct class is 1.
 
@@ -526,14 +586,12 @@ Only the position belonging to the correct class is 1.
 
 If the network produces:
 
-$$
-h_\Theta(x)=\begin{bmatrix}0.08\\0.87\\0.05\end{bmatrix}
-$$
+$$ h_\Theta(x)=\begin{bmatrix}0.08 \\\\0.87 \\\\0.05\end{bmatrix} $$
 
 then the second output is largest, so the model predicts **penguin**.
 
 $$
-\hat{y}=\underset{k}{\operatorname{argmax}}\;h_\Theta(x)_k
+\hat{y}=\arg\max_k h_\Theta(x)_k
 $$
 
 ### Binary vs Multiclass Output
@@ -556,13 +614,9 @@ $$
 
 For each layer:
 
-$$
-z^{(l+1)}=\Theta^{(l)}a^{(l)}
-$$
+$$z^{(l+1)}=\Theta^{(l)}a^{(l)}$$
 
-$$
-a^{(l+1)}=g\left(z^{(l+1)}\right)
-$$
+$$a^{(l+1)}=g\left(z^{(l+1)}\right)$$
 
 The activation function is applied element by element.
 
@@ -570,21 +624,7 @@ The activation function is applied element by element.
 
 The ordinary input activations are the three input features:
 
-$$
-a^{(1)}
-=
-\begin{bmatrix}
-a_1^{(1)} \\
-a_2^{(1)} \\
-a_3^{(1)}
-\end{bmatrix}
-=
-\begin{bmatrix}
-x_1 \\
-x_2 \\
-x_3
-\end{bmatrix}
-$$
+$$a^{(1)}=\begin{bmatrix}a_1^{(1)} \\a_2^{(1)} \\a_3^{(1)}\end{bmatrix}=\begin{bmatrix}x_1 \\x_2 \\x_3\end{bmatrix}$$
 
 Add the bias unit $a_0^{(1)}=x_0=1$ to form the bias-augmented input vector:
 
