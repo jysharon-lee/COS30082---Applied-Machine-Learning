@@ -85,18 +85,18 @@ The classification process can be summarized as:
       </a>
     </td>
     <td align="center" valign="top">
-      <a href="https://github.com/user-attachments/assets/2f56e895-57c8-4a3c-977c-3a590982893a">
+      <a href="https://github.com/user-attachments/assets/d4df5120-5c6c-4d96-bcbe-0ef87d85aeac">
         <img
-          src="https://github.com/user-attachments/assets/2f56e895-57c8-4a3c-977c-3a590982893a"
+          src="https://github.com/user-attachments/assets/d4df5120-5c6c-4d96-bcbe-0ef87d85aeac"
           width="100%"
           height="750"
           alt="Dog and cat training examples plotted using pixel features">
       </a>
     </td>
     <td align="center" valign="top">
-      <a href="https://github.com/user-attachments/assets/83ee8658-e669-4397-a5f8-7b3cfbd5a8a4">
+      <a href="https://github.com/user-attachments/assets/62d846af-8c92-40a1-96e4-d303ea221713">
         <img
-          src="https://github.com/user-attachments/assets/83ee8658-e669-4397-a5f8-7b3cfbd5a8a4"
+          src="https://github.com/user-attachments/assets/62d846af-8c92-40a1-96e4-d303ea221713"
           width="100%"
           height="760"
           alt="Non-linear decision boundary separating dogs and cats">
@@ -111,7 +111,7 @@ The classification process can be summarized as:
     </td>
     <td align="center" valign="top">
       Each image becomes a training point. 
-      🔵 = Dogs
+      <br>🔵 = Dogs
       🔴 = Cats
     </td>
     <td align="center" valign="top">
@@ -276,7 +276,7 @@ A logistic regression neuron directly maps the original inputs to the output. An
 
 <td align="center" width="50%" valign="top">
 
-<img src="https://github.com/user-attachments/assets/eb2c1a44-cc0a-4aa9-a262-c579adef359d" width="100%" height="280">
+<img src="https://github.com/user-attachments/assets/87b0d2eb-3fc0-49bc-8240-71316b3679b7" width="100%">
 
 <br>
 
@@ -573,9 +573,9 @@ Instead of storing the label as 1, 2, or 3, represent it as a vector:
   
 | Class | One-Hot Target $y$ |
 |-------|--------------------|
-| Dog | $$\begin{bmatrix}1 \\\\0 \\\\0\end{bmatrix} $$ |
-| Penguin | $$\begin{bmatrix}0 \\\\1 \\\\0\end{bmatrix} $$ |
-| Tiger | $$ h_\Theta(x)=\begin{bmatrix}0.08 \\\\0.87 \\\\0.05\end{bmatrix} $$ |
+| Dog | $\begin{bmatrix}1 \\\\0 \\\\0\end{bmatrix}$ |
+| Penguin | $\begin{bmatrix}0 \\\\1 \\\\0\end{bmatrix}$ |
+| Tiger | $h_\Theta(x)=\begin{bmatrix}0.08 \\\\0.87 \\\\0.05\end{bmatrix}$ |
   
 </div>
 
