@@ -13,10 +13,10 @@
 3. [From Logistic Regression to a Neuron](#3-from-logistic-regression-to-a-neuron)
 4. [Neural Network Architecture](#4-neural-network-architecture)
 5. [ANN Notation and Weight Dimensions](#5-ann-notation-and-weight-dimensions)
-6. [Forward Propagation](#6-forward-propagation)
+6. [The ANN Cost Function](#6-the-ann-cost-function)
 7. [Feature Learning and Deep Networks](#7-feature-learning-and-deep-networks)
 8. [Multiclass Classification](#8-multiclass-classification)
-9. [The ANN Cost Function](#9-the-ann-cost-function)
+9. [Forward Propagation](#9-forward-propagation)
 10. [Why Backpropagation Is Needed](#10-why-backpropagation-is-needed)
 11. [Backward Propagation](#11-backward-propagation)
 12. [The Backpropagation Algorithm](#12-the-backpropagation-algorithm)
@@ -32,6 +32,10 @@
 ## 1. Why Do We Need a Non-Linear Hypothesis?
 
 ### The Problem: Real Data Is Often Complicated
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/eb699e48-a56d-4c60-ab7a-95a6e335e84f" width=1000>
+</p>
 
 Suppose we want to classify an image as either a **dog** or a **cat**. Each pixel can be treated as an input feature:
 
@@ -53,6 +57,10 @@ $$
 
 The classification process can be summarized as:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0e260c37-f470-4114-9732-e7010f59399c" />
+</p>
+
 <div align="center">
 
 ```text
@@ -60,6 +68,63 @@ Image → Pixel Intensities → Classification Model → Dog or Cat
 ```
 
 </div>
+
+### From Image Pixels to a Non-Linear Decision Boundary
+
+<table align="center">
+  <tr>
+    <th align="center" width="33%">
+      1️⃣ Extract Pixel Features
+    </th>
+    <th align="center" width="33%">
+      2️⃣ Plot Training Examples
+    </th>
+    <th align="center" width="33%">
+      3️⃣ Learn a Non-Linear Boundary
+    </th>
+  </tr>
+
+  <tr>
+    <td align="center" valign="top">
+      <a href="https://github.com/user-attachments/assets/bfc159ba-595b-40c8-b46d-f8958ac14c21">
+        <img
+          src="https://github.com/user-attachments/assets/bfc159ba-595b-40c8-b46d-f8958ac14c21"
+          width="100%"
+          alt="Dog and cat images represented using two pixel features">
+      </a>
+    </td>
+    <td align="center" valign="top">
+      <a href="https://github.com/user-attachments/assets/2f56e895-57c8-4a3c-977c-3a590982893a">
+        <img
+          src="https://github.com/user-attachments/assets/2f56e895-57c8-4a3c-977c-3a590982893a"
+          width="100%"
+          alt="Dog and cat training examples plotted using pixel features">
+      </a>
+    </td>
+    <td align="center" valign="top">
+      <a href="https://github.com/user-attachments/assets/83ee8658-e669-4397-a5f8-7b3cfbd5a8a4">
+        <img
+          src="https://github.com/user-attachments/assets/83ee8658-e669-4397-a5f8-7b3cfbd5a8a4"
+          width="100%"
+          alt="Non-linear decision boundary separating dogs and cats">
+      </a>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center" valign="top">
+      Selected pixel intensities become the input features
+      <b>x<sub>1</sub></b> and <b>x<sub>2</sub></b>.
+    </td>
+    <td align="center" valign="top">
+      Each image becomes a training point. 🔵 represents dogs, while 🔴
+      represents cats.
+    </td>
+    <td align="center" valign="top">
+      A non-linear decision boundary is needed to separate the two classes.
+    </td>
+  </tr>
+</table>
 
 ### Why Not Add Polynomial Features?
 
@@ -83,12 +148,16 @@ $$
 \frac{10{,}800(10{,}801)}{2} \approx 58.3 \text{ million features}
 $$
 
+<div align="center">
+
 | Problem | Effect |
 |---------|--------|
 | Too many polynomial features | Very high memory usage |
 | Manual feature construction | Difficult to decide which combinations matter |
 | High-dimensional input | Expensive model training and prediction |
 | Complex patterns | A simple linear boundary may underfit |
+
+</div>
 
 > [!IMPORTANT]
 > **Neural networks provide a better alternative:** instead of manually creating millions of polynomial features, the hidden layers learn useful non-linear features automatically.
@@ -104,6 +173,10 @@ $$
 The human brain contains interconnected biological neurons. A neuron receives signals, processes them, and sends an output to other neurons.
 
 An **Artificial Neural Network (ANN)** follows a simplified version of the same idea:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1217fa08-7e92-48fd-9ae2-523c57f766a1" width=600>
+</p>
 
 1. Receive input values
 2. Multiply each input by a weight
@@ -202,18 +275,29 @@ $$
 
 ### Why a Hidden Layer Changes Everything
 
-A logistic regression neuron directly maps the original inputs to the output. An ANN inserts one or more hidden layers:
+A logistic regression neuron directly maps the original inputs to the output. An ANN inserts one or more hidden layers. The hidden neurons create new learned features, allowing the model to represent much more complex patterns.
 
-<div align="center">
+<table align="center">
+<tr>
 
-```text
-Logistic Regression:  Inputs ──────────────→ Output
-Neural Network:       Inputs → Hidden Layer → Output
-```
+<td align="center" width="50%" valign="top">
 
-</div>
+<img src="https://github.com/user-attachments/assets/eb2c1a44-cc0a-4aa9-a262-c579adef359d" width="100%">
 
-The hidden neurons create new learned features, allowing the model to represent much more complex patterns.
+<br>
+
+Logistic Regression
+
+</td>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/14653ee2-251d-4374-a70b-91d5c0cba62c" width="100%" height="288">
+
+<br>
+
+Neural Networks
+</td></tr></table>
 
 ---
 
@@ -221,11 +305,15 @@ The hidden neurons create new learned features, allowing the model to represent 
 
 ### The Three Main Layer Types
 
+<div align="center">
+
 | Layer | Role |
 |-------|------|
 | **Input layer** | Holds the original features $x$ |
 | **Hidden layer(s)** | Learns intermediate feature representations |
 | **Output layer** | Produces the final prediction $h_\theta(x)$ |
+
+</div>
 
 ### A Single-Hidden-Layer Network
 
@@ -235,24 +323,15 @@ Consider a network with:
 - 3 hidden neurons
 - 1 output neuron
 
-<div align="center">
-
-```text
-Layer 1                 Layer 2                 Layer 3
-Input Layer             Hidden Layer            Output Layer
-
-x₁ ─┬───────────────→ a₁⁽²⁾ ─┐
-x₂ ─┼───────────────→ a₂⁽²⁾ ─┼───────────────→ hθ(x)
-x₃ ─┴───────────────→ a₃⁽²⁾ ─┘
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cfc0e736-d888-4c89-9d0d-3f09ae22473c" width=600>
+</p>
 
 Every neuron in one layer is normally connected to every non-bias neuron in the next layer. This is called a **fully connected** or **dense** layer.
 
-### Bias Units
+### Bias Units (encircled with blue colour)
 
-A bias unit has a fixed activation of 1:
+A bias unit has a fixed activation of +1, where $l$ is the current layer:
 
 $$
 a_0^{(l)} = 1
@@ -299,13 +378,9 @@ Why?
 
 For 3 input neurons, 3 hidden neurons, and 1 output neuron:
 
-$$
-\Theta^{(1)} \in \mathbb{R}^{3\times4}
-$$
-
-$$
-\Theta^{(2)} \in \mathbb{R}^{1\times4}
-$$
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6ce1e26b-5945-4dca-a5e5-da938a3d5c33" width=600>
+</p>
 
 | Mapping | Destination Neurons | Source Neurons + Bias | Matrix Size |
 |---------|---------------------|-----------------------|-------------|
@@ -323,84 +398,44 @@ $$
 > **Memory trick:** **Next × (Current + 1)** gives the weight-matrix dimensions.
 
 ---
+## 6. The ANN Cost Function
 
-## 6. Forward Propagation
+### Important Terminology
 
-### What Is Forward Propagation?
+| Symbol | Meaning |
+|--------|---------|
+| $K$ | Number of output neurons/classes |
+| $L$ | Total number of network layers |
+| $s_l$ | Number of non-bias neurons in layer $l$ |
+| $m$ or $N$ | Number of training examples |
 
-**Forward propagation** computes the network's prediction by moving from the input layer to the output layer.
+### Binary Classification Cost
 
-For each layer:
-
-$$
-z^{(l+1)}=\Theta^{(l)}a^{(l)}
-$$
-
-$$
-a^{(l+1)}=g\left(z^{(l+1)}\right)
-$$
-
-The activation function is applied element by element.
-
-### Step-by-Step for One Hidden Layer
-
-Let the input activation, including bias, be:
+For one sigmoid output, binary cross-entropy is:
 
 $$
-a^{(1)}=\begin{bmatrix}1\\x_1\\x_2\\x_3\end{bmatrix}
+J(\Theta)=-\frac{1}{m}\sum_{i=1}^{m}\left[y^{(i)}\log h_\Theta(x^{(i)})+(1-y^{(i)})\log\left(1-h_\Theta(x^{(i)})\right)\right]
 $$
 
-**Step 1: Compute hidden-layer weighted inputs**
+### Multiclass Classification Cost
+
+For $K$ output neurons:
 
 $$
-z^{(2)}=\Theta^{(1)}a^{(1)}
+J(\Theta)=-\frac{1}{m}\sum_{i=1}^{m}\sum_{k=1}^{K}\left[y_k^{(i)}\log h_\Theta(x^{(i)})_k+(1-y_k^{(i)})\log\left(1-h_\Theta(x^{(i)})_k\right)\right]
 $$
 
-**Step 2: Activate the hidden neurons**
+The purpose of training is to find weights that minimize $J(\Theta)$.
 
-$$
-a^{(2)}=g(z^{(2)})
-$$
+### What the Cost Measures
 
-**Step 3: Add the hidden-layer bias**
+| Prediction | Actual Class | Cost Behaviour |
+|------------|--------------|----------------|
+| Confident and correct | Match | Very small cost |
+| Uncertain | Either | Moderate cost |
+| Confident and wrong | Mismatch | Very large cost |
 
-$$
-\tilde{a}^{(2)}=\begin{bmatrix}1\\a_1^{(2)}\\a_2^{(2)}\\a_3^{(2)}\end{bmatrix}
-$$
-
-**Step 4: Compute the output weighted input**
-
-$$
-z^{(3)}=\Theta^{(2)}\tilde{a}^{(2)}
-$$
-
-**Step 5: Compute the final output**
-
-$$
-a^{(3)}=g(z^{(3)})=h_\Theta(x)
-$$
-
-### Expanded Hidden-Neuron Equations
-
-$$
-a_1^{(2)}=g\left(\theta_{10}^{(1)}x_0+\theta_{11}^{(1)}x_1+\theta_{12}^{(1)}x_2+\theta_{13}^{(1)}x_3\right)
-$$
-
-$$
-a_2^{(2)}=g\left(\theta_{20}^{(1)}x_0+\theta_{21}^{(1)}x_1+\theta_{22}^{(1)}x_2+\theta_{23}^{(1)}x_3\right)
-$$
-
-$$
-a_3^{(2)}=g\left(\theta_{30}^{(1)}x_0+\theta_{31}^{(1)}x_1+\theta_{32}^{(1)}x_2+\theta_{33}^{(1)}x_3\right)
-$$
-
-The output is:
-
-$$
-h_\Theta(x)=g\left(\theta_{10}^{(2)}a_0^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}\right)
-$$
-
-> **Analogy:** Forward propagation is like information moving through a factory. Raw materials enter at the input layer, hidden layers transform them into useful components, and the output layer produces the final product.
+> **Analogy:** The cost function is the network's report card. Forward propagation answers the questions; the cost tells the network how badly its answers differ from the targets.
 
 ---
 
@@ -513,44 +548,298 @@ $$
 
 ---
 
-## 9. The ANN Cost Function
+## 9. Forward Propagation
 
-### Important Terminology
+### What Is Forward Propagation?
 
-| Symbol | Meaning |
-|--------|---------|
-| $K$ | Number of output neurons/classes |
-| $L$ | Total number of network layers |
-| $s_l$ | Number of non-bias neurons in layer $l$ |
-| $m$ or $N$ | Number of training examples |
+**Forward propagation** computes the network's prediction by moving from the input layer to the output layer.
 
-### Binary Classification Cost
-
-For one sigmoid output, binary cross-entropy is:
+For each layer:
 
 $$
-J(\Theta)=-\frac{1}{m}\sum_{i=1}^{m}\left[y^{(i)}\log h_\Theta(x^{(i)})+(1-y^{(i)})\log\left(1-h_\Theta(x^{(i)})\right)\right]
+z^{(l+1)}=\Theta^{(l)}a^{(l)}
 $$
 
-### Multiclass Classification Cost
-
-For $K$ output neurons:
-
 $$
-J(\Theta)=-\frac{1}{m}\sum_{i=1}^{m}\sum_{k=1}^{K}\left[y_k^{(i)}\log h_\Theta(x^{(i)})_k+(1-y_k^{(i)})\log\left(1-h_\Theta(x^{(i)})_k\right)\right]
+a^{(l+1)}=g\left(z^{(l+1)}\right)
 $$
 
-The purpose of training is to find weights that minimize $J(\Theta)$.
+The activation function is applied element by element.
 
-### What the Cost Measures
+### Step-by-Step Forward Propagation for One Hidden Layer
 
-| Prediction | Actual Class | Cost Behaviour |
-|------------|--------------|----------------|
-| Confident and correct | Match | Very small cost |
-| Uncertain | Either | Moderate cost |
-| Confident and wrong | Mismatch | Very large cost |
+The ordinary input activations are the three input features:
 
-> **Analogy:** The cost function is the network's report card. Forward propagation answers the questions; the cost tells the network how badly its answers differ from the targets.
+$$
+a^{(1)}
+=
+\begin{bmatrix}
+a_1^{(1)} \\
+a_2^{(1)} \\
+a_3^{(1)}
+\end{bmatrix}
+=
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+x_3
+\end{bmatrix}
+$$
+
+Add the bias unit $a_0^{(1)}=x_0=1$ to form the bias-augmented input vector:
+
+$$
+\tilde{a}^{(1)}
+=
+\begin{bmatrix}
+a_0^{(1)} \\
+a_1^{(1)} \\
+a_2^{(1)} \\
+a_3^{(1)}
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 \\
+x_1 \\
+x_2 \\
+x_3
+\end{bmatrix}
+$$
+
+> [!NOTE]
+> The tilde in $\tilde{a}^{(l)}$ indicates that the activation vector includes the bias unit $a_0^{(l)}=1$.
+
+**Step 1: Compute the hidden-layer weighted inputs**
+
+$$
+z^{(2)}=\Theta^{(1)}\tilde{a}^{(1)}
+$$
+
+The matrix dimensions are:
+
+$$
+\underbrace{z^{(2)}}_{3\times1}
+=
+\underbrace{\Theta^{(1)}}_{3\times4}
+\underbrace{\tilde{a}^{(1)}}_{4\times1}
+$$
+
+Therefore:
+
+$$
+z^{(2)}
+=
+\begin{bmatrix}
+z_1^{(2)} \\
+z_2^{(2)} \\
+z_3^{(2)}
+\end{bmatrix}
+$$
+
+**Step 2: Activate the hidden neurons**
+
+Apply the activation function element-wise:
+
+$$
+a^{(2)}
+=
+g\left(z^{(2)}\right)
+=
+\begin{bmatrix}
+g\left(z_1^{(2)}\right) \\
+g\left(z_2^{(2)}\right) \\
+g\left(z_3^{(2)}\right)
+\end{bmatrix}
+=
+\begin{bmatrix}
+a_1^{(2)} \\
+a_2^{(2)} \\
+a_3^{(2)}
+\end{bmatrix}
+$$
+
+**Step 3: Add the hidden-layer bias**
+
+The activation function produces only the three ordinary hidden-neuron activations. Before passing them to Layer 3, add the bias unit $a_0^{(2)}=1$:
+
+$$
+\tilde{a}^{(2)}
+=
+\begin{bmatrix}
+a_0^{(2)} \\
+a_1^{(2)} \\
+a_2^{(2)} \\
+a_3^{(2)}
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 \\
+a_1^{(2)} \\
+a_2^{(2)} \\
+a_3^{(2)}
+\end{bmatrix}
+$$
+
+**Step 4: Compute the output-layer weighted input**
+
+$$
+z^{(3)}=\Theta^{(2)}\tilde{a}^{(2)}
+$$
+
+The matrix dimensions are:
+
+$$
+\underbrace{z^{(3)}}_{1\times1}
+=
+\underbrace{\Theta^{(2)}}_{1\times4}
+\underbrace{\tilde{a}^{(2)}}_{4\times1}
+$$
+
+**Step 5: Compute the final output**
+
+$$
+a^{(3)}
+=
+g\left(z^{(3)}\right)
+=
+h_\Theta(x)
+$$
+
+Because Layer 3 contains only one output neuron:
+
+$$
+a^{(3)}=a_1^{(3)}=h_\Theta(x)
+$$
+
+### Expanded Hidden-Neuron Equations
+
+Since $a_0^{(1)}=x_0=1$, the weighted input of the first hidden neuron is:
+
+$$
+z_1^{(2)}
+=
+\theta_{10}^{(1)}
++
+\theta_{11}^{(1)}x_1
++
+\theta_{12}^{(1)}x_2
++
+\theta_{13}^{(1)}x_3
+$$
+
+Its activation is:
+
+$$
+a_1^{(2)}
+=
+g\left(z_1^{(2)}\right)
+=
+g\left(
+\theta_{10}^{(1)}
++
+\theta_{11}^{(1)}x_1
++
+\theta_{12}^{(1)}x_2
++
+\theta_{13}^{(1)}x_3
+\right)
+$$
+
+For the second hidden neuron:
+
+$$
+z_2^{(2)}
+=
+\theta_{20}^{(1)}
++
+\theta_{21}^{(1)}x_1
++
+\theta_{22}^{(1)}x_2
++
+\theta_{23}^{(1)}x_3
+$$
+
+$$
+a_2^{(2)}
+=
+g\left(z_2^{(2)}\right)
+=
+g\left(
+\theta_{20}^{(1)}
++
+\theta_{21}^{(1)}x_1
++
+\theta_{22}^{(1)}x_2
++
+\theta_{23}^{(1)}x_3
+\right)
+$$
+
+For the third hidden neuron:
+
+$$
+z_3^{(2)}
+=
+\theta_{30}^{(1)}
++
+\theta_{31}^{(1)}x_1
++
+\theta_{32}^{(1)}x_2
++
+\theta_{33}^{(1)}x_3
+$$
+
+$$
+a_3^{(2)}
+=
+g\left(z_3^{(2)}\right)
+=
+g\left(
+\theta_{30}^{(1)}
++
+\theta_{31}^{(1)}x_1
++
+\theta_{32}^{(1)}x_2
++
+\theta_{33}^{(1)}x_3
+\right)
+$$
+
+### Expanded Output-Neuron Equation
+
+Since $a_0^{(2)}=1$, the output-layer weighted input is:
+
+$$
+z^{(3)}
+=
+\theta_{10}^{(2)}
++
+\theta_{11}^{(2)}a_1^{(2)}
++
+\theta_{12}^{(2)}a_2^{(2)}
++
+\theta_{13}^{(2)}a_3^{(2)}
+$$
+
+The final prediction is therefore:
+
+$$
+h_\Theta(x)
+=
+a^{(3)}
+=
+g\left(
+\theta_{10}^{(2)}
++
+\theta_{11}^{(2)}a_1^{(2)}
++
+\theta_{12}^{(2)}a_2^{(2)}
++
+\theta_{13}^{(2)}a_3^{(2)}
+\right)
+$$
+
+> **Analogy:** Forward propagation is like doing a presentation from beginning to end. The input layer represents the collected research, facts, and findings. The hidden layers filter the important information, connect related ideas, and organise them into clear slides. The output layer represents the final conclusion or message presented to the audience.
 
 ---
 
