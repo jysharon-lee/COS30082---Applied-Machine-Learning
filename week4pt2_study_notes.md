@@ -59,20 +59,9 @@ Suppose we are given $N$ training samples, and we want to classify a person as *
 
 Several different straight lines could separate the two classes:
 
-<div align="center">
-
-```text
-height (x₁)
-   │        ● obese          ●●●●
-   │   ╲   ●●●
-   │    ╲ ●●
-   │     ╲●
-   │      ╲●●●●●●
-   │       ╲   ● non-obese
-   └───────────────────────── weight (x₂)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
+</p>
 
 Any of these lines technically separates the two groups, but they are not all equally good. Some lines pass very close to a few data points, which makes the classifier more fragile to new, unseen data.
 
@@ -84,6 +73,10 @@ $$
 \text{distance(threshold, nearest obese point)} = \text{distance(threshold, nearest non-obese point)}
 $$
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/76c4ab88-f9b7-4c86-9d04-9e5e015143ab" width=600>
+</p>
+
 This equal distance on both sides is what we call the **margin**.
 
 ### The Answer: Maximum Margin
@@ -93,6 +86,10 @@ The objective of the SVM algorithm is to find a decision boundary that has the *
 $$
 \boxed{\text{SVM objective: maximize the margin between the decision boundary and the nearest data points}}
 $$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5069a388-722c-48c0-8949-b1c1c9a6663d" width=600>
+</p>
 
 > [!IMPORTANT]
 > Out of infinitely many lines that could separate two linearly separable classes, SVM specifically selects the one that maximizes the distance to the nearest data point on either side.
@@ -112,6 +109,10 @@ $$
 \boxed{\text{Support vectors are the data points that define the hyperplane}}
 $$
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/58448ed1-8b11-4705-9eda-0a4a062e5e79" width=600>
+</p>
+
 | Component | Description |
 |-----------|-------------|
 | **Decision boundary** | The hyperplane that separates the two classes |
@@ -129,14 +130,6 @@ $$
 
 ### Recall: Logistic Regression's Cost Function
 
-$$
-\text{if } y=1:\quad cost(x,y) = -\log\left(\frac{1}{1+e^{-(\theta^Tx)}}\right)
-$$
-
-$$
-\text{if } y=0:\quad cost(x,y) = -\log\left(1-\frac{1}{1+e^{-(\theta^Tx)}}\right)
-$$
-
 Recall the sigmoid hypothesis:
 
 $$
@@ -151,13 +144,16 @@ $$
 \text{predict } y=0 \text{ if } h_\theta(x)<0.5 \;\Longleftrightarrow\; \theta^Tx<0
 $$
 
-So logistic regression only requires:
 
-| Class | Requirement |
-|-------|-------------|
-| $y=1$ | $\theta^Tx \geq 0$ |
-| $y=0$ | $\theta^Tx < 0$ |
-
+| | $y=1$ | $y=0$ |
+|---|---|---|
+| **Equation** | $$cost(x,y) = -\log\left(\dfrac{1}{1+e^{-(\theta^Tx)}}\right)$$ | $$cost(x,y) = -\log\left(1-\dfrac{1}{1+e^{-(\theta^Tx)}}\right)$$ |
+| **Graph** | <p align="center">
+  <img src="https://github.com/user-attachments/assets/57607697-1094-4535-b99e-ce90a3bb7cf1" width="100%">
+</p> | <p align="center">
+  <img src="https://github.com/user-attachments/assets/aa49e836-1aa7-42c0-b40f-499f305e5fa7" width=600>
+</p> |
+| **Interpretation** | For $y=1$, we want $\theta^Tx \geq 0$ | For $y=0$, we want $\theta^Tx < 0$ |
 ---
 
 ## 5. The Hinge Loss
