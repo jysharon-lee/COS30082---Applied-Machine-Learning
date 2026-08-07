@@ -634,7 +634,7 @@ Consider a neural network containing:
 
 > [!IMPORTANT]
 > The superscript identifies the **layer**, not a power.  
-> For example, \(a_2^{(1)}\) means the activation of neuron 2 in Layer 1.
+> For example, $\(a_2^{(1)}\)$ means the activation of neuron 2 in Layer 1.
 
 ---
 
@@ -723,7 +723,7 @@ $$z_3^{(2)}=
 +\theta_{33}^{(1)}x_3
 $$
 
-Because $\x_0=1\$, the terms $\(\theta_{10}^{(1)}x_0\)$, $\(\theta_{20}^{(1)}x_0\)$, and $\(\theta_{30}^{(1)}x_0\)$ are the bias contributions.
+Because $x_0=1$, the terms $\(\theta_{10}^{(1)}x_0\)$, $\(\theta_{20}^{(1)}x_0\)$, and $\(\theta_{30}^{(1)}x_0\)$ are the bias contributions.
 
 ---
 
@@ -738,7 +738,7 @@ Because $\x_0=1\$, the terms $\(\theta_{10}^{(1)}x_0\)$, $\(\theta_{20}^{(1)}x_0
 
 <p align="center">
   <em>
-    Step 2 to Step 3 — Layer 2 first calculates $\(z^{(2)}=\Theta^{(1)}a^{(1)}\)$, then applies $\(g\)$ to produce $\(a^{(2)}\)$.
+    Step 2 to Step 3 — Layer 2 first calculates $z^{(2)}=\Theta^{(1)}\tilde{a}^{(1)}$, then applies $g$ to produce $a^{(2)}$.
   </em>
 </p>
 
@@ -766,7 +766,7 @@ $$\{a}^{(2)}=\begin{bmatrix}1 \cr a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmat
 
 <p align="center">
   <em>
-    Step 4 — After calculating the three hidden activations, the bias $\(a_0^{(2)}=1\)$ is added before propagation to Layer 3.
+    Step 4 — After calculating the three hidden activations, the bias $(a_0^{(2)}=1)$ is added before propagation to Layer 3.
   </em>
 </p>
 
@@ -824,7 +824,7 @@ $$z^{(3)}=\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)
 
 <p align="center">
   <em>
-    Final step — The output neuron applies $\(g\)$ to $\(z^{(3)}\)$, producing the final prediction $\(h_\Theta(x)\)$.
+    Final step — The output neuron applies $(g)$ to $\(z^{(3)})$, producing the final prediction $(h_\Theta(x))$.
   </em>
 </p>
 
@@ -897,7 +897,7 @@ Backward propagation, commonly called **backpropagation**, is an efficient metho
 
 Forward propagation moves from the input layer to the output layer:
 
-$$x\longrightarrowa^{(2)}\longrightarrowh_\Theta(x)$$
+$$x\longrightarrow a^{(2)}\longrightarrow h_\Theta(x)$$
 
 Backward propagation works in the opposite direction:
 
@@ -1057,7 +1057,7 @@ $$\underbrace{\frac{\partial J}{\partial\Theta^{(2)}}}_{1\times4}=\underbrace{\d
 <p align="center">
   <em>
     The output error is multiplied by each hidden-layer activation to
-    calculate the gradient of every weight in $\(\Theta^{(2)}\)$.
+    calculate the gradient of every weight in $(\Theta^{(2)})$.
   </em>
 </p>
 
@@ -1077,7 +1077,7 @@ $$\Theta_{\mathrm{nb}}^{(2)}=\begin{bmatrix}\theta_{11}^{(2)}&\theta_{12}^{(2)}&
 
 The hidden-layer error is:
 
-$$\boxed{\delta^{(2)}=\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T\delta^{(3)}\odotg'\left(z^{(2)}\right)}$$
+$$\boxed{\delta^{(2)}=\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T\delta^{(3)}\odot g'\left(z^{(2)}\right)}$$
 
 where $\(\odot\)$ represents element-wise multiplication.
 
@@ -1123,10 +1123,10 @@ $$g'\left(z^{(2)}\right)=a^{(2)}\odot\left(1-a^{(2)}\right)$$
 The hidden-layer weighted input is:
 
 $$
-z^{(2)}=\Theta^{(1)}\a^{(1)}
+z^{(2)}=\Theta^{(1)}a^{(1)\}
 $$
 
-For an individual weight \(\theta_{jk}^{(1)}\):
+For an individual weight $(\theta_{jk}^{(1)})$:
 
 $$\frac{\partial J}{\partial\theta_{jk}^{(1)}}=\frac{\partial J}{\partial z_j^{(2)}}\frac{\partial z_j^{(2)}}{\partial\theta_{jk}^{(1)}}$$
 
@@ -1165,7 +1165,7 @@ $$\underbrace{\frac{\partial J}{\partial\Theta^{(1)}}}_{3\times4}=\underbrace{\d
   </em>
 </p>
 
-For each bias weight in \(\Theta^{(1)}\):
+For each bias weight in $(\Theta^{(1)})$:
 
 $$\frac{\partial J}{\partial\theta_{j0}^{(1)}}=\delta_j^{(2)}a_0^{(1)}=\delta_j^{(2)}$$
 
@@ -1241,14 +1241,7 @@ Backward propagation stops after calculating the gradients of $\(\Theta^{(1)}\)$
 
 Given a training set containing $\(m\)$ examples:
 
-$$
-\left\{
-\left(x^{(1)},y^{(1)}\right),
-\left(x^{(2)},y^{(2)}\right),
-\ldots,
-\left(x^{(m)},y^{(m)}\right)
-\right\}
-$$
+$$\left\{\left(x^{(1)},y^{(1)}\right),\left(x^{(2)},y^{(2)}\right),\ldots,\left(x^{(m)},y^{(m)}\right)\right\}$$
 
 the network processes each input, compares its prediction with the corresponding target, calculates the required gradients, and adjusts its parameters to reduce the prediction error.
 
@@ -1348,7 +1341,7 @@ Propagate the output error backwards through the hidden layers.
 
 For a hidden layer $\(l\)$:
 
-$$\delta^{(l)}=\left(\Theta_{\mathrm{nb}}^{(l)}\right)^T\delta^{(l+1)}\odotg'\left(z^{(l)}\right)$$
+$$\delta^{(l)}=\left(\Theta_{\mathrm{nb}}^{(l)}\right)^T\delta^{(l+1)}\odot g'\left(z^{(l)}\right)$$
 
 Here, $\(\Theta_{\mathrm{nb}}^{(l)}\)$ represents the weight matrix with its bias column excluded.
 
@@ -1458,15 +1451,130 @@ It asks:
   <img src="https://github.com/user-attachments/assets/85fd0335-3e8c-499c-bde8-404e0dbb4ec2" width=600>
 </p>
 
-During backward propagation, a hidden neuron's error combines the downstream errors influenced by that neuron:
+Backward propagation calculates the error terms from the output layer towards the input layer.
+
+The error term of neuron $(j)$ in layer $(l)$ is defined as:
+
+$$\boxed{\delta_j^{(l)}=\frac{\partial J}{\partial z_j^{(l)}}}$$
+
+This measures how sensitive the final cost $J$ is to a change in the neuron's weighted input $(z_j^{(l)})$.
+
+In simple terms, it asks:
+
+> How much did this neuron contribute to the final prediction error?
+
+A large value of $(\left|\delta_j^{(l)}\right|)$ means that changing the neuron would have a relatively large effect on the final cost.
+
+---
+
+#### How a Hidden Neuron Receives Its Error
+
+A hidden neuron does not have a target value that can be directly compared with its activation. Its error must therefore be calculated from the neurons in the following layer.
+
+For neuron $j$ in layer $l$, first combine the error terms of all neurons in layer $l+1$ that receive its activation:
 
 $$
-\delta_j^{(l)}=\left(\sum_r\theta_{rj}^{(l)}\delta_r^{(l+1)}\right)g'(z_j^{(l)})
+\sum_{k=1}^{s_{l+1}}
+\theta_{kj}^{(l)}
+\delta_k^{(l+1)}
 $$
 
-It asks:
+The hidden neuron's error is then adjusted by its local activation derivative:
 
-> How much did this neuron contribute to the final error?
+$$
+\boxed{
+\delta_j^{(l)}=
+\left(
+\sum_{k=1}^{s_{l+1}}
+\theta_{kj}^{(l)}
+\delta_k^{(l+1)}
+\right)
+g'\left(z_j^{(l)}\right)
+}
+$$
+
+This calculation contains two parts:
+
+| Component | Meaning |
+|---|---|
+| $(\displaystyle \sum_{k=1}^{s_{l+1}}\theta_{kj}^{(l)}\delta_k^{(l+1)})$ | Error received from the following layer |
+| $(g'(z_j^{(l)})$) | Sensitivity of the current neuron |
+| \(\delta_j^{(l)}\) | Responsibility assigned to the current neuron |
+
+A hidden neuron receives greater responsibility when:
+
+1. It is connected to a downstream neuron with a large error.
+2. The connecting weight is large.
+3. Its activation function is sensitive at the current value of $(z_j^{(l)})$.
+
+---
+
+#### Equivalent Matrix Form
+
+To write the same three calculations compactly, first remove the bias weight from \(\Theta^{(2)}\).
+
+The complete output weight matrix is:
+
+$$
+\Theta^{(2)}=
+\begin{bmatrix}
+\theta_{10}^{(2)}
+&
+\theta_{11}^{(2)}
+&
+\theta_{12}^{(2)}
+&
+\theta_{13}^{(2)}
+\end{bmatrix}
+$$
+
+After excluding the bias column:
+
+$$
+\overline{\Theta}^{(2)}=
+\begin{bmatrix}
+\theta_{11}^{(2)}
+&
+\theta_{12}^{(2)}
+&
+\theta_{13}^{(2)}
+\end{bmatrix}
+$$
+
+The hidden-layer error vector is then:
+
+$$
+\boxed{
+\delta^{(2)}=
+\left(\overline{\Theta}^{(2)}\right)^T
+\delta^{(3)}
+\odot
+g'\left(z^{(2)}\right)
+}
+$$
+
+where \(\odot\) represents element-wise multiplication.
+
+The dimensions are:
+
+$$
+\underbrace{\delta^{(2)}}_{3\times1}=
+\left(
+\underbrace{
+\left(\overline{\Theta}^{(2)}\right)^T
+}_{3\times1}
+\underbrace{\delta^{(3)}}_{1\times1}
+\right)
+\odot
+\underbrace{
+g'\left(z^{(2)}\right)
+}_{3\times1}
+$$
+
+> [!NOTE]
+> The scalar and matrix equations describe the same operation. The
+> scalar form explains how one hidden neuron receives its error, while
+> the matrix form calculates all hidden-neuron errors simultaneously.
 
 ### Meaning of a Weight Gradient
 
