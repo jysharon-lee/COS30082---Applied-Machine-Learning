@@ -770,7 +770,9 @@ $$\{a}^{(2)}=\begin{bmatrix}1 \cr a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmat
 
 <p align="center">
   <em>
-    Step 4 — After calculating the three hidden activations, the bias $(a_0^{(2)}=1)$ is added before propagation to Layer 3.
+    Step 4 — After calculating the three hidden activations, the bias
+    <i>a</i><sub>0</sub><sup>(2)</sup> = 1 is added before propagation
+    to Layer 3.
   </em>
 </p>
 
@@ -828,7 +830,9 @@ $$z^{(3)}=\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)
 
 <p align="center">
   <em>
-    Final step — The output neuron applies $(g)$ to $\(z^{(3)})$, producing the final prediction $(h_\Theta(x))$.
+    Final step — The output neuron applies <i>g</i> to
+    <i>z</i><sup>(3)</sup>, producing the final prediction
+    <i>h</i><sub>&Theta;</sub>(<i>x</i>).
   </em>
 </p>
 
@@ -1061,7 +1065,8 @@ $$\underbrace{\frac{\partial J}{\partial\Theta^{(2)}}}_{1\times4}=\underbrace{\d
 <p align="center">
   <em>
     The output error is multiplied by each hidden-layer activation to
-    calculate the gradient of every weight in $(\Theta^{(2)})$.
+    calculate the gradient of every weight in
+    &Theta;<sup>(2)</sup>.
   </em>
 </p>
 
@@ -1104,7 +1109,7 @@ $$\underbrace{\delta^{(2)}}_{3\times1}=\left(\underbrace{\left(\Theta_{\mathrm{n
   </em>
 </p>
 
-For each hidden neuron \(j\):
+For each hidden neuron $j$:
 
 $$\delta_j^{(2)}=\theta_{1j}^{(2)}\delta^{(3)}g'\left(z_j^{(2)}\right)$$
 
@@ -1117,7 +1122,7 @@ Since \(a=g(z)\), this can also be written as:
 $$g'\left(z^{(2)}\right)=a^{(2)}\odot\left(1-a^{(2)}\right)$$
 
 > [!IMPORTANT]
-> There is no error term for the bias unit \(a_0^{(2)}\). The bias is a
+> There is no error term for the bias unit $(a_0^{(2)})$. The bias is a
 > fixed value of 1 rather than an ordinary neuron activation.
 
 ---
@@ -1165,7 +1170,7 @@ $$\underbrace{\frac{\partial J}{\partial\Theta^{(1)}}}_{3\times4}=\underbrace{\d
   <em>
     Each hidden-neuron error is multiplied by the corresponding
     input-layer activation to calculate the gradients of
-    $\(\Theta^{(1)}\)$.
+    &Theta;<sup>(1)</sup>.
   </em>
 </p>
 
@@ -1203,30 +1208,6 @@ $$\boxed{\frac{\partial J}{\partial\Theta^{(1)}}=\delta^{(2)}\left(\ a^{(1)}\rig
 
 The complete calculation for one training example can be summarised as:
 
-$$
-\begin{aligned}
-\delta^{(3)}
-&=
-\frac{\partial J}{\partial a^{(3)}}
-\odot g'\left(z^{(3)}\right), \\
-\delta^{(2)}
-&=
-\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T
-\delta^{(3)}
-\odot g'\left(z^{(2)}\right), \\
-\frac{\partial J}{\partial\Theta^{(2)}}
-&=
-\delta^{(3)}
-\left(\ a^{(2)}\right)^T, \\
-\frac{\partial J}{\partial\Theta^{(1)}}
-&=
-\delta^{(2)}
-\left(\ a^{(1)}\right)^T.
-\end{aligned}
-$$
-
-If the aligned equations do not render properly, use them as separate blocks:
-
 $$\delta^{(3)}=\frac{\partial J}{\partial a^{(3)}}\odot g'\left(z^{(3)}\right)$$
 
 $$\delta^{(2)}=\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T\delta^{(3)}\odot g'\left(z^{(2)}\right)$$
@@ -1243,9 +1224,16 @@ Backward propagation stops after calculating the gradients of $\(\Theta^{(1)}\)$
 
 ## 12. The Backpropagation Algorithm
 
-Given a training set containing $\(m\)$ examples:
+Given a training set containing $m$ examples:
 
-$$\left\{\left(x^{(1)},y^{(1)}\right),\left(x^{(2)},y^{(2)}\right),\ldots,\left(x^{(m)},y^{(m)}\right)\right\}$$
+$$
+\left\{
+\left(x^{(1)},y^{(1)}\right),
+\left(x^{(2)},y^{(2)}\right),
+\ldots,
+\left(x^{(m)},y^{(m)}\right)
+\right\}
+$$
 
 the network processes each input, compares its prediction with the corresponding target, calculates the required gradients, and adjusts its parameters to reduce the prediction error.
 
@@ -1500,10 +1488,10 @@ $$
 This calculation contains two parts:
 
 | Component | Meaning |
-|---|---|
-| $(\displaystyle \sum_{k=1}^{s_{l+1}}\theta_{kj}^{(l)}\delta_k^{(l+1)})$ | Error received from the following layer |
-| $(g'(z_j^{(l)})$) | Sensitivity of the current neuron |
-| \(\delta_j^{(l)}\) | Responsibility assigned to the current neuron |
+|:---:|---|
+| $\displaystyle \sum_{k=1}^{s_{l+1}}\theta_{kj}^{(l)}\delta_k^{(l+1)}$ | Error received from the following layer |
+| $g'\left(z_j^{(l)}\right)$ | Sensitivity of the current neuron |
+| $\delta_j^{(l)}$ | Responsibility assigned to the current neuron |
 
 A hidden neuron receives greater responsibility when:
 
@@ -1515,7 +1503,7 @@ A hidden neuron receives greater responsibility when:
 
 #### Equivalent Matrix Form
 
-To write the same three calculations compactly, first remove the bias weight from \(\Theta^{(2)}\).
+To write the same three calculations compactly, first remove the bias weight from $(\Theta^{(2)})$.
 
 The complete output weight matrix is:
 
@@ -1557,7 +1545,7 @@ g'\left(z^{(2)}\right)
 }
 $$
 
-where \(\odot\) represents element-wise multiplication.
+where $(\odot\)$ represents element-wise multiplication.
 
 The dimensions are:
 
