@@ -1226,13 +1226,12 @@ Backward propagation stops after calculating the gradients of $\(\Theta^{(1)}\)$
 
 Given a training set containing $m$ examples:
 
-$$
-\left\{
-\left(x^{(1)},y^{(1)}\right),
-\left(x^{(2)},y^{(2)}\right),
-\ldots,
-\left(x^{(m)},y^{(m)}\right)
-\right\}
+$$\mathcal{D}=
+\lbrace
+(x^{(i)},y^{(i)})
+\mid
+i=1,2,\ldots,m
+\rbrace
 $$
 
 the network processes each input, compares its prediction with the corresponding target, calculates the required gradients, and adjusts its parameters to reduce the prediction error.
