@@ -375,9 +375,7 @@ $$
 
 **SVM:**
 
-$$
-\min_{\theta} J(\theta)
-=
+$$\min_{\theta} J(\theta)=
 \underbrace{
 C\left[
 \sum_{n=1}^{N}
