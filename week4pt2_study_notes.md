@@ -1,4 +1,4 @@
-# 📘 Week 4 Part 2 Study Notes: Support Vector Machine (SVM)
+<img width="430" height="315" alt="image" src="https://github.com/user-attachments/assets/231d33a7-3f3c-4712-ba5d-5212365fb765" /># 📘 Week 4 Part 2 Study Notes: Support Vector Machine (SVM)
 
 > **Course:** COS30082 — Applied Machine Learning  
 > **Topic:** Support Vector Machine (SVM)  
@@ -60,7 +60,7 @@ Suppose we are given $N$ training samples, and we want to classify a person as *
 Several different straight lines could separate the two classes:
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
+  <img src="https://github.com/user-attachments/assets/31c79969-afed-49c7-8145-69a2e6053564" width=600>
 </p>
 
 Any of these lines technically separates the two groups, but they are not all equally good. Some lines pass very close to a few data points, which makes the classifier more fragile to new, unseen data.
@@ -158,25 +158,29 @@ $$
 
 SVM's cost function is very similar in shape to logistic regression's, but it replaces the smooth logarithmic curve with two straight-line segments. This is called the **hinge loss**.
 
-$$
-\text{if } y=1:\quad cost_1(\theta^Tx)=\max\left(0,\;1-\theta^Tx\right)
-$$
+<table align="center">
+<tr>
 
 $$
-\text{if } y=0:\quad cost_0(\theta^Tx)=\max\left(0,\;1+\theta^Tx\right)
+\text{if } y=1:\quad cost_1(\theta^Tx)=\max\left(0,\1-\theta^Tx\right)
 $$
 
-<div align="center">
+<td align="center" width="50%" valign="top">
 
-```text
-cost₁(θᵀx)                         cost₀(θᵀx)
-   │╲                                  │       ╱
-   │ ╲                                 │      ╱
-   │  ╲___________ θᵀx                 │_____╱______ θᵀx
-        1                                  -1
-```
+<img src="https://github.com/user-attachments/assets/b144fe41-1f02-4fb0-9f30-926875312cba" width="100%" height="300">
 
-</div>
+</td>
+
+$$
+\text{if } y=0:\quad cost_0(\theta^Tx)=\max\left(0,\1+\theta^Tx\right)
+$$
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/6c5211bc-5e3a-4f61-b9bc-b85f0d6cdd01" width="100%" height="300">
+
+</td></tr></table>
+
 
 | Function | Zero when | Behaviour |
 |----------|-----------|-----------|
@@ -200,20 +204,26 @@ $$
 
 However, for the **loss interpretation** used during training, SVM demands a stricter margin condition than logistic regression:
 
-$$
-cost_1(\theta^Tx)=0 \quad\text{only when}\quad \theta^Tx\geq1
-$$
+<div align="center">
+  
+| | $y=1$ | $y=0$ |
+|---|---|---|
+| **Equation** | $$cost_1(\theta^Tx)=0 \text{ only when } \theta^Tx\geq1$$ | $$cost_0(\theta^Tx)=0 \text{ only when } \theta^Tx\leq-1$$ |
+| **Graph** | <img src="https://github.com/user-attachments/assets/0903fa3c-0a58-4f54-9430-2074f7dc7952" width="300"> | <img src="https://github.com/user-attachments/assets/175b42a5-be99-49d4-8d3c-014f0b26b050" width="300"> |
+| **Interpretation** | SVM requires $\theta^Tx\geq1$ (stricter than LR's $\theta^Tx\geq0$) | SVM requires $\theta^Tx\leq-1$ (stricter than LR's $\theta^Tx<0$) |
 
-$$
-cost_0(\theta^Tx)=0 \quad\text{only when}\quad \theta^Tx\leq-1
-$$
+</div>
 
 Hence:
 
+<div align="center">
+  
 | Class | Logistic Regression requires | SVM requires |
 |-------|-------------------------------|--------------|
 | $y=1$ | $\theta^Tx\geq0$ | $\theta^Tx\geq1$ |
 | $y=0$ | $\theta^Tx<0$ | $\theta^Tx\leq-1$ |
+
+</div>
 
 > [!IMPORTANT]
 > SVM builds in an extra **safety margin**. It is not satisfied with a data point just barely crossing the boundary — it wants the point to be at least 1 unit away (in the $\theta^Tx$ sense) on the correct side. This built-in buffer is exactly what produces the large margin.
@@ -229,22 +239,18 @@ Assume three hyperplanes:
 - **Decision boundary:** $\theta^Tx=0$
 - **Margin boundaries:** $\theta^Tx=\pm1$
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/29008609-cb8f-4d85-b66a-2a6e0a1f66ff" width=600>
+</p>
 
-```text
-x₁
- │           θᵀx = 1  (positive margin)
- │          ⋰
- │        ⋰   θᵀx = 0  (decision boundary)
- │      ⋰
- │    ⋰      θᵀx = -1 (negative margin)
- └───────────────────────── x₂
-```
+| Positive Domain | Negative Domain |
+|---------|------------|
+| When a point sits exactly on the margin, $\theta^Tx=1$ | When a point sits exactly on the margin, $\theta^Tx=-1$ |
+| When it sits between the boundary and the margin, $0<\theta^Tx<1$ | When it sits between the boundary and the margin, $-1<\theta^Tx<0$
 
-</div>
-
-- **Positive domain:** when a point sits exactly on the margin, $\theta^Tx=1$. When it sits between the boundary and the margin, $0<\theta^Tx<1$.
-- **Negative domain:** when a point sits exactly on the margin, $\theta^Tx=-1$. When it sits between the boundary and the margin, $-1<\theta^Tx<0$.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0848e4ff-6812-4daf-ae8b-ac8c76931618" width=600>
+</p>
 
 For a point $x$ belonging to class $y=1$, the ideal condition is:
 
@@ -264,13 +270,13 @@ $$
 
 For a series of candidate points with $y=1$:
 
-| Point $x=(x_1,x_2)$ | $\theta^Tx$ calculation | $\theta^Tx$ | Interpretation |
-|---|---|---|---|
-| $(6,\,2)$ | $-1+1(6)-1(2)$ | $3$ | Well past the margin → $cost_1=0$ |
-| $(3,\,1)$ | $-1+1(3)-1(1)$ | $1$ | Exactly on the margin → $cost_1=0$ |
-| $(2.5,\,1)$ | $-1+1(2.5)-1(1)$ | $0.5$ | Between boundary and margin → $cost_1\neq0$ |
-| $(2,\,1)$ | $-1+1(2)-1(1)$ | $0$ | Exactly on the decision boundary → $cost_1\neq0$ |
-| $(2,\,2.5)$ | $-1+1(2)-1(2.5)$ | $-1.5$ | On the wrong side entirely → large $cost_1$ |
+| Plot | Point $x=(x_1,x_2)$ | $\theta^Tx$ calculation | $\theta^Tx$ | Interpretation |
+|---|---|---|---|---|
+| <p align="center"><img src="https://github.com/user-attachments/assets/f729dacc-5385-42c6-9136-110544abb610" width=300></p> | $(6,2)$ | $-1+1(6)-1(2)$ | $3$ | Well past the margin → $cost_1=0$ |
+| <p align="center"><img src="https://github.com/user-attachments/assets/81095caa-e15c-40f1-9505-41c88914fa23" width=300></p> | $(3,1)$ | $-1+1(3)-1(1)$ | $1$ | Exactly on the margin → $cost_1=0$ | 
+| <p align="center"><img src="https://github.com/user-attachments/assets/26aea8a5-b5bd-4023-b601-a152eb0a0e62" width=300></p> | $(2.5,1)$ | $-1+1(2.5)-1(1)$ | $0.5$ | Between boundary and margin → $cost_1\neq0$ |
+| <p align="center"><img src="https://github.com/user-attachments/assets/2457d613-f243-4bb7-b0d0-c1fabf01d0fd" width=300></p> | $(2,1)$ | $-1+1(2)-1(1)$ | $0$ | Exactly on the decision boundary → $cost_1\neq0$ |
+| <p align="center"><img src="https://github.com/user-attachments/assets/dd5d66d3-56d5-4eab-b2fe-36927fe3d726" width=300></p> | $(2,2.5)$ | $-1+1(2)-1(2.5)$ | $-1.5$ | On the wrong side entirely → large $cost_1$ |
 
 > [!NOTE]
 > Only the points with $\theta^Tx<1$ (the last three rows) incur a penalty. The reason the cost only becomes zero from $\theta^Tx=1$ onward — instead of $\theta^Tx=0$ — is precisely to **penalize points that are correctly classified but too close to the boundary**, forcing the algorithm to prefer a wider margin.
@@ -288,7 +294,7 @@ For a series of candidate points with $y=1$:
 Putting the hinge loss together with a regularization term:
 
 $$
-\min_\theta J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}cost_1\!\left(\theta^Tx^{(n)}\right)+\left(1-y^{(n)}\right)cost_0\!\left(\theta^Tx^{(n)}\right)\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
+\min_\theta J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}cost_1\left(\theta^Tx^{(n)}\right)+\left(1-y^{(n)}\right)cost_0\left(\theta^Tx^{(n)}\right)\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
 $$
 
 | Symbol | Meaning |
@@ -308,19 +314,16 @@ If $C$ is **very large**, minimizing $J(\theta)$ effectively forces the hinge-lo
 
 $$
 \min_\theta J(\theta) = \min_\theta \underbrace{C[\cdots]}_{\text{very large}} + \underbrace{\frac{1}{2}\sum_{j=1}^{M}\theta_j^2}_{0}
-\;\;\Longrightarrow\;\;
-\min_\theta J(\theta) \approx \min_\theta \frac{1}{2}\sum_{j=1}^{M}\theta_j^2
+\Longrightarrow\min_\theta J(\theta) \approx \min_\theta \frac{1}{2}\sum_{j=1}^{M}\theta_j^2
 $$
 
 The mathematical intuition behind $\min_\theta \frac{1}{2}\sum_{j=1}^{M}\theta_j^2$ is to let the SVM choose the decision boundary that results in the **large-margin classification effect**.
 
 However, a model with a large $C$ value is **sensitive to outliers**, similar to having no regularization at all. Such a model is prone to **overfitting**.
 
-| Large C | Effect |
-|---------|--------|
-| Effect of noisy points | Large |
-| Precedence given to | A plane with very few misclassifications |
-| Bias / Variance | Lower bias, higher variance |
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/49145546-182c-4fc3-85b8-5c01b1a07fba" width=600>
+</p>
 
 ### Small C Effect
 
@@ -328,15 +331,20 @@ A smaller $C$ allows a bigger margin for model regularization. It is useful for 
 
 However, a model with a **too-small** $C$ value is prone to **underfitting**.
 
-| Small C | Effect |
-|---------|--------|
-| Effect of noisy points | Low |
-| Precedence given to | Planes that separate the points well, even with some misclassifications |
-| Bias / Variance | Higher bias, lower variance |
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fde73718-9276-4081-81b8-ac2e13204496" width=600>
+</p>
 
 > [!WARNING]
 > Choosing $C$ is a bias–variance trade-off, just like choosing $\lambda$ in regularized logistic regression. Too large risks overfitting to outliers; too small risks underfitting the true pattern.
 
+### Effects of Increasing and Decreasing C Regularization Parameter for SVM
+
+| Factor | Larger C | Smaller C | 
+|---------|--------|--------|
+| Effect of noisy points | Large | Small |
+| Precedence given to | A plane with very few misclassifications | Planes that separate the points well, even with some misclassifications |
+| Bias / Variance | Lower bias, higher variance | Higher bias, lower variance |
 ---
 
 ## 10. SVM vs Logistic Regression Terminology
@@ -346,13 +354,13 @@ Both models share a very similar cost function structure — only the loss term 
 **Logistic Regression:**
 
 $$
-\min_\theta J(\theta) = \frac{1}{N}\left[\sum_{n=1}^{N}y^{(n)}\{-\log h_\theta(x^{(n)})\} + (1-y^{(n)})\{-\log(1-h_\theta(x^{(n)}))\} \right] + \frac{\lambda}{2N}\sum_{j=1}^{M}\theta_j^2
+\min_\theta J(\theta) = \frac{1}{N}\left[\sum_{n=1}^{N}y^{(n)}\underbrace{\{-\log h_\theta(x^{(n)})\}}_{} + (1-y^{(n)})\underbrace{\{-\log(1-h_\theta(x^{(n)}))\}}_{} \right] + \frac{\lambda}{2N}\sum_{j=1}^{M}\theta_j^2
 $$
 
 **SVM:**
 
 $$
-\min_\theta J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}cost_1\!\left(\theta^Tx^{(n)}\right)+\left(1-y^{(n)}\right)cost_0\!\left(\theta^Tx^{(n)}\right)\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
+\min_\theta J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}\underbrace{cost_1\left(\theta^Tx^{(n)}\right)}_{}+\left(1-y^{(n)}\right)\underbrace{cost_0\left(\theta^Tx^{(n)}\right)}_{}\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
 $$
 
 where $M$ = number of parameters and $N$ = number of data points (training data).
@@ -361,11 +369,15 @@ $$
 \boxed{C \text{ plays a role similar to } \frac{1}{\lambda}}
 $$
 
+<div align="center">
+  
 | Aspect | Logistic Regression | SVM |
 |--------|---------------------|-----|
 | Loss term | Log-loss (cross-entropy) | Hinge loss |
 | Regularization placement | Multiplies the regularization term ($\lambda$) | Multiplies the loss term ($C$) |
 | Larger regularization strength | Smaller $\lambda$ | Larger $C$ |
+
+</div>
 
 ---
 
@@ -377,20 +389,9 @@ The simplest way to separate two groups of data is with a straight line (1 dimen
 
 However, there are situations where a **nonlinear region** can separate the groups far more efficiently — for example, when one class is surrounded by the other:
 
-<div align="center">
-
-```text
-x₁
- │      ● ●
- │   ●  ╭───╮   ●
- │     │ ○ ○ │
- │   ● │○   ○│  ●
- │      ╰───╯
- └───────────────── x₂
-        ● class 1     ○ class 2
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9ff1f8e5-28a9-44ca-8ca5-77e7dd917084" width=600>
+</p>
 
 In this case, a **non-linear decision boundary** is necessary to correctly separate the data points.
 
@@ -413,7 +414,7 @@ $$
 The cost function is updated the same way:
 
 $$
-J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}cost_1\!\left(\theta^Tf(x^{(n)})\right)+\left(1-y^{(n)}\right)cost_0\!\left(\theta^Tf(x^{(n)})\right)\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
+J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}cost_1\left(\theta^Tf(x^{(n)})\right)+\left(1-y^{(n)}\right)cost_0\left(\theta^Tf(x^{(n)})\right)\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
 $$
 
 ### What Is $f$?
@@ -424,14 +425,13 @@ A non-linear function is effectively learned by a linear learning machine operat
 
 This is called the **kernel trick**: the kernel function transforms the data into a higher-dimensional feature space, making it possible to perform **linear** separation there — even though the original data was not linearly separable.
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c8a0f241-3672-46f5-8c3a-920d183f6e7d" width=600>
+</p>
 
-```text
-Original space (x₁, x₂)        Transformed space (x₁', x₂')
-   curved boundary        →        straight boundary
-```
-
-</div>
+<p align="center">
+  <em>From original space (curved boundary) to transformed space (straight boundary)</em>
+</p>
 
 > **Analogy:** Imagine trying to separate red and blue marbles that are arranged in two concentric circles on a flat table — no straight line works. But if you lift the inner circle of marbles up into the air (adding a third dimension), a flat sheet of glass can now separate them perfectly. The kernel trick is like finding that extra dimension mathematically, without physically computing every new coordinate.
 
@@ -443,19 +443,35 @@ Original space (x₁, x₂)        Transformed space (x₁', x₂')
 
 The kernel function computes a new feature of $x$ based on its **proximity to landmarks**:
 
-$$
-f_1 = \text{similarity}(x,l^{(1)}) \text{ or } k(x,l^{(1)})
-$$
-
-$$
-f_2 = \text{similarity}(x,l^{(2)}) \text{ or } k(x,l^{(2)})
-$$
-
-$$
-f_3 = \text{similarity}(x,l^{(3)}) \text{ or } k(x,l^{(3)})
-$$
+<table>
+<tr>
+<td rowspan="3" align="center" width="320"><img src="https://github.com/user-attachments/assets/aac0e49d-6854-4e68-a2b4-c82eab456d33" width="300"></td>
+<td>$$f_1 = \text{similarity}(x,l^{(1)}) \text{ or } k(x,l^{(1)})$$</td>
+</tr>
+<tr>
+<td>$$f_2 = \text{similarity}(x,l^{(2)}) \text{ or } k(x,l^{(2)})$$</td>
+</tr>
+<tr>
+<td>$$f_3 = \text{similarity}(x,l^{(3)}) \text{ or } k(x,l^{(3)})$$</td>
+</tr>
+</table>
 
 ### How Are Landmarks Chosen?
+
+<table align="center">
+<tr>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/2e89932c-513d-449f-8460-eaaaaabd5ea2" width="100%" height="300">
+
+</td>
+
+<td align="center" width="50%" valign="top">
+
+<img src="https://github.com/user-attachments/assets/f6fa21ad-f4e5-4a54-b2b8-ad908ffcd53e" width="100%" height="300">
+
+</td></tr></table>
 
 Given $n$ training samples, the location of the landmarks is chosen to be **exactly the location of the $n$ training samples**:
 
@@ -498,25 +514,25 @@ where $\|x-l\|^2$ is the squared **Euclidean distance** between $x$ and the land
 For multiple landmarks:
 
 $$
-f_1 = \exp\left(-\frac{\|x-l^{(1)}\|^2}{2\sigma^2}\right) \text{ or } \exp\left(-\frac{\sum_{j=1}^{M}(x_j-l_j^{(1)})^2}{2\sigma^2}\right)
+f_1 = \exp\left(-\frac{\||x-l^{(1)}\||^2}{2\sigma^2}\right) \text{ or } \exp\left(-\frac{\sum_{j=1}^{M}(x_j-l_j^{(1)})^2}{2\sigma^2}\right)
 $$
 
 $$
-f_2 = \exp\left(-\frac{\|x-l^{(2)}\|^2}{2\sigma^2}\right) \text{ or } \exp\left(-\frac{\sum_{j=1}^{M}(x_j-l_j^{(2)})^2}{2\sigma^2}\right)
+f_2 = \exp\left(-\frac{\||x-l^{(2)}\||^2}{2\sigma^2}\right) \text{ or } \exp\left(-\frac{\sum_{j=1}^{M}(x_j-l_j^{(2)})^2}{2\sigma^2}\right)
 $$
 
 $$
-f_3 = \exp\left(-\frac{\|x-l^{(3)}\|^2}{2\sigma^2}\right) \text{ or } \exp\left(-\frac{\sum_{j=1}^{M}(x_j-l_j^{(3)})^2}{2\sigma^2}\right)
+f_3 = \exp\left(-\frac{\||x-l^{(3)}\||^2}{2\sigma^2}\right) \text{ or } \exp\left(-\frac{\sum_{j=1}^{M}(x_j-l_j^{(3)})^2}{2\sigma^2}\right)
 $$
 
 ### The Core Idea
 
 $$
-\text{If } x \approx l \;\Longrightarrow\; f = \exp\left(-\frac{\|0\|^2}{2\sigma^2}\right)\approx1
+\text{If } x \approx l \;\Longrightarrow\; f = \exp\left(-\frac{\||0\||^2}{2\sigma^2}\right)\approx1
 $$
 
 $$
-\text{If } x \text{ is far from } l \;\Longrightarrow\; f = \exp\left(-\frac{\|\text{large number}\|^2}{2\sigma^2}\right)\approx0
+\text{If } x \text{ is far from } l \;\Longrightarrow\; f = \exp\left(-\frac{\||\text{large number}\||^2}{2\sigma^2}\right)\approx0
 $$
 
 | Distance between $x$ and $l$ | Resulting feature value |
@@ -542,7 +558,11 @@ $$
 
 The model predicts $h_\theta(x)=1$ when $\theta^Tf(x)\geq0$.
 
-### Case 1: $x$ is right on top of landmark $l^{(1)}$
+### Case 1: $x$ is beside landmark $l^{(1)}$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0f360968-6d0a-41db-9df4-00895f0453df" width=600>
+</p>
 
 $$
 f_1(x)=1,\quad f_2(x)=0,\quad f_3(x)=0
@@ -554,6 +574,10 @@ $$
 
 ### Case 2: $x$ is right on top of landmark $l^{(2)}$
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b7c73e95-ebea-431b-8be4-fea5e293d270" width=600>
+</p>
+
 $$
 f_1(x)=0,\quad f_2(x)=1,\quad f_3(x)=0
 $$
@@ -563,6 +587,10 @@ $$
 $$
 
 ### Case 3: $x$ is right on top of landmark $l^{(3)}$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/700b63d8-f3ab-447e-b5c3-0af45e6f5dba" width=600>
+</p>
 
 $$
 f_1(x)=0,\quad f_2(x)=0,\quad f_3(x)=1
@@ -584,27 +612,16 @@ $$
 
 With these learned parameters, any data point $x$ **near landmarks $l^{(1)}$ and $l^{(2)}$** will be predicted as class 1; otherwise it is predicted as class 0. This naturally traces out a **non-linear** decision boundary around the two relevant landmarks:
 
-<div align="center">
-
-```text
-x₁
- │        h_θ(x) = 1
- │         ╭────╮
- │        │  ●l⁽²⁾│
- │        │╭──╮   │
- │        │●l⁽¹⁾   │      h_θ(x) = 0
- │         ╰────╯       ●l⁽³⁾
- └──────────────────────────── x₂
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f5384cce-ba54-446a-8e8f-16bfbb5051c6" width=600>
+</p>
 
 ---
 
 ## 16. The Influence of σ²
 
 $$
-f(x)=\exp\left(-\frac{\|x-l\|^2}{2\sigma^2}\right)
+f(x)=\exp\left(-\frac{\||x-l\||^2}{2\sigma^2}\right)
 $$
 
 Besides the regularization term $C$, we can also adjust $\sigma^2$ from the Gaussian kernel to find the balance between **bias and variance**.
@@ -624,6 +641,10 @@ Small σ²:  narrow, sharp spike centred at l (overfitting risk)
 ```
 
 </div>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c40450fc-9bb4-487f-85c1-a483320dc316" width=600>
+</p>
 
 > [!TIP]
 > Think of $\sigma^2$ as a "zoom level" for similarity. A large $\sigma^2$ zooms out, so many points look similar to a landmark. A small $\sigma^2$ zooms in, so only points extremely close to a landmark are considered similar.
