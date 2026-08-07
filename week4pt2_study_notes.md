@@ -381,7 +381,7 @@ C\left[
 \sum_{n=1}^{N}
 \left(
 y^{(n)}
-\operatorname{cost}_1\left(\theta^T x^{(n)}\right)
+\mathrm{cost}_1\left(\theta^T x^{(n)}\right)
 +
 \left(1-y^{(n)}\right)
 \operatorname{cost}_0\left(\theta^T x^{(n)}\right)
