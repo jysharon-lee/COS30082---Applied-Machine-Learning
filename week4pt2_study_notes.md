@@ -354,7 +354,23 @@ Both models share a very similar cost function structure — only the loss term 
 **Logistic Regression:**
 
 $$
-\min_\theta J(\theta) = \frac{1}{N}\left[\sum_{n=1}^{N}y^{(n)}\underbrace{\{{-\log h_\theta(x^{(n)})\}}}_{loss term} + (1-y^{(n)})\underbrace{\{{-\log(1-h_\theta(x^{(n)}))\}}_{regularizsation constant} \right] + \frac{\lambda}{2N}\sum_{j=1}^{M}\theta_j^2
+\min_{\theta} J(\theta)=
+\frac{1}{N}
+\left[
+\sum_{n=1}^{N}
+\underbrace{
+y^{(n)}\left[-\log h_{\theta}(x^{(n)})\right]
+}_{\text{loss when } y^{(n)}=1}
++
+\underbrace{
+(1-y^{(n)})\left[-\log\left(1-h_{\theta}(x^{(n)})\right)\right]
+}_{\text{loss when } y^{(n)}=0}
+\right]
++
+\underbrace{
+\frac{\lambda}{2N}
+\sum_{j=1}^{M}\theta_j^2
+}_{\text{regularization term}}
 $$
 
 **SVM:**
@@ -661,7 +677,7 @@ Small σ²:  narrow, sharp spike centred at l (OVERFITTING risk)
 |---|---|---|
 | **Boundary chosen** | Finds *the* maximum-margin boundary (distance between the decision boundary and the support vectors) | Can settle on different decision boundaries depending on the parameters $\theta$ that happen to be near the optimal solution |
 | **Uniqueness** | Effectively one well-defined "best" boundary | Several near-optimal boundaries are possible |
-| <p align="center"><img src="https://github.com/user-attachments/assets/5c61cfec-953e-4113-9149-bf67c0f15914" width=300></p> | <p align="center"><img src="https://github.com/user-attachments/assets/f6c44cdd-2167-44c5-9495-c0655f8f1228" width=300></p> |
+| **Visual Representation** | <p align="center"><img src="https://github.com/user-attachments/assets/5c61cfec-953e-4113-9149-bf67c0f15914" width="100%"></p> | <p align="center"><img src="https://github.com/user-attachments/assets/f6c44cdd-2167-44c5-9495-c0655f8f1228" width="100%"></p> |
 
 ### Choosing Between LR and SVM
 
@@ -669,7 +685,7 @@ The choice depends on the number of training samples ($n$) and the number of fea
 
 | Scenario | Recommendation |
 |---|---|
-| $m$ is **large** and $n$ is **small** ($n \11 m$) | Linear SVM or Logistic Regression |
+| $m$ is **large** and $n$ is **small** ($n \ll m$) | Linear SVM or Logistic Regression |
 | $m$ is **small** and $n$ is **intermediate** ($n > m$) | **SVM with Gaussian kernel** |
 | $m$ is **small** and $n$ is **large** ($n \gg m$) | Linear SVM or Logistic Regression (preferable to add more features) |
 
