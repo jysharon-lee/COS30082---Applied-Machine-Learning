@@ -738,7 +738,11 @@ Because $x_0=1$, the terms $\(\theta_{10}^{(1)}x_0\)$, $\(\theta_{20}^{(1)}x_0\)
 
 <p align="center">
   <em>
-    Step 2 to Step 3 — Layer 2 first calculates $z^{(2)}=\Theta^{(1)}\tilde{a}^{(1)}$, then applies $g$ to produce $a^{(2)}$.
+    Step 2 to Step 3 — Layer 2 first calculates
+    <i>z</i><sup>(2)</sup> =
+    &Theta;<sup>(1)</sup><i>a&#771;</i><sup>(1)</sup>,
+    then applies <i>g</i> to produce
+    <i>a</i><sup>(2)</sup>.
   </em>
 </p>
 
