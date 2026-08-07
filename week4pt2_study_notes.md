@@ -376,7 +376,24 @@ $$
 **SVM:**
 
 $$
-\min_\theta J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}\underbrace{cost_1\left(\theta^Tx^{(n)}\right)}_{loss term}+\left(1-y^{(n)}\right)\underbrace{cost_0\left(\theta^Tx^{(n)}\right)}_{regularization constant}\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
+\min_{\theta} J(\theta)
+=
+\underbrace{
+C\left[
+\sum_{n=1}^{N}
+\left(
+y^{(n)}
+\operatorname{cost}_1\left(\theta^T x^{(n)}\right)
++
+\left(1-y^{(n)}\right)
+\operatorname{cost}_0\left(\theta^T x^{(n)}\right)
+\right)
+\right]
+}_{\text{hinge-loss term}}
++
+\underbrace{
+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
+}_{\text{regularization term}}
 $$
 
 where $M$ = number of parameters and $N$ = number of data points (training data).
