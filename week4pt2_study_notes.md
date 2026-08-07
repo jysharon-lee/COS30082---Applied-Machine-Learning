@@ -375,16 +375,17 @@ $$
 
 **SVM:**
 
-$$\min_{\theta} J(\theta)=
+$$
+\min_{\theta} J(\theta)=
 \underbrace{
 C\left[
 \sum_{n=1}^{N}
 \left(
 y^{(n)}
-\mathrm{cost}_1\left(\theta^T x^{(n)}\right)
+\mathrm{cost}_{1}\left(\theta^T x^{(n)}\right)
 +
 \left(1-y^{(n)}\right)
-\operatorname{cost}_0\left(\theta^T x^{(n)}\right)
+\mathrm{cost}_{0}\left(\theta^T x^{(n)}\right)
 \right)
 \right]
 }_{\text{hinge-loss term}}
