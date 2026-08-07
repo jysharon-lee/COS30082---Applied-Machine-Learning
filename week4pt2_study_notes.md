@@ -148,11 +148,7 @@ $$
 | | $y=1$ | $y=0$ |
 |---|---|---|
 | **Equation** | $$cost(x,y) = -\log\left(\dfrac{1}{1+e^{-(\theta^Tx)}}\right)$$ | $$cost(x,y) = -\log\left(1-\dfrac{1}{1+e^{-(\theta^Tx)}}\right)$$ |
-| **Graph** | <p align="center">
-  <img src="https://github.com/user-attachments/assets/57607697-1094-4535-b99e-ce90a3bb7cf1" width="100%">
-</p> | <p align="center">
-  <img src="https://github.com/user-attachments/assets/aa49e836-1aa7-42c0-b40f-499f305e5fa7" width=600>
-</p> |
+| **Graph** | <p align="center"><img src="https://github.com/user-attachments/assets/57607697-1094-4535-b99e-ce90a3bb7cf1" width=600></p> | <p align="center"><img src="https://github.com/user-attachments/assets/aa49e836-1aa7-42c0-b40f-499f305e5fa7" width=600></p> |
 | **Interpretation** | For $y=1$, we want $\theta^Tx \geq 0$ | For $y=0$, we want $\theta^Tx < 0$ |
 ---
 
