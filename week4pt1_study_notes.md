@@ -553,6 +553,10 @@ For image classification, a simplified interpretation is:
 
 ### More Than Two Classes
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/941a2fcb-f9f9-4694-ae5e-fae10bfa462f" width=1000>
+</p>
+
 Suppose an image must be classified into three classes:
 
 1. Dog
@@ -589,9 +593,9 @@ $$ h_\Theta(x)=\begin{bmatrix}0.08 \\\\0.87 \\\\0.05\end{bmatrix} $$
 
 then the second output is largest, so the model predicts **penguin**.
 
-$$
-\hat{y}=\arg\max_k h_\Theta(x)_k
-$$
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6d636018-0413-4f36-920f-d1b19f81c0df" width=600>
+</p>
 
 ### Binary vs Multiclass Output
 
@@ -628,7 +632,9 @@ Consider a neural network containing:
 - One output neuron
 - A bias unit in Layers 1 and 2
 
-Forward propagation moves information from the input layer to the output layer to calculate the network prediction \(h_\Theta(x)\).
+> [!IMPORTANT]
+> The superscript identifies the **layer**, not a power.  
+> For example, \(a_2^{(1)}\) means the activation of neuron 2 in Layer 1.
 
 ---
 
@@ -643,173 +649,194 @@ Forward propagation moves information from the input layer to the output layer t
 
 <p align="center">
   <em>
-    The input features and bias unit are multiplied by the Layer 1
-    weight matrix to calculate the weighted inputs of the hidden neurons.
+    Step 1 — The input features and input bias are passed from Layer 1 towards the three neurons in Layer 2.
   </em>
 </p>
 
-The input-layer activations are the input features:
+The input-layer activation is written as:
 
-$$a^{(1)}=\begin{bmatrix}x_1 \cr
-x_2 \cr
-x_3\end{bmatrix}$$
+$$
+a^{(1)}=x
+$$
 
-A fixed bias unit $\(a_0^{(1)}=x_0=1\)$ is added to form the bias-augmented input vector:
+The three ordinary input activations are:
 
-$$\{a}^{(1)}=\begin{bmatrix}1 \cr x_1 \cr x_2 \cr x_3\end{bmatrix}$$
+$$
+a_1^{(1)},\qquad
+a_2^{(1)},\qquad
+a_3^{(1)}
+$$
 
-The weighted inputs entering the three hidden neurons are calculated using:
+The input layer also contains the fixed bias unit:
 
-$$z^{(2)}=\Theta^{(1)}\{a}^{(1)}$$
+$$
+a_0^{(1)}=x_0= +1
+$$
 
-The corresponding matrix dimensions are:
+Therefore, the complete input vector used in the calculation is:
 
-$$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrace{\{a}^{(1)}}_{4\times1}$$
-
-The resulting vector contains one weighted input for each hidden neuron:
-
-$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \cr z_2^{(2)} \cr z_3^{(2)}\end{bmatrix}$$
+$$a^{(1)}=\begin{bmatrix}a_0 \cr a_1 \cr a_2 \cr a_3\end{bmatrix}=\begin{bmatrix}1 \cr a_1 \cr a_2 \cr a_3\end{bmatrix}$$
 
 ---
 
-### Step 2: Activate the Hidden Neurons
+### Step 2: Calculate the Hidden Layer Weighted Inputs
 
-<p align="center">
-  <img
-    src="https://github.com/user-attachments/assets/d25dd289-eded-4d1e-853c-b91133fec64a"
-    width="80%"
-    alt="Activation of the hidden-layer neurons">
-</p>
+The first weight matrix maps Layer 1 to Layer 2:
 
-<p align="center">
-  <em>
-    Each hidden neuron applies the activation function to its weighted
-    input, producing the hidden-layer activations.
-  </em>
-</p>
+$$\Theta^{(1)}\in\mathbb{R}^{3\times4}$$
 
-The activation function \(g\) is applied element-wise to the hidden-layer weighted inputs:
+It has three rows because Layer 2 contains three neurons and four columns because Layer 1 supplies three inputs plus one bias.
+
+The hidden-layer weighted-input vector is:
 
 $$
-a^{(2)}=g\left(z^{(2)}\right)
+z^{(2)}=\Theta^{(1)}a^{(1)}
 $$
+
+Its dimensions are:
+
+$$\underbrace{z^{(2)}}_{3\times1}=\underbrace{\Theta^{(1)}}_{3\times4}\underbrace{a^{(1)}}_{4\times1}$$
 
 Therefore:
 
-$$a^{(2)}=\begin{bmatrix}g\left(z_1^{(2)}\right) \cr g\left(z_2^{(2)}\right) \cr g\left(z_3^{(2)}\right)\end{bmatrix}=\begin{bmatrix}a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmatrix}$$
+$$z^{(2)}=\begin{bmatrix}z_1^{(2)} \cr z_2^{(2)} \cr z_3^{(2)}\end{bmatrix}$$
 
-For each hidden neuron:
+For the three hidden neurons:
 
-$$a_j^{(2)}=g\left(z_j^{(2)}\right),\qquad j=1,2,3$$
+$$z_1^{(2)}=\theta_{10}^{(1)}x_0
++\theta_{11}^{(1)}x_1
++\theta_{12}^{(1)}x_2
++\theta_{13}^{(1)}x_3
+$$
+
+$$z_2^{(2)}=
+\theta_{20}^{(1)}x_0
++\theta_{21}^{(1)}x_1
++\theta_{22}^{(1)}x_2
++\theta_{23}^{(1)}x_3
+$$
+
+$$z_3^{(2)}=
+\theta_{30}^{(1)}x_0
++\theta_{31}^{(1)}x_1
++\theta_{32}^{(1)}x_2
++\theta_{33}^{(1)}x_3
+$$
+
+Because $\x_0=1\$, the terms $\(\theta_{10}^{(1)}x_0\)$, $\(\theta_{20}^{(1)}x_0\)$, and $\(\theta_{30}^{(1)}x_0\)$ are the bias contributions.
 
 ---
 
-### Step 3: Add the Hidden-Layer Bias
+### Step 3: Activate the Hidden Neurons (neurons in Layer 2)
 
 <p align="center">
   <img
-    src="https://github.com/user-attachments/assets/0139ee20-4678-4693-8960-4b2a4a505626"
+    src="https://github.com/user-attachments/assets/06252155-1229-47c6-ae64-4c8316518c8c"
     width="80%"
-    alt="Hidden-layer bias added before propagation to the output layer">
+    alt="Hidden-layer activations calculated during forward propagation">
 </p>
 
 <p align="center">
   <em>
-    A fixed bias activation is added to the hidden layer before its
-    activations are passed to the output neuron.
+    Step 2 to Step 3 — Layer 2 first calculates $\(z^{(2)}=\Theta^{(1)}a^{(1)}\)$, then applies $\(g\)$ to produce $\(a^{(2)}\)$.
   </em>
 </p>
 
-The activation function produces only the three ordinary hidden-neuron activations. Before propagating them to Layer 3, another bias unit is added:
+The activation function produces only the three ordinary hidden-neuron activations. Before propagating them to Layer 3 (output layer), another bias unit is added:
 
 $$a_0^{(2)}=1$$
 
 The bias-augmented hidden-layer vector is therefore:
 
-$$\{a}^{(2)}=\begin{bmatrix}1 \cr2 a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmatrix}$$
+$$\{a}^{(2)}=\begin{bmatrix}1 \cr a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmatrix}$$
 
 > [!NOTE]
-> $\(\{a}^{(l)}\)$ indicates that the activation vector includes the bias unit \(a_0^{(l)}=1\).
+> $\(\{a}^{(l)}\)$ indicates that the activation vector includes the bias unit $\(a_0^{(l)}=1\)$.
 
 ---
 
-### Step 4: Propagate to the Output Layer
+### Step 4: Add the Hidden-Layer Bias
 
 <p align="center">
   <img
-    src="https://github.com/user-attachments/assets/24e4344d-ba34-4305-9db7-b0843d1d3317"
+    src="https://github.com/user-attachments/assets/89770faf-6d11-40d7-bbe0-03f54985fea6"
     width="80%"
-    alt="Final output produced through forward propagation">
+    alt="Hidden-layer bias added before the output calculation">
 </p>
 
 <p align="center">
   <em>
-    The output neuron applies the activation function to its weighted
-    input, producing the final network prediction.
+    Step 4 — After calculating the three hidden activations, the bias $\(a_0^{(2)}=1\)$ is added before propagation to Layer 3.
   </em>
 </p>
 
-The output neuron combines the hidden-layer activations using the second weight matrix:
+The activation function produces only the three ordinary hidden-neuron activations. A new fixed bias unit is then added:
 
 $$
-z^{(3)}=\Theta^{(2)}\{a}^{(2)}
+a_0^{(2)}=1
 $$
 
-The matrix dimensions are:
+The resulting bias-augmented activation vector is:
 
-$$\underbrace{z^{(3)}}_{1\times1}=\underbrace{\Theta^{(2)}}_{1\times4}\underbrace{\{a}^{(2)}}_{4\times1}$$
+$$\ a^{(2)}=\begin{bmatrix}a_0^{(2)} \cr a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmatrix}=\begin{bmatrix}1 \cr a_1^{(2)} \cr a_2^{(2)} \cr a_3^{(2)}\end{bmatrix}$$
 
-Because the network contains one output neuron, \(z^{(3)}\) is a scalar.
-
-The activation function is then applied:
-
-$$a^{(3)}=g\left(z^{(3)}\right)$$
-
-Therefore:
-
-$$\boxed{h_\Theta(x)=a^{(3)}=g\left(z^{(3)}\right)}$$
+> [!NOTE]
+> The symbol $a^{(2)}$ represents the ordinary hidden-neuron
+> activations, while $\ a^{(2)}$ represents the same activation
+> vector with the bias unit included.
 
 ---
 
-### Expanded Hidden-Layer Calculations
+#### Step 5: Calculate the Output-Layer Weighted Input
 
-For hidden neuron \(j\), the general weighted-input equation is:
+The second weight matrix maps Layer 2 to Layer 3:
 
-$$z_j^{(2)}=\theta_{j0}^{(1)}+\sum_{k=1}^{3}\theta_{jk}^{(1)}x_k$$
+$$\Theta^{(2)}\in\mathbb{R}^{1\times4}$$
 
-The corresponding activation is:
+It has one row because Layer 3 contains one output neuron and four columns because Layer 2 supplies three hidden activations plus one bias.
 
-$$a_j^{(2)}=g\left(z_j^{(2)}\right)$$
+The output weighted input is:
 
-For the first hidden neuron:
+$$z^{(3)}=\Theta^{(2)}\ a^{(2)}$$
 
-$$z_1^{(2)}=\theta_{10}^{(1)}+\theta_{11}^{(1)}x_1+\theta_{12}^{(1)}x_2+\theta_{13}^{(1)}x_3$$
+Its dimensions are:
 
-$$a_1^{(2)}=g\left(z_1^{(2)}\right)$$
+$$\underbrace{z^{(3)}}_{1\times1}=\underbrace{\Theta^{(2)}}_{1\times4}\underbrace{\ a^{(2)}}_{4\times1}$$
 
-For the second hidden neuron:
+Expanded:
 
-$$z_2^{(2)}=\theta_{20}^{(1)}+\theta_{21}^{(1)}x_1+\theta_{22}^{(1)}x_2+\theta_{23}^{(1)}x_3$$
+$$z^{(3)}=\theta_{10}^{(2)}a_0^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}$$
 
-$$a_2^{(2)}=g\left(z_2^{(2)}\right)$$
-
-For the third hidden neuron:
-
-$$z_3^{(2)}=\theta_{30}^{(1)}+\theta_{31}^{(1)}x_1+\theta_{32}^{(1)}x_2+\theta_{33}^{(1)}x_3$$
-
-$$a_3^{(2)}=g\left(z_3^{(2)}\right)$$
-
----
-
-### Expanded Output-Layer Calculation
-
-Since \(a_0^{(2)}=1\), the output-layer weighted input is:
+Since $\(a_0^{(2)}=1\)$:
 
 $$z^{(3)}=\theta_{10}^{(2)}+\theta_{11}^{(2)}a_1^{(2)}+\theta_{12}^{(2)}a_2^{(2)}+\theta_{13}^{(2)}a_3^{(2)}$$
 
-The final prediction is:
+---
 
-$$h_\Theta(x)=a^{(3)}=g\left(z^{(3)}\right)$$
+#### Step 6: Calculate the Final Output
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/ed4fd850-5f38-4a99-9e32-e418f49686da"
+    width="80%"
+    alt="Final prediction produced by forward propagation">
+</p>
+
+<p align="center">
+  <em>
+    Final step — The output neuron applies $\(g\)$ to $\(z^{(3)}\)$, producing the final prediction $\(h_\Theta(x)\)$.
+  </em>
+</p>
+
+The output neuron applies the activation function:
+
+$$
+a^{(3)}=g\left(z^{(3)}\right)
+$$
+
+The result is the neural-network hypothesis:
+
+$$\boxed{h_\Theta(x)=a^{(3)}=g\left(z^{(3)}\right)}$$
 
 > **Analogy:** Forward propagation is like doing a presentation from beginning to end. The input layer represents the collected research, facts, and findings. The hidden layers filter the important information, connect related ideas, and organise them into clear slides. The output layer represents the final conclusion or message presented to the audience.
 
@@ -864,159 +891,524 @@ The prediction depends on the last hidden layer, which depends on the previous h
 > **Analogy:** If the final product from a production line is faulty, backpropagation inspects the last process first, then traces responsibility backwards to earlier processes.
 
 ---
-
 ## 11. Backward Propagation
 
-### Error-Term Notation
+Backward propagation, commonly called **backpropagation**, is an efficient method for calculating how much each neural-network parameter contributes to the prediction error.
+
+Forward propagation moves from the input layer to the output layer:
+
+$$x\longrightarrowa^{(2)}\longrightarrowh_\Theta(x)$$
+
+Backward propagation works in the opposite direction:
+
+$$\text{output error}\longrightarrow\text{hidden-layer error}\longrightarrow\text{parameter gradients}$$
+
+It repeatedly applies the chain rule to calculate the derivatives of the cost function \(J\) with respect to every weight in the network:
 
 $$
-\delta_j^{(l)}=\text{error associated with neuron }j\text{ in layer }l
+\frac{\partial J}{\partial\Theta^{(l)}}
 $$
 
-In calculus terms:
+These gradients indicate:
 
-$$
-\delta_j^{(l)}=\frac{\partial J}{\partial z_j^{(l)}}
-$$
-
-### Step 1: Output-Layer Error
-
-For sigmoid output activation with cross-entropy loss, the output error simplifies to:
-
-$$
-\boxed{\delta^{(L)}=a^{(L)}-y}
-$$
-
-Since $a^{(L)}=h_\Theta(x)$:
-
-$$
-\delta^{(L)}=h_\Theta(x)-y
-$$
-
-> [!NOTE]
-> With another loss/activation pairing, the derivative may not simplify this way. In the general chain-rule form, the loss derivative and activation derivative must both be included.
-
-### Step 2: Hidden-Layer Error
-
-Move backwards through the hidden layers:
-
-$$
-\boxed{\delta^{(l)}=\left(\Theta^{(l)}\right)^T\delta^{(l+1)}\odot g'\left(z^{(l)}\right)}
-$$
-
-where $\odot$ means element-wise multiplication.
-
-The bias component is excluded when the error is passed to the ordinary neurons of the preceding layer.
-
-For sigmoid activation:
-
-$$
-g'(z)=g(z)(1-g(z))
-$$
-
-Since $a=g(z)$:
-
-$$
-g'(z)=a(1-a)
-$$
-
-### Step 3: Weight Gradients
-
-The gradient for the weight from neuron $k$ in layer $l$ to neuron $j$ in layer $l+1$ is:
-
-$$
-\boxed{\frac{\partial J}{\partial\theta_{jk}^{(l)}}=\delta_j^{(l+1)}a_k^{(l)}}
-$$
-
-In matrix form for one training example:
-
-$$
-\frac{\partial J}{\partial\Theta^{(l)}}=\delta^{(l+1)}\left(a^{(l)}\right)^T
-$$
-
-### What About the Bias Gradient?
-
-Because a bias input is fixed at 1:
-
-$$
-\frac{\partial J}{\partial\theta_{j0}^{(l)}}=\delta_j^{(l+1)}
-$$
-
-### No $\delta^{(1)}$
-
-We normally do not calculate an error term for the input layer because it contains given feature values, not trainable neuron activations.
+- Which weights contributed to the error
+- The direction in which each weight should move
+- The relative amount by which each weight should change
 
 > [!IMPORTANT]
-> Backpropagation does **not** update the weights by itself. It efficiently computes the gradients; an optimizer such as gradient descent then uses those gradients to update the weights.
+> Backpropagation calculates the gradients, but it does not update the
+> weights itself. An optimizer such as gradient descent uses the
+> calculated gradients to update the parameters.
 
 ---
 
+### Error-Term Notation
+
+The error associated with neuron $\(j\)$ in layer $\(l\)$ is represented by:
+
+$$\boxed{\delta_j^{(l)}=\frac{\partial J}{\partial z_j^{(l)}}}$$
+
+The vector containing the error terms of all ordinary neurons in layer $\(l\)$ is:
+
+$$\delta^{(l)}=\begin{bmatrix}\delta_1^{(l)} \cr \delta_2^{(l)} \cr \vdots \cr \delta_{s_l}^{(l)}\end{bmatrix}$$
+
+The error term measures how sensitive the cost is to a change in the neuron's weighted input $\(z_j^{(l)}\)$.
+
+A large magnitude of $\(\delta_j^{(l)}\)$ means that the neuron made a relatively large contribution to the final error.
+
+> [!NOTE]
+> The error term belongs to the weighted input $\(z_j^{(l)}\)$, not
+> directly to the activation $\(a_j^{(l)}\)$.
+
+---
+
+### Step 1: Calculate the Output-Layer Error
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/f946bc1c-b0cd-4757-a4b5-c41673f96c63"
+    width="80%"
+    alt="Calculation of the output-layer error">
+</p>
+
+<p align="center">
+  <em>
+    The backward pass begins by calculating how sensitive the cost is to the weighted input of the output neuron.
+  </em>
+</p>
+
+Backward propagation begins at the output layer because this is where the prediction can be compared with the expected target.
+
+For the one-output network:
+
+$$
+a^{(3)}=g\left(z^{(3)}\right)=h_\Theta(x)
+$$
+
+The output error is defined as:
+
+$$\delta^{(3)}=\frac{\partial J}{\partial z^{(3)}}
+$$
+
+Using the chain rule:
+
+$$\delta^{(3)}=\frac{\partial J}{\partial a^{(3)}}\frac{\partial a^{(3)}}{\partial z^{(3)}}$$
+
+Since:
+
+$$\frac{\partial a^{(3)}}{\partial z^{(3)}}=g'\left(z^{(3)}\right)$$
+
+the general output-error equation is:
+
+$$\boxed{\delta^{(3)}=\frac{\partial J}{\partial a^{(3)}}g'\left(z^{(3)}\right)}$$
+
+For a sigmoid output combined with binary cross-entropy loss, this expression simplifies to:
+
+$$
+\boxed{
+\delta^{(3)}=a^{(3)}-y
+}
+$$
+
+Because $\(a^{(3)}=h_\Theta(x)\)$:
+
+$$
+\boxed{
+\delta^{(3)}=h_\Theta(x)-y
+}
+$$
+
+The sign of the error provides useful information:
+
+- $\(\delta^{(3)}>0\)$: the prediction is higher than the target
+- $\(\delta^{(3)}<0\)$: the prediction is lower than the target
+- $\(\delta^{(3)}=0\)$: the prediction matches the target
+
+> [!NOTE]
+> The simplification $\(\delta^{(3)}=a^{(3)}-y\)$ depends on the chosen
+> output activation and loss function. For other combinations, use the
+> complete chain-rule expression.
+
+---
+
+### Step 2: Calculate the Gradient of the Output Weights
+
+The output-layer weighted input is:
+
+$$
+z^{(3)}=\Theta^{(2)}\ a^{(2)}
+$$
+
+An individual output weight $\(\theta_{1k}^{(2)}\)$ connects activation $\(a_k^{(2)}\)$ to the output neuron.
+
+Using the chain rule:
+
+$$\frac{\partial J}{\partial\theta_{1k}^{(2)}}=\frac{\partial J}{\partial z^{(3)}}\frac{\partial z^{(3)}}{\partial\theta_{1k}^{(2)}}$$
+
+Since:
+
+$$
+\frac{\partial J}{\partial z^{(3)}}=\delta^{(3)}
+$$
+
+and:
+
+$$\frac{\partial z^{(3)}}{\partial\theta_{1k}^{(2)}}=a_k^{(2)}$$
+
+the gradient is:
+
+$$\boxed{\frac{\partial J}{\partial\theta_{1k}^{(2)}}=\delta^{(3)}a_k^{(2)}}$$
+
+For all output-layer weights simultaneously:
+
+$$\boxed{\frac{\partial J}{\partial\Theta^{(2)}}=\delta^{(3)}\left(\ a^{(2)}\right)^T}$$
+
+The matrix dimensions are:
+
+$$\underbrace{\frac{\partial J}{\partial\Theta^{(2)}}}_{1\times4}=\underbrace{\delta^{(3)}}_{1\times1}\underbrace{\left(\ a^{(2)}\right)^T}_{1\times4}$$
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/f5fe9836-7cf8-4547-8f84-4ae5ab1f27b7"
+    width="80%"
+    alt="Calculation of the output-layer weight gradients">
+</p>
+
+<p align="center">
+  <em>
+    The output error is multiplied by each hidden-layer activation to
+    calculate the gradient of every weight in $\(\Theta^{(2)}\)$.
+  </em>
+</p>
+
+The bias weight follows the same rule. Because $\(a_0^{(2)}=1\)$:
+
+$$\frac{\partial J}{\partial\theta_{10}^{(2)}}=\delta^{(3)}a_0^{(2)}=\delta^{(3)}$$
+
+---
+
+### Step 3: Propagate the Error to the Hidden Layer
+
+After calculating the output error, the error is propagated backwards into the three hidden neurons.
+
+Only the non-bias columns of $\(\Theta^{(2)}\)$ are used:
+
+$$\Theta_{\mathrm{nb}}^{(2)}=\begin{bmatrix}\theta_{11}^{(2)}&\theta_{12}^{(2)}&\theta_{13}^{(2)}\end{bmatrix}$$
+
+The hidden-layer error is:
+
+$$\boxed{\delta^{(2)}=\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T\delta^{(3)}\odotg'\left(z^{(2)}\right)}$$
+
+where $\(\odot\)$ represents element-wise multiplication.
+
+The dimensions are:
+
+$$\underbrace{\delta^{(2)}}_{3\times1}=\left(\underbrace{\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T}_{3\times1}\underbrace{\delta^{(3)}}_{1\times1}\right)\odot\underbrace{g'\left(z^{(2)}\right)}_{3\times1}$$
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/1e865bea-501f-48a4-be0a-8e397f366a9d"
+    width="80%"
+    alt="Propagation of the output error into the hidden layer">
+</p>
+
+<p align="center">
+  <em>
+    The output error is distributed backwards through the associated
+    weights and adjusted by the local activation derivatives of the
+    hidden neurons.
+  </em>
+</p>
+
+For each hidden neuron \(j\):
+
+$$\delta_j^{(2)}=\theta_{1j}^{(2)}\delta^{(3)}g'\left(z_j^{(2)}\right)$$
+
+For sigmoid activation:
+
+$$g'(z)=g(z)\left(1-g(z)\right)$$
+
+Since \(a=g(z)\), this can also be written as:
+
+$$g'\left(z^{(2)}\right)=a^{(2)}\odot\left(1-a^{(2)}\right)$$
+
+> [!IMPORTANT]
+> There is no error term for the bias unit \(a_0^{(2)}\). The bias is a
+> fixed value of 1 rather than an ordinary neuron activation.
+
+---
+
+### Step 4: Calculate the Gradient of the Input-to-Hidden Weights
+
+The hidden-layer weighted input is:
+
+$$
+z^{(2)}=\Theta^{(1)}\a^{(1)}
+$$
+
+For an individual weight \(\theta_{jk}^{(1)}\):
+
+$$\frac{\partial J}{\partial\theta_{jk}^{(1)}}=\frac{\partial J}{\partial z_j^{(2)}}\frac{\partial z_j^{(2)}}{\partial\theta_{jk}^{(1)}}$$
+
+Since:
+
+$$\frac{\partial J}{\partial z_j^{(2)}}=\delta_j^{(2)}$$
+
+and:
+
+$$\frac{\partial z_j^{(2)}}{\partial\theta_{jk}^{(1)}}=a_k^{(1)}$$
+
+the gradient is:
+
+$$\boxed{\frac{\partial J}{\partial\theta_{jk}^{(1)}}=\delta_j^{(2)}a_k^{(1)}}$$
+
+For the complete matrix:
+
+$$\boxed{\frac{\partial J}{\partial\Theta^{(1)}}=\delta^{(2)}\left(\ a^{(1)}\right)^T}$$
+
+The matrix dimensions are:
+
+$$\underbrace{\frac{\partial J}{\partial\Theta^{(1)}}}_{3\times4}=\underbrace{\delta^{(2)}}_{3\times1}\underbrace{\left(\ a^{(1)}\right)^T}_{1\times4}$$
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/bcd73ea9-5ddd-4a1b-95f1-25403438d192"
+    width="80%"
+    alt="Calculation of the input-to-hidden weight gradients">
+</p>
+
+<p align="center">
+  <em>
+    Each hidden-neuron error is multiplied by the corresponding
+    input-layer activation to calculate the gradients of
+    $\(\Theta^{(1)}\)$.
+  </em>
+</p>
+
+For each bias weight in \(\Theta^{(1)}\):
+
+$$\frac{\partial J}{\partial\theta_{j0}^{(1)}}=\delta_j^{(2)}a_0^{(1)}=\delta_j^{(2)}$$
+
+because $\(a_0^{(1)}=1\)$.
+
+---
+
+### Step 5: Collect the Calculated Gradients
+
+After the backward pass, the required gradients are:
+
+$$\boxed{\frac{\partial J}{\partial\Theta^{(2)}}=\delta^{(3)}\left(\ a^{(2)}\right)^T}$$
+
+and:
+
+$$\boxed{\frac{\partial J}{\partial\Theta^{(1)}}=\delta^{(2)}\left(\ a^{(1)}\right)^T}$$
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/d4c83fbb-374e-4a6f-9b58-9132afc0f295"
+    width="80%"
+    alt="Summary of backward propagation and gradient calculation">
+</p>
+
+<p align="center">
+  <em>
+    Backward propagation applies the chain rule from right to left,
+    producing one gradient matrix for each weight matrix in the network.
+  </em>
+</p>
+
+The complete calculation for one training example can be summarised as:
+
+$$
+\begin{aligned}
+\delta^{(3)}
+&=
+\frac{\partial J}{\partial a^{(3)}}
+\odot g'\left(z^{(3)}\right), \\
+\delta^{(2)}
+&=
+\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T
+\delta^{(3)}
+\odot g'\left(z^{(2)}\right), \\
+\frac{\partial J}{\partial\Theta^{(2)}}
+&=
+\delta^{(3)}
+\left(\ a^{(2)}\right)^T, \\
+\frac{\partial J}{\partial\Theta^{(1)}}
+&=
+\delta^{(2)}
+\left(\ a^{(1)}\right)^T.
+\end{aligned}
+$$
+
+If the aligned equations do not render properly, use them as separate blocks:
+
+$$\delta^{(3)}=\frac{\partial J}{\partial a^{(3)}}\odot g'\left(z^{(3)}\right)$$
+
+$$\delta^{(2)}=\left(\Theta_{\mathrm{nb}}^{(2)}\right)^T\delta^{(3)}\odot g'\left(z^{(2)}\right)$$
+
+$$\frac{\partial J}{\partial\Theta^{(2)}}=\delta^{(3)}\left(\ a^{(2)}\right)^T$$
+
+$$\frac{\partial J}{\partial\Theta^{(1)}}=\delta^{(2)}\left(\ a^{(1)}\right)^T$$
+
+### Why There Is No $\(\delta^{(1)}\)$
+
+An error term is not normally calculated for the input layer because its values are supplied features rather than trainable neuron activations.
+
+Backward propagation stops after calculating the gradients of $\(\Theta^{(1)}\)$.
+
 ## 12. The Backpropagation Algorithm
 
-Given the training set:
+Given a training set containing $\(m\)$ examples:
 
 $$
-\left(x^{(1)},y^{(1)}\right),\left(x^{(2)},y^{(2)}\right),\ldots,\left(x^{(m)},y^{(m)}\right)
+\left\{
+\left(x^{(1)},y^{(1)}\right),
+\left(x^{(2)},y^{(2)}\right),
+\ldots,
+\left(x^{(m)},y^{(m)}\right)
+\right\}
 $$
 
-the complete training process is:
+the network processes each input, compares its prediction with the corresponding target, calculates the required gradients, and adjusts its parameters to reduce the prediction error.
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/24aa2c6d-f30f-4175-8ef2-64d691481576"
+    alt="Complete neural-network training process using backpropagation">
+</p>
+
+<p align="center">
+  <em>
+    Overview of neural-network training: perform forward propagation,
+    measure the output error, propagate the error backwards, calculate
+    the gradients, and use an optimizer to improve the parameters.
+  </em>
+</p>
+
+The complete training process is described below.
+
+---
 
 ### Step 1: Initialize the Parameters
 
-Initialize each weight matrix $\Theta^{(l)}$ using small random values.
+Before training begins, initialize each weight matrix $\(\Theta^{(l)}\)$ using small random values.
 
-### Step 2: Forward Propagation
-
-For each layer, calculate:
+Random initialization prevents neurons in the same layer from learning identical features.
 
 $$
-z^{(l+1)}=\Theta^{(l)}a^{(l)}
+\Theta^{(l)}
+\leftarrow
+\text{small random values}
 $$
 
-$$
-a^{(l+1)}=g(z^{(l+1)})
-$$
-
-Continue until $a^{(L)}=h_\Theta(x)$ is obtained.
-
-### Step 3: Compute the Output Error
-
-For sigmoid plus cross-entropy, calculate:
+The gradient accumulators are also initialized to zero:
 
 $$
-\delta^{(L)}=a^{(L)}-y
+\Delta^{(l)}=0
 $$
 
-### Step 4: Backpropagate the Error
+> [!IMPORTANT]
+> Initializing every weight to zero would cause neurons in the same
+> layer to remain identical during training. This is known as the
+> symmetry problem.
 
-For hidden layers from right to left:
+---
 
-$$
-\delta^{(l)}=\left(\Theta^{(l)}\right)^T\delta^{(l+1)}\odot g'(z^{(l)})
-$$
+### Step 2: Supply a Training Example
 
-### Step 5: Compute and Accumulate Gradients
-
-$$
-\Delta^{(l)}:=\Delta^{(l)}+\delta^{(l+1)}(a^{(l)})^T
-$$
-
-After processing the required examples, average the accumulated gradients.
-
-### Step 6: Update the Weights
+For each training example $\(i\)$, provide the input features $\(x^{(i)}\)$ and their corresponding target $\(y^{(i)}\)$:
 
 $$
-\Theta^{(l)}=\Theta^{(l)}-\alpha\frac{\partial J}{\partial\Theta^{(l)}}
+\left(x^{(i)},y^{(i)}\right),
+\qquad i=1,2,\ldots,m
 $$
 
-### Step 7: Repeat
+The input $\(x^{(i)}\)$ is passed through the network, while $\(y^{(i)}\)$ is retained for comparison with the final prediction.
 
-Repeat the forward and backward passes over many epochs until the cost converges or another stopping condition is met.
+---
 
-<div align="left">
+### Step 3: Perform Forward Propagation
+
+Starting from the input layer, calculate the weighted inputs and activations of each following layer:
+
+$$z^{(l+1)}=\Theta^{(l)}\tilde a^{(l)}$$
+
+$$a^{(l+1)}=g\left(z^{(l+1)}\right)$$
+
+The tilde indicates that the activation vector includes its bias unit.
+
+This process continues from left to right until the final prediction is obtained:
+
+$$a^{(L)}=h_\Theta\left(x^{(i)}\right)$$
+
+Forward propagation answers the question:
+
+> Given the current weights, what does the network predict?
+
+---
+
+### Step 4: Calculate the Output Error
+
+Compare the predicted output $\(a^{(L)}\)$ with the expected target $\(y^{(i)}\)$.
+
+For sigmoid activation combined with cross-entropy loss:
+
+$$\delta^{(L)}=a^{(L)}-y^{(i)}$$
+
+The output error indicates how far the prediction is from the expected result and provides the starting point for the backward pass.
+
+The cost function $\(J(\Theta)\)$ provides an overall numerical measure of the prediction error.
+
+---
+
+### Step 5: Backpropagate the Error
+
+Propagate the output error backwards through the hidden layers.
+
+For a hidden layer $\(l\)$:
+
+$$\delta^{(l)}=\left(\Theta_{\mathrm{nb}}^{(l)}\right)^T\delta^{(l+1)}\odotg'\left(z^{(l)}\right)$$
+
+Here, $\(\Theta_{\mathrm{nb}}^{(l)}\)$ represents the weight matrix with its bias column excluded.
+
+This calculation determines how much each hidden neuron contributed to the final prediction error.
+
+Backpropagation answers the question:
+
+> Which neurons and connections were responsible for the error?
+
+---
+
+### Step 6: Calculate and Accumulate the Gradients
+
+For each weight matrix, calculate:
+
+$$\frac{\partial J^{(i)}}{\partial\Theta^{(l)}}=\delta^{(l+1)}\left(\tilde a^{(l)}\right)^T$$
+
+Accumulate the gradients across the training examples:
+
+$$\Delta^{(l)}:=\Delta^{(l)}+\delta^{(l+1)}\left(\tilde a^{(l)}\right)^T$$
+
+After all \(m\) training examples have been processed, calculate the average gradient:
+
+$$\frac{\partial J}{\partial\Theta^{(l)}}=\frac{1}{m}\Delta^{(l)}$$
+
+The gradient describes the direction and sensitivity of the cost with respect to each weight.
+
+---
+
+### Step 7: Update the Weights
+
+An optimization algorithm uses the calculated gradients to adjust the weights.
+
+Using gradient descent:
+
+$$\Theta^{(l)}:=\Theta^{(l)}-\alpha\frac{\partial J}{\partial\Theta^{(l)}}$$
+
+where $\(\alpha\)$ is the learning rate.
+
+The update moves the weights in the direction that reduces the cost:
+
+- A positive gradient causes the weight to decrease.
+- A negative gradient causes the weight to increase.
+- A larger gradient produces a larger adjustment.
+- The learning rate controls the overall update size.
+
+> [!NOTE]
+> Backpropagation calculates the gradients. Gradient descent uses those
+> gradients to update the weights.
+
+---
+
+### Step 8: Repeat Until Convergence
+
+Repeat the forward pass, backward pass, and parameter update over multiple epochs:
 
 ```text
 Random Initialization
+         ↓
+Supply Training Examples
          ↓
 Forward Propagation
          ↓
@@ -1024,20 +1416,31 @@ Compute Cost and Output Error
          ↓
 Backward Propagation
          ↓
-Compute Gradients
+Calculate Gradients
          ↓
-Update Weights
+Update Parameters
          ↓
 Repeat Until Convergence
 ```
 
-</div>
+One epoch is completed when the network has processed the entire training set once.
 
----
+Training continues until a suitable stopping condition is reached, such as:
+
+- The cost stops decreasing significantly
+- The validation performance stops improving
+- A specified number of epochs is completed
+- The gradients become sufficiently small
+
+With repeated training, the network gradually learns parameter values that produce predictions closer to the expected targets.
 
 ## 13. Backpropagation Intuition
 
 ### Forward: Combine Information
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b0945a47-4629-42ee-af87-c661fab5facf" width=600>
+</p>
 
 During forward propagation, a neuron computes a weighted sum of activations from the left:
 
@@ -1050,6 +1453,10 @@ It asks:
 > Given the current weights, what should this neuron output?
 
 ### Backward: Assign Responsibility
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/85fd0335-3e8c-499c-bde8-404e0dbb4ec2" width=600>
+</p>
 
 During backward propagation, a hidden neuron's error combines the downstream errors influenced by that neuron:
 
@@ -1090,6 +1497,10 @@ If all hidden neurons start with identical weights, they receive the same inputs
 This is called the **symmetry problem**.
 
 ### What Goes Wrong
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/072b6a66-1c5e-40b5-a6f5-0f233b2dec17" width=600>
+</p>
 
 Suppose all three hidden neurons have the same weights:
 
