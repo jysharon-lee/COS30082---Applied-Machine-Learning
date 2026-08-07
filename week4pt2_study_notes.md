@@ -1,4 +1,4 @@
-<img width="430" height="315" alt="image" src="https://github.com/user-attachments/assets/231d33a7-3f3c-4712-ba5d-5212365fb765" /># 📘 Week 4 Part 2 Study Notes: Support Vector Machine (SVM)
+# 📘 Week 4 Part 2 Study Notes: Support Vector Machine (SVM)
 
 > **Course:** COS30082 — Applied Machine Learning  
 > **Topic:** Support Vector Machine (SVM)  
@@ -160,26 +160,26 @@ SVM's cost function is very similar in shape to logistic regression's, but it re
 
 <table align="center">
 <tr>
-
-$$
-\text{if } y=1:\quad cost_1(\theta^Tx)=\max\left(0,\1-\theta^Tx\right)
-$$
-
 <td align="center" width="50%" valign="top">
-
-<img src="https://github.com/user-attachments/assets/b144fe41-1f02-4fb0-9f30-926875312cba" width="100%" height="300">
-
+$$
+\text{if } y=1:\quad cost_1(\theta^Tx)=\max\left(0,1-\theta^Tx\right)
+$$
 </td>
-
-$$
-\text{if } y=0:\quad cost_0(\theta^Tx)=\max\left(0,\1+\theta^Tx\right)
-$$
-
 <td align="center" width="50%" valign="top">
-
+$$
+\text{if } y=0:\quad cost_0(\theta^Tx)=\max\left(0,1+\theta^Tx\right)
+$$
+</td>
+</tr>
+<tr>
+<td align="center" width="50%" valign="top">
+<img src="https://github.com/user-attachments/assets/b144fe41-1f02-4fb0-9f30-926875312cba" width="100%" height="300">
+</td>
+<td align="center" width="50%" valign="top">
 <img src="https://github.com/user-attachments/assets/6c5211bc-5e3a-4f61-b9bc-b85f0d6cdd01" width="100%" height="300">
-
-</td></tr></table>
+</td>
+</tr>
+</table>
 
 
 | Function | Zero when | Behaviour |
@@ -354,13 +354,13 @@ Both models share a very similar cost function structure — only the loss term 
 **Logistic Regression:**
 
 $$
-\min_\theta J(\theta) = \frac{1}{N}\left[\sum_{n=1}^{N}y^{(n)}\underbrace{\{-\log h_\theta(x^{(n)})\}}_{} + (1-y^{(n)})\underbrace{\{-\log(1-h_\theta(x^{(n)}))\}}_{} \right] + \frac{\lambda}{2N}\sum_{j=1}^{M}\theta_j^2
+\min_\theta J(\theta) = \frac{1}{N}\left[\sum_{n=1}^{N}y^{(n)}\underbrace{\{{-\log h_\theta(x^{(n)})\}}}_{loss term} + (1-y^{(n)})\underbrace{\{{-\log(1-h_\theta(x^{(n)}))\}}_{regularizsation constant} \right] + \frac{\lambda}{2N}\sum_{j=1}^{M}\theta_j^2
 $$
 
 **SVM:**
 
 $$
-\min_\theta J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}\underbrace{cost_1\left(\theta^Tx^{(n)}\right)}_{}+\left(1-y^{(n)}\right)\underbrace{cost_0\left(\theta^Tx^{(n)}\right)}_{}\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
+\min_\theta J(\theta) = C\left[\sum_{n=1}^{N}y^{(n)}\underbrace{cost_1\left(\theta^Tx^{(n)}\right)}_{loss term}+\left(1-y^{(n)}\right)\underbrace{cost_0\left(\theta^Tx^{(n)}\right)}_{regularization constant}\right]+\frac{1}{2}\sum_{j=1}^{M}\theta_j^2
 $$
 
 where $M$ = number of parameters and $N$ = number of data points (training data).
@@ -443,18 +443,20 @@ This is called the **kernel trick**: the kernel function transforms the data int
 
 The kernel function computes a new feature of $x$ based on its **proximity to landmarks**:
 
-<table>
-<tr>
-<td rowspan="3" align="center" width="320"><img src="https://github.com/user-attachments/assets/aac0e49d-6854-4e68-a2b4-c82eab456d33" width="300"></td>
-<td>$$f_1 = \text{similarity}(x,l^{(1)}) \text{ or } k(x,l^{(1)})$$</td>
-</tr>
-<tr>
-<td>$$f_2 = \text{similarity}(x,l^{(2)}) \text{ or } k(x,l^{(2)})$$</td>
-</tr>
-<tr>
-<td>$$f_3 = \text{similarity}(x,l^{(3)}) \text{ or } k(x,l^{(3)})$$</td>
-</tr>
-</table>
+<div align="center">
+  <table>
+  <tr>
+  <td rowspan="3" align="center" width="320"><img src="https://github.com/user-attachments/assets/aac0e49d-6854-4e68-a2b4-c82eab456d33" width="300"></td>
+  <td>$$f_1 = \text{similarity}(x,l^{(1)}) \text{ or } k(x,l^{(1)})$$</td>
+  </tr>
+  <tr>
+  <td>$$f_2 = \text{similarity}(x,l^{(2)}) \text{ or } k(x,l^{(2)})$$</td>
+  </tr>
+  <tr>
+  <td>$$f_3 = \text{similarity}(x,l^{(3)}) \text{ or } k(x,l^{(3)})$$</td>
+  </tr>
+  </table>
+</div>
 
 ### How Are Landmarks Chosen?
 
@@ -636,8 +638,8 @@ With a **fixed** distance between $x$ and $l$:
 <div align="center">
 
 ```text
-Large σ²:  wide, smooth bump centred at l   (underfitting risk)
-Small σ²:  narrow, sharp spike centred at l (overfitting risk)
+Large σ²:  wide, smooth bump centred at l   (UNDERFITTING risk)
+Small σ²:  narrow, sharp spike centred at l (OVERFITTING risk)
 ```
 
 </div>
@@ -659,6 +661,7 @@ Small σ²:  narrow, sharp spike centred at l (overfitting risk)
 |---|---|---|
 | **Boundary chosen** | Finds *the* maximum-margin boundary (distance between the decision boundary and the support vectors) | Can settle on different decision boundaries depending on the parameters $\theta$ that happen to be near the optimal solution |
 | **Uniqueness** | Effectively one well-defined "best" boundary | Several near-optimal boundaries are possible |
+| <p align="center"><img src="https://github.com/user-attachments/assets/5c61cfec-953e-4113-9149-bf67c0f15914" width=300></p> | <p align="center"><img src="https://github.com/user-attachments/assets/f6c44cdd-2167-44c5-9495-c0655f8f1228" width=300></p> |
 
 ### Choosing Between LR and SVM
 
@@ -666,7 +669,7 @@ The choice depends on the number of training samples ($n$) and the number of fea
 
 | Scenario | Recommendation |
 |---|---|
-| $m$ is **large** and $n$ is **small** ($m \gg n$) | Linear SVM or Logistic Regression |
+| $m$ is **large** and $n$ is **small** ($n \11 m$) | Linear SVM or Logistic Regression |
 | $m$ is **small** and $n$ is **intermediate** ($n > m$) | **SVM with Gaussian kernel** |
 | $m$ is **small** and $n$ is **large** ($n \gg m$) | Linear SVM or Logistic Regression (preferable to add more features) |
 
