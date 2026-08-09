@@ -61,18 +61,9 @@ $$
 | **Connections** | Every neuron connects to every neuron in the previous layer | Each neuron only connects to a **small local region** of the previous layer |
 | **Parameters** | Each connection has its own independent weight | The **same filter (set of weights)** is reused across the whole image |
 
-<div align="center">
-
-```text
-ANN with 2 hidden layers                CNN with 2 convolutional layers
-
-  ○ ─┬─○ ─┬─○                              ▮ ──▶ [width x height x depth] ──▶ [width x height x depth] ──▶ ▭
-  ○ ─┼─○ ─┼─○                                    (a 3-D block of neurons, not a flat layer)
-  ○ ─┼─○ ─┼─○
-  ○ ─┴─○ ─┴─○
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2002eb90-324a-4e53-bcfc-8cd06ed4a98c" width=1000>
+</p>
 
 > [!NOTE]
 > An ANN "flattens" everything, so it loses the spatial relationship between neighbouring pixels. A CNN keeps that spatial structure alive by organising its layers as 3‑D volumes (width × height × depth/number of channels).
@@ -83,15 +74,9 @@ ANN with 2 hidden layers                CNN with 2 convolutional layers
 
 A typical CNN passes an image through two broad stages:
 
-<div align="center">
-
-```text
-                 ┌────────────── Feature Learning ──────────────┐   ┌────── Classification ──────┐
-
-Input Image ──▶ Convolution + ReLU ──▶ Pooling ──▶ Convolution + ReLU ──▶ Pooling ──▶ Fully Connected ──▶ Softmax ──▶ dog / cat / bird / ...
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0eb66c97-b9ba-4241-ba68-25112408b383" width=1000>
+</p>
 
 | Stage | Layers involved | Purpose |
 |---|---|---|
@@ -126,20 +111,21 @@ $$
 
 ### How the Filter Slides
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7292d4cb-3149-4623-a78d-97325dadc1ca" width=1000>
+</p>
 
-```text
-Input layer                     Filter w                Feature map
-┌───┬───┬───┬───┬───┐                                    ┌───┬───┬───┐
-│▓▓▓│   │   │   │   │      f( Σ (patch · filter) )        │▓▓▓│   │   │
-├───┼───┼───┼───┼───┤     ─────────────────────▶          ├───┼───┼───┤
-│   │   │   │   │   │                                     │   │   │   │
-├───┼───┼───┼───┼───┤                                     ├───┼───┼───┤
-│   │   │   │   │   │                                     │   │   │   │
-└───┴───┴───┴───┴───┘                                     └───┴───┴───┘
-```
+<p align="center">
+  <em>Translation of top-left corner of the image into the feature map</em>
+</p>
 
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2f22ce6c-a490-40c9-83d6-484c7beff925" width=600>
+</p>
+
+<p align="center">
+  <em>Translation of bottom-right corner of the image into the feature map</em>
+</p>
 
 The filter starts at the top‑left corner of the image, computes a weighted sum with the pixels it currently covers, applies the activation function, and writes the result into the corresponding cell of the feature map. It then **slides** across the image (left to right, top to bottom) and repeats the process until the whole image has been covered.
 
@@ -190,8 +176,15 @@ $$
 To get the very first value (top-left, $=3$), the filter is placed over the top-left $3\times3$ patch of the input:
 
 $$
-\begin{bmatrix}1&1&0\\0&1&0\\0&0&1\end{bmatrix} * \begin{bmatrix}0&1&1\\0&1&1\\0&0&1\end{bmatrix}
-= (1{\times}0)+(1{\times}1)+(0{\times}1)+(0{\times}0)+(1{\times}1)+(0{\times}1)+(0{\times}0)+(0{\times}0)+(1{\times}1) = 3
+\begin{bmatrix}
+1 & 1 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{bmatrix} * \begin{bmatrix}
+0 & 1 & 1\\
+0 & 1 & 1\\
+0 & 0 & 1
+\end{bmatrix} = (1{\times}0)+(1{\times}1)+(0{\times}1)+(0{\times}0)+(1{\times}1)+(0{\times}1)+(0{\times}0)+(0{\times}0)+(1{\times}1) = 3
 $$
 
 The filter then slides one column to the right (stride = 1) and repeats, filling out the rest of the $3\times3$ feature map, one cell at a time, until it has swept the entire input.
@@ -206,10 +199,10 @@ The filter then slides one column to the right (stride = 1) and repeats, filling
 ### The General Formula
 
 $$
-\boxed{\text{output size} = \frac{d - N + 2p}{s} + 1}
+\boxed{\text{output size} = \frac{d - N}{s} + 1}
 $$
 
-where $d$ = input size, $N$ = filter size, $p$ = padding, $s$ = stride.
+where $d$ = input size, $N$ = filter size, $s$ = stride.
 
 ### Stride
 
@@ -222,9 +215,17 @@ where $d$ = input size, $N$ = filter size, $p$ = padding, $s$ = stride.
 
 Example: with a $(5,5)$ input, a $(3,3)$ filter, and $s=2$:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/95982241-b931-4a10-a062-07c674b031bf" width=600>
+</p>
+
 $$
 \text{output size} = \frac{5-3}{2}+1 = 2
 $$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/27b72fc9-cf5c-43be-ab17-48f07d8dccd7">
+</p>
 
 ### Padding
 
@@ -232,24 +233,13 @@ $$
 
 Example: with padding $p=(1,1)$, a $(5,5)$ input effectively becomes $(7,7)$:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9b3f1f7a-962e-45ec-8369-1bf4dd22e37b" width=600>
+</p>
+
 $$
 \text{output size} = \frac{7-3}{1}+1 = 5
 $$
-
-<div align="center">
-
-```text
-No padding:            With padding = 1:
-┌───┬───┬───┬───┬───┐   ┌───┬───┬───┬───┬───┬───┬───┐
-│ x │ x │ x │ x │ x │   │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │
-├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┼───┼───┤
-│ x │ x │ x │ x │ x │   │ 0 │ x │ x │ x │ x │ x │ 0 │
-├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┼───┼───┤
-│ x │ x │ x │ x │ x │   │ 0 │ x │ x │ x │ x │ x │ 0 │
-└───┴───┴───┴───┴───┘   └───┴───┴───┴───┴───┴───┴───┘
-```
-
-</div>
 
 > [!NOTE]
 > Bigger stride → smaller, faster output. Padding → keeps (or slows down the shrinking of) the output size and lets the filter "see" the edge pixels properly.
@@ -260,21 +250,15 @@ No padding:            With padding = 1:
 
 A convolutional layer usually applies **many filters** to the same input, not just one. Using $N$ different filters produces $N$ different feature maps, which are then stacked together (concatenated) to form the output volume.
 
-<div align="center">
+### Operational Workflow 
+1. Input dimensions of (15, 15, 3) on the image are identified. Prepare 512 unique (3,3,3) filters
+2. Slide filters across the spatial dimensions. Advance by a stride of 2 pixels.
+3. Apply the standard convolution dimension formula. Yield individual (7,7,1) feature maps.
+4. Stack all 512 separate maps together. Form the final (7,7,512) output volume.
 
-```text
-Input image (15,15,3)
-        │
-        │  convolve with 512 filters, each (3,3,3), stride 2
-        ▼
-512 separate feature maps, each (7,7,1)
-        │
-        │  concatenate along depth
-        ▼
-Output volume (7,7,512)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7c7be048-c1b2-4aa4-9bb5-b0c0945550ce" width=600>
+</p>
 
 | Quantity | Value in the example |
 |---|---|
@@ -306,19 +290,11 @@ $$
 
 **Translation invariance** means the network can recognise the same object regardless of *where* in the image it appears.
 
-<div align="center">
+With an image size of 50 x 50 pixels:
 
-```text
-image size = 50 × 50 pixels
-
-┌───────────┐  ┌───────────┐  ┌───────────┐
-│           │  │           │  │        🐱  │
-│        🐱  │  │      🐱   │  │            │
-└───────────┘  └───────────┘  └───────────┘
-    (cat detected regardless of its position in the frame)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9aefdea9-146d-4adf-9f93-07e514980cc3" width=1000>
+</p>
 
 > **Analogy:** Imagine a cookie cutter shaped like a star. It cuts the exact same star shape no matter where on the dough you press it. A CNN filter behaves the same way — it detects the exact same pattern (e.g. an edge) no matter where in the image it is applied.
 
