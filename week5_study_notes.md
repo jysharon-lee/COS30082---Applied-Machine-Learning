@@ -603,7 +603,7 @@ Every resulting probability lies in the range $(0,1)$, and all of them **sum to 
 The cost of one training sample, summed across all $k$ output classes:
 
 $$
-cost\big(h_\theta(x),y\big) = -\sum_{c=1}^{k}\mathbb{1}\{{y=c}\}\log h_\theta^{(c)}(x) = -\sum_{c=1}^{k}\mathbb{1}\{{y=c}\}\log\frac{e^{z_c}}{\sum_{i=1}^{k}e^{z_i}}
+cost\big(h_\theta(x),y\big) = -\sum_{c=1}^{k}\mathbb{1}\{(y=c)\}\log h_\theta^{(c)}(x) = -\sum_{c=1}^{k}\mathbb{1}\{(y=c)\}\log\frac{e^{z_c}}{\sum_{i=1}^{k}e^{z_i}}
 $$
 
 | Component | Role |
