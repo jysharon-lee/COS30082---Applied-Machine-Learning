@@ -532,10 +532,16 @@ The window then slides one step to the right (and eventually down), taking the m
 | Padding = (1,1) → input effectively $(7,7)$ | output size $= \frac{7-3}{1}+1 = 5$ |
 | Stride = 2 | output size $= \frac{5-3}{2}+1 = 2$ |
 
-The pooled feature map with stride, $s$ = 2 will be $\begin{bmatrix}
-8 & 9\\
+For a pooling operation with stride $s=2$, the resulting pooled feature map is
+
+$$
+\mathbf{P}_{s=2}
+=
+\begin{bmatrix}
+8 & 9 \\
 6 & 6
-\end{bmatrix}$
+\end{bmatrix}.
+$$
 
 ---
 
@@ -573,7 +579,7 @@ This produces **faster and more robust learning**.
 </p>
 
 <p align="center">
-  <em>Up-down Comparison between traditional approach (Flatten + Fully-Connected) and convolution-only approach (No Flatten)
+  <em>Up-down Comparison between traditional approach (Flatten + Fully-Connected) and convolution-only approach (No Flatten) </em>
 </p>
 
 By replacing the flatten + FC combo with convolutions that use filter sizes matching the remaining spatial dimensions (e.g. a $7\times7$ filter, then $1\times1$ filters), the same transformation can be achieved with roughly **6× fewer parameters** (13M vs 81.5M in this example) — because the weights are shared instead of each connection getting its own independent weight.
