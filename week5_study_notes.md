@@ -120,7 +120,7 @@ $$
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/2f22ce6c-a490-40c9-83d6-484c7beff925" width=600>
+  <img src="https://github.com/user-attachments/assets/2f22ce6c-a490-40c9-83d6-484c7beff925" width=1000>
 </p>
 
 <p align="center">
@@ -283,7 +283,7 @@ A convolutional layer usually applies **many filters** to the same input, not ju
 - The reasoning: if detecting an edge is useful in one part of the image, that same edge-detecting pattern is likely useful in other parts of the image too — so we might as well reuse the same filter everywhere.
 
 $$
-\boxed{\text{Weight sharing} \;\Longrightarrow\; \text{Translation invariance}}
+\boxed{\text{Weight sharing} \Longrightarrow\ \text{Translation invariance}}
 $$
 
 ### Translation Invariance
@@ -302,6 +302,10 @@ With an image size of 50 x 50 pixels:
 
 ## 9. Sparsity of Connection
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/30ab6296-ffe0-4f34-a396-1c65ad005e12" width=1000>
+</p>
+
 **Sparsity of connection** means each element of the output depends only on a **small section** of the input — not the entire image.
 
 | Layer depth | What one output element depends on |
@@ -309,18 +313,13 @@ With an image size of 50 x 50 pixels:
 | First conv layer, $3\times3$ filter | Only 9 numbers from the input |
 | Deeper layers | Progressively **more** of the original image (indirectly), but still a limited, local region at each individual layer |
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/de50df20-0d7b-450b-b360-859e0e17ae03" width=600>
+</p>
 
-```text
-x⁽ˡ⁻¹⁾ (input)              w⁽ˡ⁻¹⁾ (filter)        x⁽ˡ⁾ (output)
-┌───┬───┐                                            ┌─┐
-│▓▓▓│   │  ──▶  *  ──▶ ┌───┬───┐ ──▶ = ──▶            │▓│
-├───┼───┤              │   │   │                      └─┘
-│   │   │              └───┴───┘
-└───┴───┘        (only this small patch feeds into one output cell)
-```
-
-</div>
+<p align="center">
+  <em>3x3 convolution input layer compressed into one single pixel </em>
+</p>
 
 > [!NOTE]
 > Because each output unit only "looks at" a small patch, sparsity of connection lets us train with **fewer parameters** and **less data**, and helps prevent overfitting compared to a fully connected layer covering the whole image.
@@ -333,10 +332,18 @@ From a strict mathematical standpoint, "**convolution**" requires the filter to 
 
 $$
 w_j =
-\begin{bmatrix}5&2&7\\9&4&1\\6&0&2\end{bmatrix}
+\begin{bmatrix}
+5 & 2 & 7\\
+9 & 4 & 1\\
+6 & 0 & 2
+\end{bmatrix}
 \qquad\xrightarrow{\text{flip 180°}}\qquad
 w_j =
-\begin{bmatrix}2&1&7\\0&4&2\\6&9&5\end{bmatrix}
+\begin{bmatrix}
+2 & 1 & 7\\
+0 & 4 & 2\\
+6 & 9 & 5
+\end{bmatrix}
 $$
 
 ### Why Does Math Require Flipping?
@@ -370,28 +377,42 @@ input ──▶ [ neuron: Σ(weights × inputs) ] ──▶ [ activation functio
 
 </div>
 
-### Sigmoid and Tanh
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c5d301fe-bedf-4624-9af2-20557fc5c18b" width=1000>
+</p>
 
-$$
-\text{Sigmoid: } g(z) = \frac{1}{1+e^{-z}} \qquad\qquad \text{Tanh: } g(z) = \tanh(z)
-$$
+### Sigmoid and Tanh (Hyperbolic tangent)
 
-| Function | Output range | Shape |
-|---|---|---|
-| Sigmoid | $(0,1)$ | S-shaped curve |
-| Tanh | $(-1,1)$ | S-shaped curve, centred at 0 |
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/40d8c666-00b8-4c81-8799-addc8fc5bfe5" width=1000>
+</p>
+
+| Function | Activation function, $g(z)$ | Output range | Shape |
+|---|---|---|---|
+| Sigmoid | $frac{1}{1+e^{-z}}$ |$(0,1)$ | S-shaped curve |
+| Tanh | $tanh(z)$ | $(-1,1)$ | S-shaped curve, centred at 0 |
 
 ### Limitations of Sigmoid and Tanh
 
 | Problem | Explanation |
 |---|---|
-| **Saturation / limited sensitivity** | Large inputs "snap" to 1.0 (or -1); small inputs snap to 0 (or -1 for tanh). The functions are only really sensitive around their mid-point (0.5 for sigmoid, 0.0 for tanh) |
-| **Vanishing gradient** | In a feedforward network, the backpropagated error tends to shrink exponentially the further it travels from the output layer, which can make the network effectively stop learning in its earlier layers |
+| **Saturation / limited sensitivity** | 1. Large inputs "snap" to 1.0 (or -1)
+2. small inputs snap to 0 (or -1 for tanh). 
+3. The functions are only really sensitive around their mid-point (0.5 for sigmoid, 0.0 for tanh) |
+| **Vanishing gradient** | 1. In a feedforward network, the backpropagated error tends to shrink exponentially the further it travels from the output layer, which can make the network effectively stop learning in its earlier layers |
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ddee9e41-0118-4109-b532-d635bfca9864" width=600>
+</p>
 
 > [!WARNING]
 > A saturated activation function has a derivative close to zero. Since backpropagation multiplies gradients together layer by layer, many near-zero derivatives multiplied together quickly shrink toward zero — this is the root cause of the vanishing gradient problem (see Section 23).
 
 ### ReLU (Rectified Linear Unit)
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b7de8692-c9df-4d51-9e40-2354487769d6" width=600>
+</p>
 
 $$
 f(x) = \max(0, x)
@@ -401,19 +422,20 @@ $$
 
 ReLU became the default choice in most modern CNNs because it is cheap to compute and does **not saturate** for positive inputs, which greatly reduces the vanishing gradient problem.
 
+> **Analogy:** ReLU is a threshold filter that zeroes out the negative side and leaves the positive side completely alone.
+
 ### Other Common Activation Functions
 
-| Name | Formula | Notes |
-|---|---|---|
-| Identity | $f(x)=x$ | No non-linearity at all |
-| Binary step | $f(x)=0$ if $x<0$, else $1$ | Not differentiable at $x=0$ |
-| Logistic (Sigmoid) | $f(x)=\dfrac{1}{1+e^{-x}}$ | Output $(0,1)$ |
-| Tanh | $f(x)=\tanh(x)$ | Output $(-1,1)$ |
-| ArcTan | $f(x)=\tan^{-1}(x)$ | Similar shape to tanh, wider range |
-| ReLU | $f(x)=\max(0,x)$ | Most widely used in CNNs |
-| Parametric ReLU (PReLU) | $\alpha x$ if $x<0$, else $x$ | $\alpha$ is a *learnable* parameter |
-| Exponential Linear Unit (ELU) | $\alpha(e^x-1)$ if $x<0$, else $x$ | Smooths the negative side |
-| SoftPlus | $f(x)=\log_e(1+e^x)$ | A smooth approximation of ReLU |
+| Name | Plot | Formula | Notes |
+|---|---|---|---|
+| Identity | <p align="center"><img src="https://github.com/user-attachments/assets/fe9ede11-6964-4ac8-b34e-9066fedb6c5f"></p> | $f(x)=x$ | No non-linearity at all |
+| Binary step | <p align="center"><img src="https://github.com/user-attachments/assets/ea0d327c-74ec-4419-83ac-475e73750709"></p> | $f(x)=0$ if $x<0$, else $1$ | Not differentiable at $x=0$ |
+| Logistic (Sigmoid) | <p align="center"><img src="https://github.com/user-attachments/assets/9df9c075-3dad-42d0-bf5c-171abe76e342"></p> | $f(x)=\dfrac{1}{1+e^{-x}}$ | Output $(0,1)$ |
+| Tanh | <p align="center"><img src="https://github.com/user-attachments/assets/c811bb3e-5e7e-467e-b4f7-99f162913bb3"></p> | $f(x)=\tanh(x)$ | Output $(-1,1)$ |
+| ArcTan | <p align="center"><img src="https://github.com/user-attachments/assets/649ee3db-30ff-4d42-b445-6410f914da9f"></p> |$f(x)=\tan^{-1}(x)$ | Similar shape to tanh, wider range |
+| Parametric ReLU (PReLU) | <p align="center"><img src="https://github.com/user-attachments/assets/bf74610c-9e20-4b08-9a5d-7a298deb1066"></p> | $\alpha x$ if $x<0$, else $x$ | $\alpha$ is a *learnable* parameter |
+| Exponential Linear Unit (ELU) | <p align="center"><img src="https://github.com/user-attachments/assets/8eecc721-50a6-4854-8a73-03bec63a5e95"></p> | $\alpha(e^x-1)$ if $x<0$, else $x$ | Smooths the negative side |
+| SoftPlus | <p align="center"><img src="https://github.com/user-attachments/assets/3e1e2dbb-1690-411b-9421-6cff6061cef3"></p> | $f(x)=\log_e(1+e^x)$ | A smooth approximation of ReLU |
 
 ---
 
@@ -439,23 +461,9 @@ $$
 
 where $x_i^{(l)}$ is one output pixel, and $x^{(l-1)}$ is one input window region of the $r$-th feature map.
 
-<div align="center">
-
-```text
-Feature map                     Pooled feature map
-
-┌───┬───┬───┬───┐               ┌───┬───┐
-│▓▓▓│▓▓▓│   │   │   max( )      │▓▓▓│   │
-├───┼───┼───┼───┤  ────────▶    ├───┼───┤
-│▓▓▓│▓▓▓│   │   │               │   │   │
-├───┼───┼───┼───┤               └───┴───┘
-│   │   │   │   │
-└───┴───┴───┴───┘
-```
-
-</div>
-
----
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/68bd2e0b-203e-4b0b-bcc9-10e4b496efaf" width=600>
+</p>
 
 ## 13. Worked Example: Max Pooling
 
@@ -482,7 +490,7 @@ x^{(l-1)}=
 1&2&1&1&1\\
 1&0&1&5&0
 \end{bmatrix}
-\qquad\xrightarrow{\max(\;)}\qquad
+\qquad\xrightarrow{\max()}\qquad
 x^{(l)}=
 \begin{bmatrix}
 8&9&9\\
@@ -494,11 +502,27 @@ $$
 To find the top-left output value ($=8$), take the maximum of the top-left $3\times3$ patch:
 
 $$
-\max\begin{pmatrix}6&8&0\\4&7&5\\0&0&6\end{pmatrix} = 8
+\max\begin{pmatrix}
+6 & 8 & 0\\
+4 & 7 & 5\\
+0 & 0 & 6
+\end{pmatrix} = 8
 $$
 
 The window then slides one step to the right (and eventually down), taking the max of each new patch, until the full $3\times3$ output has been produced.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d8ce1288-cbb1-45db-bfe9-03c0f86bfe8d" width=600>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c43f4da2-8f26-4422-84b4-955c09ec1dfc" width=600>
+</p>
+
+<p align="center">
+  <em>Following convoluted kernel using max() function and resulting pooled map's output size (finds the highest number on the kernel and place it on one single pixel)
+</p>
+    
 ### Effect of Padding and Stride (same rules as convolution)
 
 | Setting | Effect on a $(5,5)$ input with a $(3,3)$ pool |
@@ -517,18 +541,9 @@ The window then slides one step to the right (and eventually down), taking the m
 | **Connections** | Every neuron connects to **every** neuron in the previous layer | Every neuron connects to only **a few nearby (local)** neurons |
 | **Weights** | Each connection has its **own independent** weight | The **same set of weights** (filter) is reused for every neuron (weight sharing) |
 
-<div align="center">
-
-```text
-Feature map from final layer
-      ┌───┬───┐
-      │   │   │   Flatten        Fully       Fully       Fully
-      ├───┼───┤  ─────────▶   Connected ─▶ Connected ─▶ Connected ─▶ softmax ─▶ class probabilities
-      │   │   │
-      └───┴───┘
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/82f54d14-5355-4cb3-b085-acd646d8f632" width=1000>
+</p>
 
 The feature map produced by the final convolution/pooling layer is **flattened** into a 1-D vector, which then becomes the input to one or more fully connected layers — essentially a standard Multi-Layer Perceptron (MLP) — that combines all the learned features together before making the final prediction.
 
@@ -546,23 +561,13 @@ This produces **faster and more robust learning**.
 
 ### A Concrete Comparison
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/12eb1131-2ae0-4218-876e-18a0deacc79a" width=1000>
+</p>
 
-```text
-Traditional approach (Flatten + FC):
-(14,14,386) ─conv─▶ (7,7,386) ─pool─▶ flatten (1,18914) ─FC(18914,4096)─▶ (1,4096) ─FC(4096,1000)─▶ (1,1000) ─▶ softmax
-
-                                        ≈ 81.5 million parameters in the FC layers
-```
-
-```text
-Convolution-only approach (no flatten needed):
-(14,14,386) ─conv─▶ (7,7,386) ─pool─▶ (7,7,386) ─conv(7×7)─▶ (1,1,386) ─conv(1×1)─▶ (1,1,4096) ─conv(1×1)─▶ (1,1,1000) ─▶ softmax
-
-                                        ≈ 13 million parameters
-```
-
-</div>
+<p align="center">
+  <em>Up-down Comparison between traditional approach (Flatten + Fully-Connected) and convolution-only approach (No Flatten)
+</p>
 
 By replacing the flatten + FC combo with convolutions that use filter sizes matching the remaining spatial dimensions (e.g. a $7\times7$ filter, then $1\times1$ filters), the same transformation can be achieved with roughly **6× fewer parameters** (13M vs 81.5M in this example) — because the weights are shared instead of each connection getting its own independent weight.
 
@@ -585,7 +590,7 @@ Every resulting probability lies in the range $(0,1)$, and all of them **sum to 
 The cost of one training sample, summed across all $k$ output classes:
 
 $$
-cost\big(h_\theta(x),y\big) = -\sum_{c=1}^{k}\mathbb{1}\{y=c\}\log h_\theta^{(c)}(x) = -\sum_{c=1}^{k}\mathbb{1}\{y=c\}\log\frac{e^{z_c}}{\sum_{i=1}^{k}e^{z_i}}
+cost\big(h_\theta(x),y\big) = -\sum_{c=1}^{k}\mathbb{1}\{{y=c}\}\log h_\theta^{(c)}(x) = -\sum_{c=1}^{k}\mathbb{1}\{{y=c}\}\log\frac{e^{z_c}}{\sum_{i=1}^{k}e^{z_i}}
 $$
 
 | Component | Role |
@@ -594,7 +599,7 @@ $$
 | **Cross-entropy (loss)** | The sum of the negative logarithm of the *correct* class's predicted probability |
 
 > [!NOTE]
-> "Softmax regression" and "multinomial logistic regression" are two names for the exact same thing: a softmax activation paired with a cross-entropy loss.
+> "Softmax regression" and "multinomial logistic regression" are two names for the exact same thing: a softmax activation + cross-entropy loss.
 
 ---
 
@@ -602,23 +607,25 @@ $$
 
 ### The General Idea (Chain Rule)
 
-<div align="center">
-
-```text
-Forward pass:                          Backward pass (chain rule):
-
-  x ──┐                                        δJ/δx = (δJ/δz)(δz/δx)
-      ├──▶ [ f(w,x) ] ──▶ z                       ▲
-  w ──┘                                     [ df ] │ ◀── δJ/δz
-                                                    ▼
-                                            δJ/δw = (δJ/δz)(δz/δw)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/73b1d1a7-4b83-4d93-9cf9-a983bc0a8feb" width=1000>
+</p>
 
 ### Forward Pass Example
 
 For a $3\times3$ input convolved with a $2\times2$ filter (stride 1, no padding), the output is $2\times2$:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c4e15de2-5364-4d43-abd3-d1ca35e819cc" width=1000>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/bc0bcff7-dd10-41b3-ac7e-e378b31867c4" width=600>
+</p>
+
+<p align="center">
+  <em>Forward pass propagation flow</em>
+</p>
 
 $$
 z_{11}=w_{11}x_{11}+w_{12}x_{12}+w_{21}x_{21}+w_{22}x_{22}
@@ -638,6 +645,18 @@ Notice how the **same four weights** ($w_{11},w_{12},w_{21},w_{22}$) show up aga
 ### Backward Pass Example
 
 Because each weight in the filter contributes to *every* output pixel, a change in one weight affects **all** output pixels — so the gradient for each weight must add up the contributions from every pixel it touched:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8b2eec74-c85c-4a10-a843-43cb98e07927" width=1000>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/acef2b1e-244c-4c76-956c-dd0db690c4d2" width=600>
+</p>
+
+<p align="center">
+  <em>Backward pass propagation flow</em>
+</p>
 
 $$
 \delta w_{11} = x_{11}\delta z_{11} + x_{12}\delta z_{12} + x_{21}\delta z_{21} + x_{22}\delta z_{22}
