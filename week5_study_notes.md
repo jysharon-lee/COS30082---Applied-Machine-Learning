@@ -318,7 +318,7 @@ With an image size of 50 x 50 pixels:
 </p>
 
 <p align="center">
-  <em>3x3 convolution input layer compressed into one single pixel </em>
+  <em>3x3 convolution input layer compressed with 3x3 kernel or filter into one single pixel </em>
 </p>
 
 > [!NOTE]
@@ -389,17 +389,15 @@ input ──▶ [ neuron: Σ(weights × inputs) ] ──▶ [ activation functio
 
 | Function | Activation function, $g(z)$ | Output range | Shape |
 |---|---|---|---|
-| Sigmoid | $frac{1}{1+e^{-z}}$ |$(0,1)$ | S-shaped curve |
+| Sigmoid | $\frac{1}{1+e^{-z}}\$ |$(0,1)$ | S-shaped curve |
 | Tanh | $tanh(z)$ | $(-1,1)$ | S-shaped curve, centred at 0 |
 
 ### Limitations of Sigmoid and Tanh
 
 | Problem | Explanation |
 |---|---|
-| **Saturation / limited sensitivity** | 1. Large inputs "snap" to 1.0 (or -1)
-2. small inputs snap to 0 (or -1 for tanh). 
-3. The functions are only really sensitive around their mid-point (0.5 for sigmoid, 0.0 for tanh) |
-| **Vanishing gradient** | 1. In a feedforward network, the backpropagated error tends to shrink exponentially the further it travels from the output layer, which can make the network effectively stop learning in its earlier layers |
+| **Saturation / limited sensitivity** | 1. Large inputs "snap" to 1.0 (or -1)<br>2. Small inputs snap to 0 (or -1 for tanh)<br>3. Only sensitive around the mid-point (0.5 for sigmoid, 0.0 for tanh) |
+| **Vanishing gradient** | 1. In a feedforward network, the backpropagated error shrinks exponentially the further it travels from the output layer<br>2. This can make the network effectively stop learning in its earlier layers |
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/ddee9e41-0118-4109-b532-d635bfca9864" width=600>
@@ -458,6 +456,10 @@ ReLU became the default choice in most modern CNNs because it is cheap to comput
 $$
 x_i^{(l)} = \max\left(x^{(l-1)}\right)
 $$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ab0250a5-b20b-448f-b13f-9963e7121ad0" width=600>
+</p>
 
 where $x_i^{(l)}$ is one output pixel, and $x^{(l-1)}$ is one input window region of the $r$-th feature map.
 
@@ -520,7 +522,7 @@ The window then slides one step to the right (and eventually down), taking the m
 </p>
 
 <p align="center">
-  <em>Following convoluted kernel using max() function and resulting pooled map's output size (finds the highest number on the kernel and place it on one single pixel)
+  <em>Following convoluted kernel using max() function and resulting pooled map's output size (finds the highest number on the kernel and place it on one single pixel) </em>
 </p>
     
 ### Effect of Padding and Stride (same rules as convolution)
@@ -529,6 +531,11 @@ The window then slides one step to the right (and eventually down), taking the m
 |---|---|
 | Padding = (1,1) → input effectively $(7,7)$ | output size $= \frac{7-3}{1}+1 = 5$ |
 | Stride = 2 | output size $= \frac{5-3}{2}+1 = 2$ |
+
+The pooled feature map with stride, $s$ = 2 will be $\begin{bmatrix}
+8 & 9\\
+6 & 6
+\end{bmatrix}$
 
 ---
 
