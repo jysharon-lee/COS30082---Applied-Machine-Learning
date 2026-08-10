@@ -1,4 +1,4 @@
-# 📘 Week 6 Study Notes: Transfer Learning for Computer Vision
+<img width="1606" height="598" alt="image" src="https://github.com/user-attachments/assets/58b906f9-0817-49ce-bb70-4f79301d670d" /><img width="657" height="549" alt="image" src="https://github.com/user-attachments/assets/325a331c-8a35-464e-91ad-dc9faedcf81f" /># 📘 Week 6 Study Notes: Transfer Learning for Computer Vision
 
 > **Course:** COS30082 — Applied Machine Learning  
 > **Topic:** Transfer Learning for Computer Vision  
@@ -65,65 +65,46 @@ $$
 
 ## 3. Traditional ML vs Transfer Learning
 
-### Two Very Different Philosophies
-
-<div align="center">
-
-```text
-Traditional ML                              Transfer Learning
-
-Dataset 1 ──▶ Learning system task 1        Source dataset ──▶ Learning system source task
-                                                                        │
-Dataset 2 ──▶ Learning system task 2                                   ▼
-                                                                    knowledge
-                                                                        │
-                                                                        ▼
-                                             Target dataset ──▶ Learning system target task
-```
-
-</div>
+### Visualising the Difference With Classification Boundaries
 
 | | Traditional ML | Transfer Learning |
 |---|---|---|
+| **Operational Workflow** | <p align="center"><img src="https://github.com/user-attachments/assets/2bcb5db1-db61-4630-bf6f-7b461d954b7d" width=600></p> | <p align="center"><img src="https://github.com/user-attachments/assets/155786a2-6826-4e27-a52c-2ab6ff91a712" width=600></p> |
 | **Task handling** | Isolated, single task | Target task's learning **relies on** the source task |
 | **Knowledge retention** | Knowledge is **not retained** between tasks | Knowledge is **passed on** from source to target |
 | **Awareness of other tasks** | Learning does not take into account knowledge from other tasks | Learning is **built on top of** prior knowledge |
 | **Result** | Faster learning process, more accurate, and needs less training data | — |
 
-> **Analogy:** Traditional ML is like a student who studies for every exam as if it's their very first day of school — even if they already learned algebra last semester, they'd have to relearn it from scratch for every new subject. Transfer learning is like a student who realises "I already know algebra from last semester, so learning calculus this semester will be much easier" — they build on top of what they already know.
-
-### Visualising the Difference With Classification Boundaries
-
-<div align="center">
-
-```text
-Traditional ML                         Transfer Learning
-
-Blue class ──▶ [boundary learned        Blue class ──▶ [boundary learned]
-                independently]                                │
-                                                                ▼ (knowledge passed on)
-Red class  ──▶ [boundary learned        Red class  ──▶ [boundary learned,
-                independently,                          benefiting from blue's
-                starting from zero]                      knowledge]
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9d35d3d7-a852-446a-a83d-d53b3b63a282" width=600>
+</p>
 
 - The circles and squares represent **labelled training samples** from two classes.
 - The **size** of a circle/square shows its weight (importance) in determining the boundary.
 - The dotted/dashed lines are the **classification boundaries**.
 - In transfer learning, the second (red) task's boundary is influenced by what was learned from the first (blue) task — leading to a **better-informed boundary**, especially when the red task has very few samples of its own.
 
+> **Analogy:** Traditional ML is like a student who studies for every exam as if it's their very first day of school — even if they already learned algebra last semester, they'd have to relearn it from scratch for every new subject. Transfer learning is like a student who realises "I already know algebra from last semester, so learning calculus this semester will be much easier" — they build on top of what they already know.
 ---
 
 ## 4. Case Study: Understanding Transfer Learning Through Dog Breeds
 
 ### Setting Up the Problem
 
-- **Dataset 1**: Large-breed dogs (e.g. German Shepherd, Rhodesian Ridgeback, Bull Mastiff) → trained into "Learning system task 1"
-- **Dataset 2**: Small/toy-breed dogs (e.g. Pomeranian, Pug, Shih Tzu, Yorkshire Terrier) → a **different** but **related** classification problem
+<div align="center">
+  
+| Dataset 1 | Dataset 2 |
+|---|---|
+| Large-breed dogs (e.g. German Shepherd, Rhodesian Ridgeback, Bull Mastiff) → trained into "Learning system task 1" | Small/toy-breed dogs (e.g. Pomeranian, Pug, Shih Tzu, Yorkshire Terrier) → a **different** but **related** classification problem |
+| <p align="center"><img src="https://github.com/user-attachments/assets/b8e06d97-5e32-41d6-a202-6252386503a6"></p> | <p align="center"><img src="https://github.com/user-attachments/assets/78becfd2-5c6a-4faa-b076-c12dc1298253"></p> |
+
+</div>
 
 ### Strategy 1: Train a Brand-New Model From Scratch
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9589ab1b-2f20-42ef-85eb-dc29d1bc90e2" width=1000>
+</p>
 
 If we simply reuse the model trained on Dataset 1 (large dogs) to classify Dataset 2 (small dogs) **without any adaptation**, we usually see:
 
@@ -134,6 +115,10 @@ $$
 > **Analogy:** It's like asking someone who has only ever driven big trucks to suddenly drive a compact sports car without any adjustment period. Their instincts (built entirely around trucks) will actively work against them at first, because the "training data" of their driving experience doesn't match the new situation.
 
 ### Strategy 2: Transfer Learning
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/54a42cc5-3ead-4398-9a00-ee312647f72a" width=600>
+</p>
 
 Instead of training two completely separate models, we treat Dataset 1 as the **source** and Dataset 2 as the **target**, and **transfer** the useful knowledge from source → target.
 
@@ -182,19 +167,14 @@ If two **domains** are different, they may have different **feature spaces** or 
 
 > **Analogy:** Think of "domain" as the *type of photograph* — is it a close-up macro shot, a photo taken outdoors in sunlight, or a photo taken in a dim greenhouse? Two datasets can both be about "bell peppers," yet look completely different simply because of lighting, angle, or background — that's a **domain shift**.
 
-<div align="center">
+| Dataset 1 | Dataset 2 |
+|---|---|
+| Large-breed dogs (e.g. German Shepherd, Rhodesian Ridgeback, Bull Mastiff) → trained into "Learning system task 1" | Small/toy-breed dogs (e.g. Pomeranian, Pug, Shih Tzu, Yorkshire Terrier) → a **different** but **related** classification problem |
+| <p align="center"><img src="https://github.com/user-attachments/assets/b8e06d97-5e32-41d6-a202-6252386503a6"></p> | <p align="center"><img src="https://github.com/user-attachments/assets/78becfd2-5c6a-4faa-b076-c12dc1298253"></p> |
 
-```text
-Dataset A (Bell pepper leaves,          Dataset B (Bell pepper plants,
-close-up, grey background)              outdoor, in soil/pots, full plant)
-
-     🍃  🍃                                  🌱      🌱
-     🍃  🍃                                  🌱      🌱
-
-Same object (bell pepper) — but a very different "look" (domain)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b9a2f5dd-334f-426a-a75b-82bceb049ebd" width=600>
+</p>
 
 Even though **Dataset A** and **Dataset B** are both about bell peppers, one is a set of individual leaf close-ups on a plain background, and the other is full plants growing outdoors. Their **feature spaces** (what visual patterns dominate) and **distributions** (how those patterns are spread out) can be quite different — this is what we mean by "different domains."
 
@@ -206,23 +186,11 @@ Even though **Dataset A** and **Dataset B** are both about bell peppers, one is 
 
 If two **tasks** are different, they may have different **label spaces** or different **conditional distributions**.
 
-> **Analogy:** Think of "task" as *the actual question you're asking the model to answer*. Even using the exact same kind of photos (same domain — e.g. dog portraits), asking "which specific breed is this?" (Dataset A: Pomeranian, Affenpinscher, Brussels Griffon...) is a **different task** from asking "which specific breed is this?" using an entirely different list of breeds (Dataset B: Manchester Terrier, Miniature Pinscher, Papillon...) — because the **set of possible answers (label space)** is different.
+> **Analogy:** Think of "task" as *the actual question you're prompting the model to answer*. Even using the exact same kind of photos (same domain — e.g. dog portraits), asking "which specific breed is this?" (Dataset A: Pomeranian, Affenpinscher, Brussels Griffon...) is a **different task** from asking "which specific breed is this?" using an entirely different list of breeds (Dataset B: Manchester Terrier, Miniature Pinscher, Papillon...) — because the **set of possible answers (label space)** is different.
 
-<div align="center">
-
-```text
-Dataset A                     Dataset B
-Label space:                  Label space:
-{Pomeranian, Affenpinscher,   {Manchester Terrier, Miniature Pinscher,
- Brussels Griffon, ...}        Papillon, Pug, Shih Tzu, ...}
-
-              Same "type" of task (breed classification),
-              but the answer options don't match up.
-```
-
-</div>
-
----
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8a7c9384-069c-492b-badd-2aa26a2f4a28" width=600>
+</p>
 
 ## 8. What, When, and How to Transfer
 
@@ -247,29 +215,15 @@ Label space:                  Label space:
 
 | Situation | Recommendation |
 |---|---|
-| Source and target domains are **similar** | Transfer learning works fine |
-| Domains are **different** but share the **same input data structure** (e.g. image → image, or speech → speech), and **low-level features** could help | Transfer learning still makes sense |
-| Domains are **very different** with **very different data structures** (e.g. ImageNet images → Natural Language text) | Better to train a deep network **from scratch** |
+| **Similar** source and target domains | Transfer learning works fine |
+| **Different** domains, **same input data structure** (e.g. image → image, or speech → speech), and **low-level features** could help | Transfer learning still makes sense |
+| **Different** domains, **different data structures** (e.g. ImageNet images → Natural Language text) | Better to train a deep network **from scratch** |
 
 > **Analogy:** You can transfer knife skills from Italian cooking to French cooking (both involve chopping vegetables, cooking with heat, plating food) — but you probably *can't* transfer those same knife skills to help you become a better violinist. Skills transfer well when the *underlying structure* of the tasks overlaps; they transfer poorly (or not at all) when the structures are fundamentally unrelated.
 
 ---
 
 ## 10. Motivation for Using Transfer Learning in Deep Learning
-
-### The Myth vs Reality
-
-<div align="center">
-
-```text
-❌ Myth:     "You can't do deep learning unless you have a
-              million labelled examples for your problem."
-
-✅ Reality:  "You CAN transfer learned representations
-              from a related task."
-```
-
-</div>
 
 ### Two Practical Motivations
 
@@ -315,21 +269,9 @@ Simply **leverage** the weighted layers of the pre-trained model to **extract fe
 
 **Approach:** Use the output of one or more layers of a network trained for a *different* task as **generic feature extractors**. Then train a **new, shallow classifier** (e.g. SVM, random forest) on top of those extracted features.
 
-<div align="center">
-
-```text
-Pre-training (on source data):                 Transfer (to target data):
-
-source data (xs, ys)                           target data and labels (xt, yt)
-      │                                                │
-   conv1 ──▶ conv2 ──▶ conv3 ──▶ fc1 ──▶ fc2      conv1 ──▶ conv2 ──▶ conv3 ──▶ fc1
-      │                                    │           (all FROZEN, lr = 0)      │
-      ▼                                    ▼                                     ▼
-    loss ◀───────── softmax ◀──────────────┘                          Shallow classifier
-                                                                        (e.g. SVM, random forest)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1502edde-b6a2-42ec-bf64-7294d5483dae" width=600>
+</p>
 
 > **Analogy:** This is like hiring a professional photographer (the frozen pre-trained network) to take high-quality photos of your product, and then having a separate, simpler person (the shallow classifier) just sort those photos into folders. The photographer's *skills* (feature extraction) don't change — only the sorting logic on top does.
 
@@ -348,18 +290,9 @@ This is a **more complex** technique. We not only **replace** the last layer (fo
 
 **Approach:** **Freeze** (fix weights, learning rate = 0) some layers during retraining, or **fine-tune** (learning rate > 0) others, according to our needs.
 
-<div align="center">
-
-```text
-source data (xs, ys)                    target data and labels (xt, yt)
-      │                                          │
-  conv1 → conv2 → conv3 → fc1 → fc2       conv1 → conv2 → conv3 → fc1 → fc2 (NEW) → softmax (NEW)
-      │                    │                lrp = 0 (frozen)     lrn > lrp (new layers,
-      ▼                    ▼                    OR                learn faster)
-    loss ◀────── softmax ◀─┘                lrp > 0 (fine-tuned)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/53910f16-fadb-4ec8-8cb4-b6451044301b" width=600>
+</p>
 
 > **Analogy:** Fine-tuning is like buying a well-tailored suit off the rack (the pre-trained network) and then bringing it to a tailor to **adjust the fit** to your specific body (fine-tuning some layers), rather than sewing a brand-new suit from raw fabric (training from scratch). You keep the expensive, hard-to-replicate craftsmanship (the frozen layers) and only adjust what's specific to you (the new/fine-tuned layers).
 
@@ -383,6 +316,10 @@ This is a much trickier question — and it's exactly what the famous **Yosinski
 
 ## 15. Worked Example: Reading the Yosinski Transferability Plot
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ec1d8f7a-a643-45ed-a7ae-812843e8ac8a" width=600>
+</p>
+
 > **Source:** Yosinski, J., Clune, J., Bengio, Y. and Lipson, H., 2014. *How transferable are features in deep neural networks?* Advances in Neural Information Processing Systems, pp. 3320–3328.
 
 This is one of the most important plots in transfer learning — let's break it down **step by step**, the same way we'd work through a convolution or pooling calculation.
@@ -395,6 +332,10 @@ This is one of the most important plots in transfer learning — let's break it 
 - The new network is then retrained on dataset **B**.
 
 ### Reading the Legend
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ed688a1e-b441-4efb-800e-f78dc0270d9a" width=800>
+</p>
 
 | Legend label | What it means |
 |---|---|
@@ -420,27 +361,9 @@ The **x-axis** is the layer $n$ at which the network was "chopped" (0 = nothing 
 
 ### The Big Picture (5 Numbered Insights)
 
-<div align="center">
-
-```text
-Top-1
-accuracy
-  ▲
-  │  5: Transfer + fine-tuning improves generalisation ─────────────────
-  │                                     ╱‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-  │  3: Fine-tuning recovers co-adapted interactions ── ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾
-  │ ●━━━━━━━━━●
-  │                  ╲                                     4: Performance
-  │                    ╲   2: Performance drops due to        drops due to
-  │                      ╲    fragile co-adaptation             representation
-  │                        ╲______________________            specificity
-  │                                                ╲________
-  └──────────────────────────────────────────────────────────▶
-    0        1        2        3        4        5        6        7
-                  Layer n at which network is chopped and retrained
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cbab5d18-f77d-405b-9764-ab02d4c3e14c" width=600>
+</p>
 
 1. **Transfer + fine-tuning improves generalisation** — the best-performing curve overall.
 2. **Performance drops due to fragile co-adaptation** — happens with *frozen* middle layers.
@@ -484,20 +407,10 @@ accuracy
 ## 17. Types of Deep Transfer Learning: An Overview
 
 Transfer learning is a **general concept** — a principle of solving a target task using knowledge from a source task's domain. It shows up in several different flavours in deep learning:
-
-<div align="center">
-
-```text
-                        ┌── Domain Adaptation
-                        │
-Transfer Learning ──────┼── Multi-task Learning
-   (general concept)    │
-                        ├── Zero-shot Learning
-                        │
-                        └── One-shot Learning
-```
-
-</div>
+- Domain Adaptation
+- Multi-task Learning
+- Zero-shot learning
+- One-shot learning
 
 The remaining sections walk through each of these four in turn.
 
@@ -511,16 +424,9 @@ The distribution of data in the **target domain** is different from the **source
 
 **The central question:** How do we overcome the differences between domains, so that a classifier trained on the source domain **generalises well** to the target domain?
 
-<div align="center">
-
-```text
-        target domain  ~~~~~~~~~~~~~~~~~~~~~
-                       ╱   ▽▽▽ (chair)   ●●● (mug)  ╲
-                      ╱                              ╲
-        source domain +++  (TV)   ▽▽▽ (chair)   ○○○ (mug)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fec32dd7-5be9-4406-9456-3dff72f4e0b6" width=600>
+</p>
 
 The **same object category** (e.g. "chair" or "mug") can look statistically different depending on which domain it was captured in — different lighting, angle, background, or even a completely different type of image (drawing vs photo).
 
@@ -536,21 +442,13 @@ The **same object category** (e.g. "chair" or "mug") can look statistically diff
 
 Works on the principle of **minimising** some **divergence-based criterion** between the source and target feature **distributions**, so that the resulting features become **domain-invariant** (i.e. they no longer carry a "signature" of which domain they came from).
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/64f78772-0da7-4860-9d69-e8ffc67f009c" width=600>
+</p>
 
-```text
-During Training:
-Source domain ──▶ f() ──▶ features ──▶ Classification Loss (map inputs to correct class)
-                              │
-                    Divergence-Based Loss (keep source & target features similar)
-                              │
-Target domain ──▶ f() ──▶ features
-
-During Inference:
-Target domain ──▶ f() (Feature Extractor) ──▶ Flattened Feature ──▶ Classifier ──▶ Output
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/55d931e6-4caa-4e43-9a9c-cfc1dd78f51a" width=600>
+</p>
 
 > **Analogy:** This is like two people from different countries agreeing to both learn a **shared simplified language** (e.g. basic English) so they can communicate, rather than one person having to fully learn the other's native language. The "divergence loss" is the pressure that keeps pushing both "languages" (feature representations) to stay close to each other.
 
@@ -563,19 +461,9 @@ Target domain ──▶ f() (Feature Extractor) ──▶ Flattened Feature ─�
 
 For domain adaptation specifically: the model learns a **discriminative mapping** of target images into the **source feature space** (via a "target encoder"), by trying to **fool a domain discriminator** that is meanwhile trying to tell apart encoded target images from real source examples.
 
-<div align="center">
-
-```text
-Step 1: Pre-training                Step 2: Adversarial Adaptation         Step 3: Testing
-
-source images+labels                source images ──▶ Source CNN ──┐      target image
-      │                                                             ├─▶ Discriminator   │
-   Source CNN ──▶ Classifier         target images ──▶ Target CNN ──┘   ──▶ domain label  Target CNN ──▶ Classifier ──▶ class label
-      │                                     (trying to fool the discriminator
-   class label                               into thinking target = source)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/732d8272-08da-447e-ab4e-45ae1c33e8db" width=600>
+</p>
 
 > **Analogy:** This is exactly like a game between a **forger** and an **art detective**. The forger (target encoder) tries to make fake paintings (target images) that look so convincing the detective (discriminator) can't tell them apart from real ones (source images). As the forger gets better at fooling the detective, its "fake" paintings become genuinely useful stand-ins for the real thing — meaning the target images can now be classified using the classifier that was trained only on source (real) images.
 
@@ -589,28 +477,15 @@ source images+labels                source images ──▶ Source CNN ──┐
 
 This works on the idea of **image-to-image translation**. The simplest model is an **encoder-decoder** network, paired with a **discriminator** that pushes the encoder-decoder to produce images that look like they belong to the **source domain**.
 
-<div align="center">
-
-```text
-Target domain image ──▶ Encoder-Decoder Network g() ──▶ "Generated Source domain" image
-                                                                    │
-Source domain image ─────────────────────────────────────────▶ Discriminator ──▶ Real or Fake?
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7dfd1592-7e85-4267-9e9f-638b2257fc2b" width=600>
+</p>
 
 **Then:** a separate **source domain classifier** is trained purely on source data.
 
-<div align="center">
-
-```text
-Generating Pipeline:                     Classification Pipeline:
-Target domain image ──▶ g() ──▶           Source domain image ──▶ f() ──▶ ... ──▶ Output
-                     "translated" image
-                     (looks like source)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c10165b8-5f59-4afa-b6f9-9b6a8ffd683f" width=600>
+</p>
 
 **At inference time**, a target-domain image is first **translated** into a source-domain-*looking* image (using $g()$), and this translated image is then passed through the **source domain classifier** ($f()$, trained during Step 2) for prediction.
 
@@ -630,24 +505,9 @@ $$
 
 ### Transfer Learning vs MTL
 
-<div align="center">
-
-```text
-Transfer Learning                         Multitask Learning
-
-Source dataset (big samples)              Task 1 Trained model ◀──▶ Task 2 Trained model
-      │                                          ▲       ╲knowledge╱       ▲
-  Learning system source task                    │        sharing         │
-      │                                          ▼                        ▼
-   knowledge                               Task 3 Trained model ◀──▶ Task 4 Trained model
-      │
-      ▼
-Target dataset (small samples)
-      │
-  Learning system target task
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/45a1a1ad-712b-4d9e-a2d3-03001e0df47a" width=600>
+</p>
 
 | | Transfer Learning | Multi-task Learning |
 |---|---|---|
@@ -660,23 +520,9 @@ Target dataset (small samples)
 
 **Case study: Plant disease identification.** A single plant photo needs to predict **two related things at once**: the *host species* and the *disease*.
 
-<div align="center">
-
-```text
-                     host species     disease
-                          ▲              ▲
-                    ┌──────────┐   ┌──────────┐
-                    │Task-spec.│   │Task-spec.│   ← Task-specific layers
-                    │  layers  │   │  layers  │
-                    └────┬─────┘   └────┬─────┘
-                         └───────┬───────┘
-                          Shared bottom layers
-                        (common representation)
-                                 │
-                          Plant disease image
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0ecd7841-b891-486c-a6f4-ba07559b5714">
+</p>
 
 Generic MTL consists of **two components**:
 
@@ -691,15 +537,9 @@ Generic MTL consists of **two components**:
 | **The amount of data per task is roughly similar** | Having *more total relevant data* (e.g. 10,000 samples for host species + 10,000 for disease = 20,000 combined) can help increase performance, compared to training on only one task's data |
 | **You can afford to train a larger network** | The network size must scale with the number of tasks it's being asked to handle well |
 
-<div align="center">
-
-```text
-host species (10,000 samples) ─┐
-                                ├──▶ Generic MTL (20,000 combined, relevant samples)
-disease (10,000 samples)      ─┘
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/bc440355-42ad-48ca-bb03-595d525bd41d">
+</p>
 
 **Real-world example — FashionNet:** A single large network simultaneously predicts *clothing styles*, *clothing attributes* (Clothes Recognition), and *landmark localisation* (Clothes Alignment) — all from one shared backbone, branching into task-specific heads.
 
@@ -718,6 +558,10 @@ disease (10,000 samples)      ─┘
 
 ### Examples of Auxiliary Information
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f64f55bd-3034-4d81-9269-cd85d428412e" width=1000>
+</p>
+
 | Type | Example |
 |---|---|
 | **Semantic attributes** | Labelling a zebra image with attributes like "stripe," "head," "tail," "long leg" |
@@ -727,41 +571,21 @@ disease (10,000 samples)      ─┘
 
 **Step 1 — Learn a projection function** from the **visual feature space** (i.e. image features) to the **semantic embedding space** (i.e. word vectors), using labelled data from **seen classes only**.
 
-<div align="center">
-
-```text
-feature vector space              semantic embedding space
-
- seen classes:                     ●  (tiger)
- △ (tiger)  ◇ (?)  □ (?)   ──▶      ●  (chimp)
-                                     ●  (lion)
-       (train a projection: feature space → semantic space)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/20fd5b94-93ef-48f6-a28f-a4f15a77d34f" >
+</p>
 
 **Step 2 — Pass unseen class images** through this same trained projection, to get their corresponding point in **semantic embedding space**.
 
-<div align="center">
-
-```text
-unseen class (e.g. dog) features ──▶ [trained projection] ──▶ some point in semantic space
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b3b67b4a-c42b-4254-b042-7045da76604c">
+</p>
 
 **Step 3 — Nearest-neighbour search**: find which known semantic embedding is **closest** to this new point. The label of that closest match becomes the predicted label for the unseen image.
 
-<div align="center">
-
-```text
-Test image (unseen: dog) ──▶ projected point ──▶ nearest neighbour search
-                                                          │
-                                                          ▼
-                                            closest semantic embedding = predicted label
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/83e4fb89-ed78-4b9b-a10e-a379d3d31ccd" >
+</p>
 
 > [!IMPORTANT]
 > Zero-shot learning doesn't require **any** training images of the target/unseen class — it only requires that the unseen class's **semantic description** (attributes/word embedding) be known in advance.
@@ -776,19 +600,9 @@ Test image (unseen: dog) ──▶ projected point ──▶ nearest neighbour s
 
 ### Case Study: Face Recognition
 
-<div align="center">
-
-```text
-       A (Adele)              C (Celine Dion)
-         ?  ╲              ╱  ?
-             ╲            ╱
-              Test (Johnny Depp)
-             ╱            ╲
-         ?  ╱              ╲  ?
-       B (Dwayne Johnson)    D (Johnny Depp)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/48effde7-a788-44cd-bc04-1e0624f58b99" width=600>
+</p>
 
 **The question:** Which of A, B, C, or D is the same person as the "Test" photo?
 
@@ -803,15 +617,9 @@ Test image (unseen: dog) ──▶ projected point ──▶ nearest neighbour s
 
 Rather than training a model to output a **class label** directly, we train it to learn a **similarity function**: the model takes **two images** and returns a value showing how *similar* they are.
 
-<div align="center">
-
-```text
-Image A ──┐
-          ├──▶ One-shot learning model ──▶ Distance-based loss / similarity score
-Image B ──┘
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/11973edd-7c16-45c1-8aa4-ceaa01d1339b" width=1000>
+</p>
 
 **The decision rule:**
 
@@ -824,15 +632,9 @@ $$
 
 where $\lambda$ is a chosen **threshold** (e.g. zero, or some small value).
 
-<div align="center">
-
-```text
-d(A, Test) > λ  →  not the same person       d(D, Test) ≤ λ  →  SAME person!
-d(B, Test) > λ  →  not the same person       (Test = Johnny Depp, D = Johnny Depp)
-d(C, Test) > λ  →  not the same person
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0ade6136-3180-44c1-b1ca-c1d3d6a03977" width=1000>
+</p>
 
 > [!TIP]
 > Because the model learns a **general notion of "same vs different"** (rather than memorising specific class labels), it generalises to **brand-new people/objects it has never seen during training** — this is exactly why it's called "one-shot": at deployment time, you might only need **one reference photo** per new person for the model to be able to recognise them.
