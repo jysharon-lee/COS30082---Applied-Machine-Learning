@@ -1,4 +1,4 @@
-<img width="1606" height="598" alt="image" src="https://github.com/user-attachments/assets/58b906f9-0817-49ce-bb70-4f79301d670d" /><img width="657" height="549" alt="image" src="https://github.com/user-attachments/assets/325a331c-8a35-464e-91ad-dc9faedcf81f" /># 📘 Week 6 Study Notes: Transfer Learning for Computer Vision
+# 📘 Week 6 Study Notes: Transfer Learning for Computer Vision
 
 > **Course:** COS30082 — Applied Machine Learning  
 > **Topic:** Transfer Learning for Computer Vision  
@@ -169,8 +169,7 @@ If two **domains** are different, they may have different **feature spaces** or 
 
 | Dataset 1 | Dataset 2 |
 |---|---|
-| Large-breed dogs (e.g. German Shepherd, Rhodesian Ridgeback, Bull Mastiff) → trained into "Learning system task 1" | Small/toy-breed dogs (e.g. Pomeranian, Pug, Shih Tzu, Yorkshire Terrier) → a **different** but **related** classification problem |
-| <p align="center"><img src="https://github.com/user-attachments/assets/b8e06d97-5e32-41d6-a202-6252386503a6"></p> | <p align="center"><img src="https://github.com/user-attachments/assets/78becfd2-5c6a-4faa-b076-c12dc1298253"></p> |
+| <p align="center"><img src="https://github.com/user-attachments/assets/67c91268-14d5-4a41-a09c-01470f278813"></p> | <p align="center"><img src="https://github.com/user-attachments/assets/1d4e412a-cd47-4ead-913a-6c7c21a440c4"></p> |
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b9a2f5dd-334f-426a-a75b-82bceb049ebd" width=600>
@@ -249,7 +248,7 @@ There are two main strategies used to apply transfer learning with deep networks
 1. **Off-the-shelf pre-trained models as feature extractors**
 2. **Fine-tuning off-the-shelf pre-trained models**
 
-<div align="center">
+<div align="left">
 
 ```text
                          ┌── Strategy 1: Feature extraction (freeze everything, lr = 0)
