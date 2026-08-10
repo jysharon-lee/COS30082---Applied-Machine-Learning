@@ -614,7 +614,7 @@ $$
 > "Softmax regression" and "multinomial logistic regression" are two names for the exact same thing: a softmax activation + cross-entropy loss.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
+  <img src="https://github.com/user-attachments/assets/2613f3fd-1a17-412c-87fc-64d2e38bc5a2" width=600>
 </p>
 
 ---
@@ -883,11 +883,15 @@ Its main contribution shows that **network depth is essential for good performan
   <img src="https://github.com/user-attachments/assets/7e5f62d2-b648-4046-b7ea-4826f6dc5352" width=600>
 </p>
 
+<div align="center">
+  
 | VGG configuration | Weight layers | Structure |
 |---|---|---|
 | A | 11 | 8 conv + 3 FC layers |
 | E | 19 | 16 conv + 3 FC layers |
 | **D (VGG-16, best-known)** | **16** | **13 conv + 3 FC layers** |
+
+</div>
 
 ### GoogleNet (Inception)
 
@@ -911,6 +915,10 @@ GoogleNet's main contribution was the **Inception layer**, which dramatically re
   <img src="https://github.com/user-attachments/assets/e9f8b00b-fc76-4980-bc59-47d0d5bd58eb" width=1000>
 </p>
 
+<p align="center">
+  <em>Small filter (left image) and larger filter (right image)</em>
+</p>
+
 ### ResNet (Residual Network)
 
 **Problems with very deep networks:**
@@ -928,7 +936,7 @@ $$
 
 | Regular Block | Single Residual Block
 |---|---|
-|<p align="center"><img src="https://github.com/user-attachments/assets/33f8455f-7e3a-4140-a167-0ad3c842a600" width=600 height=500></p>|<p align="center"><img src="https://github.com/user-attachments/assets/79a78619-87cb-4c12-b40c-39bdf048ea96" width=600 height=500></p>|
+|<p align="center"><img src="https://github.com/user-attachments/assets/33f8455f-7e3a-4140-a167-0ad3c842a600" width=600 height=532></p>|<p align="center"><img src="https://github.com/user-attachments/assets/79a78619-87cb-4c12-b40c-39bdf048ea96" width=600 height=532></p>|
 
 Treat regular block like an open-loop control system whereas single residual block is a closed-loop control system (has feedback), but in a bottom-to-top manner.
 
@@ -1007,8 +1015,8 @@ This is actually **two problems in one**: a **regression** problem (where on the
 
 | Task | Suitable metrics |
 |---|---|
-| Multi-class character classification (A–Z, 0–9) | Top-1 / Top-5 accuracy <br>Mean Average Precision (mAP) — average precision per class, then averaged across all classes |
-| Object detection (locating the license plate) | Intersection over Union (IoU) <br>Precision and Recall <br>mAP |
+| Multi-class character classification (A–Z, 0–9) | 1. Top-1 / Top-5 accuracy <br>2. Mean Average Precision (mAP) — average precision per class, then averaged across all classes |
+| Object detection (locating the license plate) | 1. Intersection over Union (IoU) <br>2. Precision and Recall <br>3. mAP |
 
 **Step 2 — Establishing the pipeline: baseline models**
 
@@ -1120,8 +1128,8 @@ If the weights in a network are very large, then the gradients for the lower lay
   
 | Method | Formula | What It Does | Output Range | Analogy |
 |---|---|---|---|---|
-| **Min-Max Scaling** | `x_norm = (x - x_min) / (x_max - x_min)` | Squeezes every value into a fixed range | `[0, 1]` | 🖼️ Resizing every photo to fit the same picture frame, no matter how big or small the original was |
-| **Standardization** | `x_norm = (x - μ) / σ` | Centers data around 0 with a spread of 1 standard deviation | Mean 0, Std 1 (unbounded) | 📊 Grading on a curve — comparing a score to the class average and typical spread, instead of judging it in isolation |
+| **Min-Max Scaling** | $x_{norm} = \dfrac{x - x_{min}}{x_{max} - x_{min}}$ | Squeezes every value into a fixed range | `[0, 1]` | 🖼️ Resizing every photo to fit the same picture frame, no matter how big or small the original was |
+| **Standardization** | $x_{norm} = \dfrac{x - \mu}{\sigma}$ | Centers data around 0 with a spread of 1 standard deviation | Mean 0, Std 1 (unbounded) | 📊 Grading on a curve — comparing a score to the class average and typical spread, instead of judging it in isolation |
 
 </div>
 
