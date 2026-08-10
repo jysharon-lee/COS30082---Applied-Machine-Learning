@@ -535,8 +535,7 @@ The window then slides one step to the right (and eventually down), taking the m
 For a pooling operation with stride $s=2$, the resulting pooled feature map is
 
 $$
-\mathbf{P}_{s=2}
-=
+\mathbf{P}_{s=2}=
 \begin{bmatrix}
 8 & 9 \\
 6 & 6
@@ -613,6 +612,10 @@ $$
 
 > [!NOTE]
 > "Softmax regression" and "multinomial logistic regression" are two names for the exact same thing: a softmax activation + cross-entropy loss.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/eee09a21-f7e7-4ece-8fd8-7dddbd931203" width=600>
+</p>
 
 ---
 
@@ -699,23 +702,17 @@ $$
 w_t \leftarrow w_{t-1} - \propto\left[\frac{\delta J}{\delta w}\right]_{w_{t-1}} \qquad\text{where } t=\text{new},\ t-1=\text{old}
 $$
 
-| Variant | How much data is used per update |
-|---|---|
-| **Batch Gradient Descent** | The **entire** training set |
-| **Stochastic Gradient Descent (SGD)** | **One** training sample at a time |
-| **Mini-batch Gradient Descent** | A **small batch** of samples at a time |
-
-<div align="center">
-
-```text
-Batch GD:        long, smooth, but slow steps toward the minimum
-Stochastic GD:    noisy, erratic steps, but fast per-step updates
-Mini-batch GD:    a practical middle ground between the two
-```
-
-</div>
+| Variant | How much data is used per update | Convergence Behaviour
+|---|---|---|
+| **Batch Gradient Descent** | The **entire** training set | long, smooth, but slow steps toward the minimum |
+| **Stochastic Gradient Descent (SGD)** | **One** training sample at a time | noisy, erratic steps, but fast per-step updates |
+| **Mini-batch Gradient Descent** | A **small batch** of samples at a time | a practical middle ground between the two |
 
 ### Why Traditional Gradient Descent Struggles in Deep Networks
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ae134c81-2d46-4091-99e8-40e92bb45f1d" width=600>
+</p>
 
 - The loss functions of logistic regression, linear regression, and SVM are **convex** — they contain only a minimum (or maximum), no saddle points.
 - The loss function of a neural network is **complex and non-convex**, so it can contain many **saddle points** and **local minima**.
@@ -726,7 +723,7 @@ Mini-batch GD:    a practical middle ground between the two
 
 ---
 
-## 19. Advanced Optimizers: From Momentum to Adam
+## 19. Advanced Optimization Algorithms: From Momentum to Adam
 
 ### Momentum
 
@@ -738,14 +735,10 @@ $$
 
 It combines the **current** gradient with an exponentially weighted average of **past** gradients ("momentum" — literally like a ball rolling downhill and building up speed).
 
-<div align="center">
-
-```text
-Batch GD without momentum:        Batch GD with momentum:
-   zig-zag path to the minimum       smoother, more direct path
-```
-
-</div>
+| Batch GD w/ Momentum | Batch GD w/o Momentum
+|---|---|
+| Smoother, more direct path (like Singai) | Zig-zag path to the minimum |
+|<p align="center"><img src="https://github.com/user-attachments/assets/f493b084-69ad-44ef-85b1-470b85ae1e7e" width=600 height=500></p>|<p align="center"><img src="https://github.com/user-attachments/assets/00aa36d4-9ae7-4b06-8ec8-fc74e593ea65" width=600 height=500></p>|
 
 ### Nesterov Accelerated Gradient (NAG)
 
@@ -783,7 +776,7 @@ $$
 ### RMSProp
 
 RMSProp solves the **same** problem as Adadelta (Adagrad's shrinking learning rate), developed independently around the same time.
-
+However, the only difference is the $\gamma$:
 $$
 \boxed{\text{RMSProp} = \text{Adadelta with } \gamma \text{ fixed at } 0.95}
 $$
@@ -824,7 +817,11 @@ $$
 
 ### LeNet-5 (1990s)
 
-Proposed by **Yann LeCun, Léon Bottou, Yoshua Bengio, and Patrick Haffner**. Designed for **handwritten and machine-printed character recognition**.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e76c73ca-682e-4334-a7c7-675cc20a0ebf" width=1000>
+</p>
+
+Designed for **handwritten and machine-printed character recognition**.
 
 | Layer | Feature maps | Size | Kernel | Stride | Activation |
 |---|---|---|---|---|---|
@@ -838,6 +835,10 @@ Proposed by **Yann LeCun, Léon Bottou, Yoshua Bengio, and Patrick Haffner**. De
 | Output FC | – | 10 | – | – | softmax |
 
 ### AlexNet
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fcc44aa7-5145-4126-ab3f-f51c2b3a08b7" width=1000>
+</p>
 
 Very similar architecture to LeNet, but **deeper and bigger**, and it stacked multiple convolutional layers on top of each other (previously it was common to only have a single conv layer immediately followed by a pooling layer).
 
@@ -853,23 +854,24 @@ Very similar architecture to LeNet, but **deeper and bigger**, and it stacked mu
 
 **Dropout**, in more detail:
 
-Individual nodes are either **dropped out** of the network with probability $1-p$, or **retained** with probability $p$. All of that node's inbound and outbound connections are removed for that training step.
+Individual nodes are either **dropped out** of the network with probability $1-p$, or **retained** with probability $p$. All of that node's inbound and outbound connections are removed for that training step. 
+In simpler terms, dropout randomly turns off a percentage of neurons during each training step, which cuts off their connections for that specific pass. However, the actual weights of those connections are kept safe in memory and used again during testing.
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1827b21a-156a-4ab6-bd75-96ea107d55e2" width=600>
+</p>
 
-```text
-Standard network:                Network with dropout:
+<p align="center">
+  <em>Dropout creates temporary structural sparsity, but it differs fundamentally from permanent connection sparsity</em>
+</p>
 
-  ○───○───○                        ○   ⊗───○
-  ○───○───○                        ⊗   ○───○
-  ○───○───○                        ○───○   ⊗
-```
+### VGG (improved version of AlexNet)
 
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5edea96d-42c7-41e8-89e0-58780cbc1969" width=600>
+</p>
 
-### VGG
-
-VGG improves on AlexNet, and its main contribution was showing that **network depth is essential for good performance**.
+Its main contribution shows that **network depth is essential for good performance**.
 
 **Special features:**
 
@@ -877,31 +879,25 @@ VGG improves on AlexNet, and its main contribution was showing that **network de
 - Introduced the idea of **blocks/modules** — applying the same filter size repeatedly to extract progressively more complex features. This concept became a common theme in the networks that followed.
 - **Limitation:** VGG has a huge number of parameters (~140 million), mostly located in its **first fully connected layer**.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7e5f62d2-b648-4046-b7ea-4826f6dc5352" width=600>
+</p>
+
 | VGG configuration | Weight layers | Structure |
 |---|---|---|
 | A | 11 | 8 conv + 3 FC layers |
 | E | 19 | 16 conv + 3 FC layers |
 | **D (VGG-16, best-known)** | **16** | **13 conv + 3 FC layers** |
 
-### GoogLeNet (Inception)
+### GoogleNet (Inception)
 
-GoogLeNet's main contribution was the **Inception layer**, which dramatically reduced the number of parameters compared to AlexNet (≈4M vs ≈60M).
+GoogleNet's main contribution was the **Inception layer**, which dramatically reduced the number of parameters compared to AlexNet (≈4M vs ≈60M).
 
 **The Inception layer** combines several operations in parallel and concatenates their outputs into one volume:
 
-<div align="center">
-
-```text
-                     ┌────────────── Filter concatenation ──────────────┐
-                     │            │             │              │
-                1×1 conv     3×3 conv       5×5 conv        1×1 conv
-                     │            │             │              │
-                     │        1×1 conv      1×1 conv       3×3 max pool
-                     │            │             │              │
-                     └────────────┴── Previous layer ───────────┘
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c125f6d8-d5fc-40a9-a24f-41ab657971fe" width=600>
+</p>
 
 | Component | Purpose |
 |---|---|
@@ -910,6 +906,10 @@ GoogLeNet's main contribution was the **Inception layer**, which dramatically re
 | Parallel 3×3 max pooling branch | Gives the layer another option besides convolution |
 
 **Intuition:** the Inception layer lets the network **pick and choose** which filter size is most relevant for the information it needs to learn — a small object might need a small filter, while a large or blurry object might need a bigger one, and the network doesn't have to commit to just one choice.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e9f8b00b-fc76-4980-bc59-47d0d5bd58eb" width=1000>
+</p>
 
 ### ResNet (Residual Network)
 
@@ -920,31 +920,17 @@ GoogLeNet's main contribution was the **Inception layer**, which dramatically re
 | **Vanishing gradient** | Earlier layers get neglected because gradients shrink as they backpropagate through many layers |
 | **Curse of dimensionality / degradation problem** | Shallower networks sometimes learn *better* than their deeper counterparts, simply because depth alone can hurt optimisation |
 
-**Solution — skip connections (identity shortcut connections):** developed by **Kaiming He et al.**
+**Solution — skip connections (identity shortcut connections):**
 
 $$
 R(x) = f(x) - x
 $$
 
-<div align="center">
+| Regular Block | Single Residual Block
+|---|---|
+|<p align="center"><img src="https://github.com/user-attachments/assets/33f8455f-7e3a-4140-a167-0ad3c842a600" width=600 height=500></p>|<p align="center"><img src="https://github.com/user-attachments/assets/79a78619-87cb-4c12-b40c-39bdf048ea96" width=600 height=500></p>|
 
-```text
-A regular block:                    A single residual block:
-
-     Activation                          Activation
-         ▲                                ▲      ▲
-       f(x)                            f(x)      │
-         ▲                                ▲       + ◀── x (skip connection)
-    Weight layer                     Weight layer  │
-         ▲                                ▲        │
-    Activation                       Activation     │
-         ▲                                ▲          │
-    Weight layer                     Weight layer     │
-         ▲                                ▲            │
-         x                                x ───────────┘
-```
-
-</div>
+Treat regular block like an open-loop control system whereas single residual block is a closed-loop control system (has feedback), but in a bottom-to-top manner.
 
 If the ideal mapping for a block is simply the **identity** ($f(x)=x$), it turns out to be much easier for the network to learn the **residual** $R(x)=f(x)-x$ (i.e. push the block's weights toward zero) than to directly learn the identity function through ordinary stacked layers. The skip connection carries $x$ straight through, so the network only has to learn the "correction" on top of it.
 
@@ -956,37 +942,34 @@ If the ideal mapping for a block is simply the **identity** ($f(x)=x$), it turns
 
 As training progresses, the **distribution of each layer's inputs keeps changing**, because the parameters of every earlier layer are also being updated. This is called **internal covariate shift**, and it can slow down training considerably.
 
-<div align="center">
-
-```text
-Changes in earlier weights ──▶ hidden unit values keep shifting ──▶ this imbalance cascades through the whole network
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/300223b1-4d29-40ba-a8eb-9c21ded2ab6c">
+</p>
 
 ### The Fix: Batch Normalization (BN)
 
 **Batch normalization** is applied right after each convolution and **before** the activation function.
 
-<div align="center">
-
-```text
-... ──▶ 3×3 conv ──▶ Batch norm ──▶ ReLU ──▶ 3×3 conv ──▶ Batch norm ──▶ (+ skip) ──▶ ReLU ──▶ ...
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2ee42e11-4865-429f-8d50-d9cf32a21cd4">
+</p>
 
 **The BN process, step by step:**
 
 1. Normalize the hidden unit values using the **mean** and **variance** of the current mini-batch:
+   
 $$
 z_{norm} = \frac{z-\boldsymbol{\mu}}{\boldsymbol{\sigma}}
 $$
+
 2. Multiply the normalized output by a learnable scale parameter $g$:
+   
 $$
 z_{norm} * g
 $$
+
 3. Add a learnable shift parameter $b$:
+   
 $$
 (z_{norm} * g) + b
 $$
@@ -1024,8 +1007,8 @@ This is actually **two problems in one**: a **regression** problem (where on the
 
 | Task | Suitable metrics |
 |---|---|
-| Multi-class character classification (A–Z, 0–9) | Top-1 / Top-5 accuracy; Mean Average Precision (mAP) — average precision per class, then averaged across all classes |
-| Object detection (locating the license plate) | Intersection over Union (IoU); Precision and Recall; mAP |
+| Multi-class character classification (A–Z, 0–9) | Top-1 / Top-5 accuracy <br>Mean Average Precision (mAP) — average precision per class, then averaged across all classes |
+| Object detection (locating the license plate) | Intersection over Union (IoU) <br>Precision and Recall <br>mAP |
 
 **Step 2 — Establishing the pipeline: baseline models**
 
@@ -1056,6 +1039,8 @@ This is actually **two problems in one**: a **regression** problem (where on the
 - **Regularization**: L1/L2 weight decay, dropout, early stopping
 - **Early stopping**: train for an arbitrarily large number of epochs, and stop as soon as performance on a held-out validation set stops improving
 
+---
+
 ### Underfitting
 
 | | Description |
@@ -1070,13 +1055,17 @@ This is actually **two problems in one**: a **regression** problem (where on the
 - **Increase training time**
 - **Reduce dropout**
 
-### Gradient Exploding
+---
+
+### Gradient Exploding (gradients approaching +∞ in an exponential manner)
+
 
 **Cause (intuition):** if a layer's weight $w^{(l)} > 1$, then as the signal passes through many layers, $z^{(l)}$ (and therefore the output $\hat y$) grows **exponentially**. During backpropagation, the gradient $\dfrac{\delta J(w)}{\delta w^{(l)}}$ then also grows **exponentially**, because each layer's error term is a weighted sum that keeps multiplying by these large weights:
 
 $$
 \delta^{(l)} = (w^{(l)})^{T}\,\delta^{(l+1)} \odot g'(z^{(l)})
 $$
+
 
 **Solutions:**
 
@@ -1086,7 +1075,13 @@ $$
 - **Data normalization** (see below)
 - **Re-design the network** to have fewer layers
 
-### Gradient Vanishing
+If the weights in a network are very large, then the gradients for the lower layers involve products of many large terms. In this case you can have exploding gradients: gradients that get too large to converge. Batch normalization can help prevent exploding gradients, as can lowering the learning rate.
+
+> **Analogy:** Think of a snowball rolling down a mountain. Starts small at the top, but picks up more snow at every single roll — not a fixed amount, but proportional to its current size. By the bottom, it's a massive, out-of-control avalanche.
+> 
+---
+
+### Gradient Vanishing (gradients approaching 0 in an exponential manner)
 
 **Cause (intuition):** the mirror-image problem — if $w^{(l)} < 1$, then $z^{(l)}$ (and $\hat y$) **shrinks** exponentially as the signal passes through many layers, and so does the backpropagated gradient $\dfrac{\delta J(w)}{\delta w^{(l)}}$.
 
@@ -1097,21 +1092,46 @@ $$
 - **Batch normalization**: forces each layer's activations to follow a consistent distribution, independent of upstream parameter changes
 - Use **careful weight initialization**
 
+> **Analogy:** Think of a radio signal fading with distance. The signal weakens a bit per mile; over enough miles, it drops below the noise floor and the receiver picks up nothing useful.
+
+### Summary Table between Exploding and Vanishing Gradients
+
+| Aspect | 🌋 Exploding Gradient | 🔇 Vanishing Gradient |
+|---|---|---|
+| **Cause** | Weights repeatedly > 1, multiplied across many layers | Weights repeatedly < 1, multiplied across many layers |
+| **Effect on gradient** | Grows exponentially toward infinity | Shrinks exponentially toward zero |
+| **Effect on training** | Huge, unstable updates; loss spikes or `NaN` | Learning stalls, especially in early layers |
+| **Common fixes** | 1. Gradient clipping - force gradient values (element-wise) to a fixed minimum/maximum if they exceed an expected range <br>2. Smaller learning rate <br>3. Weight regularization <br>4. Batch norm <br>5. Redesign the network to have fewer layers | 1. Use ReLU <br>2. Use residual (skip) connections - provides a direct path back to earlier layers <br>3. Batch normalization <br>4. Careful weight initialization |
+| **Analogy** | 🎤 Microphone feedback squeal — sound loops back and amplifies each pass | 🗣️ Whisper down a long line — message fades at each hand-off |
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b7253e5c-7bfc-4ba4-af30-c21370f67350" width=600>
+</p>
+
+<p align="center">
+  <em>Visual plots between exploding gradients and vanishing gradients</em>
+</p>
+
+---
+
 ### Data Normalization
 
-Two common approaches to keep input values on a consistent, well-behaved scale:
+<div align="center">
+  
+| Method | Formula | What It Does | Output Range | Analogy |
+|---|---|---|---|---|
+| **Min-Max Scaling** | `x_norm = (x - x_min) / (x_max - x_min)` | Squeezes every value into a fixed range | `[0, 1]` | 🖼️ Resizing every photo to fit the same picture frame, no matter how big or small the original was |
+| **Standardization** | `x_norm = (x - μ) / σ` | Centers data around 0 with a spread of 1 standard deviation | Mean 0, Std 1 (unbounded) | 📊 Grading on a curve — comparing a score to the class average and typical spread, instead of judging it in isolation |
 
-**Min-max scaling** — rescale data into a fixed range, usually $[0,1]$:
+</div>
 
-$$
-x_{norm} = \frac{x-x_{min}}{x_{max}-x_{min}}
-$$
+<div align="center">
+  
+| Plot Before Clipping | Plot After Clipping |
+|---|---|
+|<p align="center"><img src="https://github.com/user-attachments/assets/7ce8a43d-f575-4cec-ab35-e00bfe59ff4c" width=600 height=500></p>|<p align="center"><img src="https://github.com/user-attachments/assets/2c48b722-ed61-467c-8c2b-da8f6dc494f4" width=600 height=500></p>|
 
-**Standardization** — rescale data to have mean $\boldsymbol{\mu}=0$ and standard deviation $\boldsymbol{\sigma}=1$:
-
-$$
-x_{norm} = \frac{x-\boldsymbol{\mu}}{\boldsymbol{\sigma}}
-$$
+</div>
 
 > [!TIP]
 > Raw pixel values typically range from 0–255. Without normalization, this large, skewed range of numbers can itself contribute to unstable, exploding gradients — normalizing the input data is one of the simplest and most effective first steps when training is unstable.
@@ -1136,7 +1156,7 @@ $$
 
 1. A **CNN** organises its neurons in 3 dimensions (width, height, depth) and is built from **convolution**, **pooling**, and **fully connected** layers, ending in a **softmax** classifier
 2. The **convolutional layer** slides a filter across the input, computing a weighted sum (plus bias, then activation) at every position to build a **feature map**
-3. **Output size** after a conv/pool layer $= \dfrac{d-N+2p}{s}+1$, where $d$=input size, $N$=filter size, $p$=padding, $s$=stride
+3. **Output size** after a conv/pool layer $= \dfrac{d-N}{s}+1$, where $d$=input size, $N$=filter size, $p$=padding, $s$=stride
 4. Using $N$ filters in one layer produces $N$ feature maps, stacked together to form the layer's output depth
 5. **Weight sharing** (the same filter reused across the image) gives CNNs **translation invariance** and drastically fewer parameters than a fully connected layer
 6. **Sparsity of connection** means each output value only depends on a small local patch of the input, which helps prevent overfitting and reduces the data needed to train
