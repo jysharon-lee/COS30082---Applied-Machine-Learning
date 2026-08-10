@@ -169,7 +169,7 @@ If two **domains** are different, they may have different **feature spaces** or 
 
 | Dataset 1 | Dataset 2 |
 |---|---|
-| <p align="center"><img src="https://github.com/user-attachments/assets/67c91268-14d5-4a41-a09c-01470f278813"></p> | <p align="center"><img src="https://github.com/user-attachments/assets/1d4e412a-cd47-4ead-913a-6c7c21a440c4"></p> |
+| <p align="center"><img src="https://github.com/user-attachments/assets/67c91268-14d5-4a41-a09c-01470f278813" width="50%"></p> | <p align="center"><img src="https://github.com/user-attachments/assets/1d4e412a-cd47-4ead-913a-6c7c21a440c4" width="50%"></p> |
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b9a2f5dd-334f-426a-a75b-82bceb049ebd" width=600>
