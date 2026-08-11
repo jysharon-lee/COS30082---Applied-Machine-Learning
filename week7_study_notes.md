@@ -121,8 +121,8 @@ This is precisely **why** object detection needs specialised architectures inste
 
 | Approach | Description |
 |---|---|
-| **Method 1: Traditional object detection** | Non-deep-learning, computer-vision-based methods (e.g. **sliding windows** + **image pyramids**), typically paired with **HOG + Linear SVM**. Slow, tedious, error-prone |
-| **Method 2: Pre-trained network as a base network + detection framework** | Use a pre-trained classification network (e.g. VGG, ResNet) as a **base network** inside a deep-learning detection framework (Faster R-CNN, SSD, YOLO) |
+| **Method 1: Traditional object detection** | - Non-deep-learning, computer-vision-based methods (e.g. **sliding windows** + **image pyramids**) <br>- Typically paired with **HOG + Linear SVM** <br>- Slow, tedious, error-prone |
+| **Method 2: Pre-trained network as a base network + detection framework** | - Use a pre-trained classification network (e.g. VGG, ResNet) as a **base network** inside a deep-learning detection framework (Faster R-CNN, SSD, YOLO) |
 
 > **Analogy:** Method 1 is like searching for your keys by checking **every single spot in your house one at a time**, room by room, drawer by drawer — thorough, but painfully slow. Method 2 is like already having a rough memory of "I usually leave my keys near the door or the kitchen counter" (a pre-trained network's learned visual knowledge), so you jump straight to the likely spots.
 
@@ -180,7 +180,7 @@ Instead of manually sliding windows, we treat a pre-trained classification netwo
 | | **Two-Stage Detector** | **One-Stage Detector** |
 |---|---|---| 
 | **Visual Flowchart** | <p align="center"><img src="https://github.com/user-attachments/assets/5eb7c04e-fbe9-45b1-b985-c9c5a4a449d0" width=600></p> | <p align="center"><img src="https://github.com/user-attachments/assets/0230b229-8331-410d-bf70-bcd598f5cdf8" width=600></p>
-| **How it works** | (1) Propose regions of interest via a region-proposal method/network, (2) then classify only those region candidates | A **single** convolutional network directly predicts bounding boxes **and** class probabilities in one pass |
+| **How it works** | (1) Propose regions of interest via a region-proposal method/network <br>(2) then classify only those region candidates | A **single** convolutional network directly predicts bounding boxes **and** class probabilities in one pass |
 | **Models** | R-CNN, Fast R-CNN, Faster R-CNN | YOLO, SSD |
 | **Speed** | Slower — must run predictions for every selected region | Faster — commonly used for **real-time** detection |
 | **Accuracy** | Generally **higher** accuracy | Trades a bit of accuracy for **large** speed gains |
@@ -211,11 +211,11 @@ Instead of manually sliding windows, we treat a pre-trained classification netwo
 
 ### 11.2 Region Proposal
 
+We first generate **region proposals** using an algorithm such as **Edge Boxes** or **Selective Search** (~**2,000 candidate proposals per image**). Those regions may contain target objects, and they come in different sizes.
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/fb126803-afde-4af1-824f-adb8179bc1bc" width=600>
 </p>
-
-We first generate **region proposals** using an algorithm such as **Edge Boxes** or **Selective Search** (~**2,000 candidate proposals per image**). Those regions may contain target objects, and they come in different sizes.
 
 - Region proposals with **≥ 0.5 IoU** overlap with a ground-truth box are treated as **positives** for that box's class; the rest are **negatives**.
 
@@ -572,25 +572,49 @@ The loss is a sum of squared errors, using two scaling parameters:
   <img src="https://github.com/user-attachments/assets/0f6debe3-37b6-440d-99a3-9b21f979d2e7" width=1000>
 </p>
 
+Don't worry if "pyramidal feature extraction" and "detection head" sound abstract right now — the next three subsections trace through this pipeline **one arrow at a time**, using the exact diagrams from the slides, so you can see precisely what shape of data flows between each box.
+
 ### 15.1 Pyramidal Feature Extraction
+
+This is the **"Image → Feature maps"** part of the pipeline. The goal is to turn one 300×300 image into **several feature maps of different sizes**, so that later stages can search for objects at multiple scales at once.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/0aca974a-5bce-4614-a8ea-6f9f52456411" width=1000>
 </p>
 
-SSD uses **VGG-16 (up to Conv5_3)** as its base network, then stacks progressively **smaller** extra convolutional layers on top: 38×38 → 19×19 → 10×10 → 5×5 → 3×3. **Each feature-map size is tapped for detections** — not just the final, smallest layer.
+**How to read this diagram, step by step:**
+ 
+1. The 300×300 image first passes through **VGG** (a familiar base network from Section 9), which outputs a **38×38** feature map at the `Conv4_3` layer. This is immediately **tapped off** — copied sideways — as the **first** feature map SSD will use for detection, *before* the network goes any deeper.
+2. The network keeps going through a couple more convolution blocks (labelled `Conv6`/`FC6` and `Conv7`/`FC7` in the full diagram), shrinking the map down to **19×19**, which is tapped off as the **second** feature map.
+3. From here, SSD adds its own **"Extra Feature Layers"** — small conv blocks that each **halve the spatial size** roughly, producing **10×10**, then **5×5**, then **3×3** feature maps, each one tapped off in turn.
+4. The `/2` you see in `3×3×512/2` simply means **stride 2** — the convolution slides two pixels at a time instead of one, which is what shrinks the grid (38→19→10→5→3) at each stage.
+**The key insight:** every one of these five tapped feature maps is kept and used **simultaneously** for detection — the network doesn't throw away the 38×38 map just because it later computes a 3×3 map. Early, large feature maps (38×38) have a **small receptive field** per cell, so they're great at spotting **small** objects. Later, small feature maps (3×3) have a **large receptive field** per cell (each cell "sees" a huge chunk of the original image), so they're great at spotting **large** objects that fill much of the frame.
 
 > **Analogy:** Think of a photographer taking the **same scene** at several different zoom levels — a wide shot (38×38, catches small objects with lots of detail), a medium shot (10×10), and a tight zoom (3×3, catches large objects that fill the frame). By checking for objects at **every** zoom level instead of just one, SSD doesn't miss a tiny object in a wide shot **or** a huge object that only fits in a zoomed-out view.
 
 ### 15.2 Detection Head & Default Boxes
 
+This is the **"Feature maps → Detection head → Scores & boxes"** part of the pipeline. Now that we have several feature maps of different sizes, each one needs to actually **make predictions**.
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/d719421e-e298-4862-b642-c9a9349cd277" width=1000>
 </p>
 
+**How to read this diagram, step by step:**
+ 
+1. Each tapped feature map (from Section 15.1) is fed into its **own small detection head** — a tiny convolutional layer with kernel size **3×3**.
+2. This conv layer doesn't just output "yes/no, object here" — for **every single grid cell**, and for **every one of the k default boxes** anchored at that cell, it outputs a full bundle of numbers: **c** class scores (one score per class, e.g. "cat: 0.1, dog: 0.7, background: 0.2") **plus 4** numbers describing how to nudge that default box's position and size (the same $t_x, t_y, t_w, t_h$-style offsets you saw in Sections 11.6 and 12.4).
+3. That's exactly what `conv 3×3 × k(c+4)` means: **k** boxes, each carrying **(c+4)** numbers → **k(c+4)** output channels in total, produced by one 3×3 convolution.
+4. Notice in the diagram that **different feature maps use a different number of default boxes k** — for example, one map's detection head might be `conv 3×3 × 4(c+4)` (4 boxes per cell) while another's is `conv 3×3 × 6(c+4)` (6 boxes per cell, usually because that scale uses more aspect ratios). Every feature map still follows the *same general formula*, just with its own value of k.
+5. The output of every detection head is collectively labelled **"Scores & Boxes"** — a big pile of candidate predictions, one bundle per (grid cell, default box) pair.
+   
 At each feature-map location, a small `conv 3×3 × k(c+4)` layer predicts, for each of **k** default (anchor) boxes: **c** class scores + **4** box-offset coordinates.
 
+**Why does this matter?** Multiply "grid cells" × "boxes per cell" across **all five (or six) tapped feature maps**, and you get a *huge* number of raw candidate boxes for one image — in the standard SSD300 configuration, this adds up to **8,732 candidate detections**. That's far too many to show the user directly — which is exactly why the pipeline's last step, **NMS** (Section 16.2), is needed to whittle this down to a small, clean set of final predictions.
+
 ### 15.3 Worked Example: Default Boxes and Aspect Ratios (Reading the Dog/Cat Diagram)
+
+Now let's connect Sections 15.1 and 15.2 by tracing the **complete** network end to end, the same way the slides present it as one unified diagram.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/437364d1-48a0-4714-b123-8f28cc21039b" width=600>
@@ -657,6 +681,10 @@ Not all negative examples are **equally hard** to classify:
 |---|---|
 | **Pure empty background** | "Easy negative" — trivially easy to reject |
 | **Weird noisy texture / partial object** | "Hard negative" — could easily be mistaken for the real object |
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/60fca0b5-4f23-4df0-8dd1-85dd1c527565" width=1000>
+</p>
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/fb1cdca1-a971-4456-918a-7afb0cca54fa" width=600>
