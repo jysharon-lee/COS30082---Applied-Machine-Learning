@@ -47,6 +47,7 @@ $$
 
 | | **Image Classification** | **Object Detection** |
 |---|---|---|
+| **Example** | <p align="center"><img src="https://github.com/user-attachments/assets/c1dd3565-23f7-49a7-8613-319e6bf25236" width=600></p> | <p align="center"><img src="https://github.com/user-attachments/assets/bc9229e7-9801-481f-a399-f8cf63f290f8" width=600></p> |
 | **Goal** | Predict the type/class of an object in an image | Locate objects with a bounding box **and** predict the class of each one |
 | **Output** | A single class label for the whole image | One or more bounding boxes, each with its own class label |
 | **Example output** | `cat` | `cat (x, y, w, h)`, `duck (x, y, w, h)`, `dog (x, y, w, h)` |
@@ -65,7 +66,7 @@ Object detection is best understood as the **combination** of two simpler proble
 | **Object Localization** | An image with one or more objects | One or more bounding boxes (e.g. defined by a point, width, and height) |
 | **Object Detection** | An image with one or more objects | One or more bounding boxes **+** a class label for each box |
 
-<div align="center">
+<div align="left">
 
 ```text
                     ┌── Image classification  (what is it?)
@@ -131,17 +132,9 @@ This is precisely **why** object detection needs specialised architectures inste
 
 The traditional pipeline has **4 steps**:
 
-<div align="center">
-
-```text
-Step 1                Step 2               Step 3                 Step 4
-Sliding windows   →   Image pyramid   →   Classify each ROI   →   Keep box if
-(scan left→right,     (resize image        via pre-trained         P(label) > T
- top→bottom)           at multiple           CNN or SVM
-                       scales)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3ae7093e-0a0e-4879-8ec9-5f091b0083d1" width=600>
+</p>
 
 1. **Fixed-size sliding windows** slide left-to-right, top-to-bottom to localise objects at different positions.
 2. An **image pyramid** resizes the image at multiple scales, so objects of different sizes can still be caught by the fixed-size window.
@@ -156,7 +149,12 @@ Sliding windows   →   Image pyramid   →   Classify each ROI   →   Keep box
 
 Instead of manually sliding windows, we treat a pre-trained classification network as a **base network** plugged into a deep-learning detection framework such as **Faster R-CNN**, **SSD**, or **YOLO**.
 
-> **Example:** The diagram from the slides shows **VGG16 (up to the Conv5_3 layer)** acting as the base network for the **SSD** framework, followed by extra feature layers, classifiers, and non-maximum suppression to produce final detections.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c44dbe11-8d6f-44b1-8cb4-635f724bfc48" width=600>
+</p>
+
+
+> **Example:** The diagram above shows **VGG16 (up to the Conv5_3 layer)** acting as the base network for the **SSD** framework, followed by extra feature layers, classifiers, and non-maximum suppression to produce final detections.
 
 > **Analogy:** This is like a construction company that doesn't pour a brand-new **foundation** for every single building — they reuse a proven, pre-tested foundation design (the base network) and just build different structures (the detection framework: classifiers, regressors) on top of it.
 
@@ -180,26 +178,12 @@ Instead of manually sliding windows, we treat a pre-trained classification netwo
 ## 10. Object Detection Frameworks: One-Stage vs Two-Stage
 
 | | **Two-Stage Detector** | **One-Stage Detector** |
-|---|---|---|
+|---|---|---| 
+| **Visual Flowchart** | <p align="center"><img src="https://github.com/user-attachments/assets/5eb7c04e-fbe9-45b1-b985-c9c5a4a449d0" width=600></p> | <p align="center"><img src="https://github.com/user-attachments/assets/0230b229-8331-410d-bf70-bcd598f5cdf8" width=600></p>
 | **How it works** | (1) Propose regions of interest via a region-proposal method/network, (2) then classify only those region candidates | A **single** convolutional network directly predicts bounding boxes **and** class probabilities in one pass |
 | **Models** | R-CNN, Fast R-CNN, Faster R-CNN | YOLO, SSD |
 | **Speed** | Slower — must run predictions for every selected region | Faster — commonly used for **real-time** detection |
 | **Accuracy** | Generally **higher** accuracy | Trades a bit of accuracy for **large** speed gains |
-
-<div align="center">
-
-```text
-One-stage detector                    Two-stage detector
-
-Feature       ┌─▶ object classification   Feature   ┌── Proposal generator ──┐
-extraction ───┤                           extraction │  (object class +      │
-              └─▶ object localization     ───────────┤   object location)    │
-                                                       └── ROI classifier ─────┤
-                                                          (crop, classify,     │
-                                                           re-localize)  ◀─────┘
-```
-
-</div>
 
 > **Analogy:** A **two-stage detector** is like a hiring process with **two separate rounds**: first a recruiter skims resumes to shortlist promising candidates (region proposal), then a specialist panel carefully interviews only the shortlisted candidates (classification + refinement). It's thorough but takes longer. A **one-stage detector** is like a single interviewer who looks at *every* candidate once and makes an instant decision on the spot — much faster, but occasionally less accurate because there's no second, more careful look.
 
@@ -209,31 +193,27 @@ extraction ───┤                           extraction │  (object class 
 
 **R-CNN (Regions with CNN features)** was the first major deep-learning object detector. Its pipeline has **4 main blocks**:
 
-<div align="center">
-
-```text
-                     ┌── CNN Classification model pre-training
-CNN feature          │
-extraction    ───────┼── Region proposal
-                     │
-                     └── CNN Classification model fine-tuning
-        │
-        ├──▶ Object classification  (Binary SVM training)
-        │
-        └──▶ Bounding box refinement (Regression model)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b870ce9e-08d5-4b83-893a-0ccc94c043f5">
+</p>
 
 > **Source:** Girshick, R., Donahue, J., Darrell, T. and Malik, J., 2014. *Rich feature hierarchies for accurate object detection and semantic segmentation.* CVPR.
 
 ### 11.1 CNN Classification Model Pre-training
 
-**Pre-train** a CNN (e.g. VGG or ResNet) on an image classification task, typically ImageNet. The network learns from `training images → CNN → fully connected layers → K classes (softmax loss)`.
+**Pre-train** a CNN (e.g. VGG or ResNet) on an image classification task, typically ImageNet. The network learns from the following phases:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fe0c65e6-fdc0-4ff4-9873-241cf40425f6">
+</p>
 
 > **Analogy:** This is the "general education" phase — like a new employee going through onboarding training that teaches broad skills useful in almost any role at the company, before being assigned to a specific project.
 
 ### 11.2 Region Proposal
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fb126803-afde-4af1-824f-adb8179bc1bc" width=600>
+</p>
 
 We first generate **region proposals** using an algorithm such as **Edge Boxes** or **Selective Search** (~**2,000 candidate proposals per image**). Those regions may contain target objects, and they come in different sizes.
 
@@ -249,20 +229,9 @@ $$
 \text{IoU} = \frac{\text{Area of Overlap}}{\text{Area of Union}}
 $$
 
-<div align="center">
-
-```text
-Poor overlap        Good overlap         Excellent overlap
-IoU = 0.421          IoU = 0.748           IoU = 0.952
-
-┌───┐                 ┌────────┐            ┌────────┐
-│┌──┼──┐              │┌──────┐│            ││││││││││
-││..│..│              ││......││            ││││││││││
-└┼──┘  │              │└──────┘│            └────────┘
- └─────┘              └────────┘        (prediction ≈ ground truth)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/598ae6dd-d655-408e-86ce-3df276fbf213" width=600>
+</p>
 
 **How to read this scale:**
 
@@ -273,11 +242,23 @@ IoU = 0.421          IoU = 0.748           IoU = 0.952
 | **Around 0.7–0.8** | The box roughly matches the object — usually the threshold used to count a detection as "correct" in training/evaluation ("Good") |
 | **Close to 1.0** | Near-perfect match between prediction and ground truth ("Excellent") |
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d42dc1fc-1aa4-4e52-8e1c-f096094921fb" width=600>
+</p>
+
+<p align="center">
+  <em>Example of IoU on a STOP sign</em>
+</p>
+
 > **Analogy:** IoU is like grading how well someone parked a car inside a parking space by comparing **how much of the space is covered by the car** versus **how much total space the car + the empty space together take up**. If they parked perfectly inside the lines, IoU ≈ 1. If they're halfway on the line into the next spot, IoU drops a lot — even though "most" of the car is still roughly in the right area.
 
 ### 11.4 CNN Classification Model Fine-tuning
 
 The proposed regions are **cropped**, **resized**, and **warped** to a fixed size (as required by the CNN). The CNN is then **fine-tuned** on these warped regions for **K + 1 classes** (the "+1" is the **background** class).
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4d807179-168c-4919-8db5-b43be43f20cd" width=1000>
+</p>
 
 - A much **smaller learning rate** is used during fine-tuning.
 - The mini-batch **oversamples positive cases**, because most proposed regions are just background.
@@ -292,11 +273,19 @@ For every image region, one forward pass through the CNN generates a **feature v
 - **Negative samples:** everything else (irrelevant regions).
 - A subset of **"hard negatives"** (regions that look deceptively similar to the positive class) is specifically used to sharpen the SVM's decision boundary.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fa4036cd-7271-4386-94cb-c055c50664cc" width=1000>
+</p>
+
 > **Analogy:** Training one binary SVM per class is like hiring a **separate specialist gatekeeper for each category** — one gatekeeper only asks "is this a dog or not?", another only asks "is this a cat or not?" — rather than one gatekeeper trying to juggle every category at once.
 
 ### 11.6 Bounding Box Regression
 
 The bounding-box regression stage **improves localization** — it predicts a refined bounding box for each detection, using the CNN features. Only boxes with **IoU ≥ 0.6** are used to train the class-specific regressor.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/23712abb-e51d-45bd-9149-f0b77ab1c4e0" width=1000>
+</p>
 
 **Goal:** learn a transformation that maps a proposal box $P = (P_x, P_y, P_h, P_w)$ to a ground-truth box $G = (g_x, g_y, g_h, g_w)$.
 
@@ -326,9 +315,13 @@ $$
 
 ## 12. Two-Stage Detector 2: Fast R-CNN
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ecf33525-0310-4b74-81a3-4dfbc874acd4" width=1000>
+</p>
+
 > **Source:** Girshick, R., 2015. *Fast R-CNN.* ICCV.
 
-**Fast R-CNN** makes R-CNN **faster** by **unifying the three independent models** (CNN, SVM, regressor) into **one jointly trained framework**, sharing computation.
+**Fast R-CNN** makes R-CNN **faster** by **unifying the three independent models** (CNN, binary SVM, regressor) from the existing CNN problem: "Complex, multi-stage pipeline" into **one jointly trained framework**, sharing computation.
 
 ### 12.1 Solving R-CNN's Problems
 
@@ -342,50 +335,24 @@ $$
 
 ### 12.2 Model Workflow
 
-<div align="center">
-
-```text
-1. Pre-train a CNN on image classification tasks.
-2. Propose regions by selective search (~2k candidates per image).
-3. Replace the last max-pooling layer with a ROI Pooling layer
-   → outputs FIXED-LENGTH feature vectors for each region proposal.
-4. Branch into two output layers:
-   - A softmax estimator of K + 1 classes
-   - A bounding-box regression model (offsets relative to the original ROI, per class)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/77f26666-67ce-4f9b-a792-c773db6c5607" width=600>
+</p>
 
 ### 12.3 Worked Example: Reading the ROI Pooling Diagram
 
-**ROI Pooling** is the key trick that lets Fast R-CNN turn region proposals of *different sizes* into a **fixed-size** feature vector, so they can all be fed into the same fully connected layers. Let's walk through the example from the slides, the same way we would trace through a convolution calculation.
+**ROI Pooling** is the key trick that lets Fast R-CNN turn region proposals of *different sizes* into a **fixed-size** feature vector, so they can all be fed into the same fully connected layers. Let's walk through the example, the same way we would trace through a convolution calculation.
 
 **Setup:** An 8×8 input feature map, one region proposal, and a desired output size of **2×2**.
 
-```text
-Step 1: 8×8 input feature map               Step 2: Region proposal (7×5 box)
-0.88 0.44 0.14 0.16 0.37 0.77 0.96 0.27      [only the region inside the black
-0.19 0.45 0.57 0.16 0.63 0.29 0.71 0.70       box is kept — the rest is ignored]
-0.66 0.26 0.82 0.64 0.54 0.73 0.59 0.26
-0.85 0.34 0.76 0.84 0.29 0.75 0.62 0.25
-0.32 0.74 0.21 0.39 0.34 0.03 0.33 0.48
-0.20 0.14 0.16 0.13 0.73 0.65 0.96 0.32
-0.19 0.69 0.09 0.86 0.88 0.07 0.01 0.48
-0.83 0.24 0.97 0.04 0.24 0.35 0.50 0.91
+1. 8x8 input feature map
+2. Region proposal (7x5 box)
+3. Pooling sections
+4. MAX pixel value in each of the 4 sections obtained
 
-Step 3: Split the 7×5 region into 2×2       Step 4: Take the MAX value in
-"pooling sections" (sections don't          each of the 4 sections
-need to divide the region evenly!)
-
-┌───────┬───────┐                            ┌──────┬──────┐
-│ 0.85  │ 0.29  │   →  max of each section    │ 0.85 │ 0.84 │
-│ ...   │ ...   │                              ├──────┼──────┤
-├───────┼───────┤                            │ 0.97 │ 0.96 │
-│ 0.19  │ 0.88  │                              └──────┴──────┘
-│ ...   │ ...   │                             Output: 2×2 fixed-size
-└───────┴───────┘                             feature map, no matter
-                                               how big the region was!
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b45f13c1-0fd6-42db-bab4-a32aa3008d48" width=1500>
+</p>
 
 **How to read this:** no matter whether the input region is 7×5, 12×9, or 3×3, ROI Pooling always slices it into the **same fixed grid** (here 2×2) and takes the **max value** in each cell. The output is *always* the same shape, ready to feed into a fully connected layer.
 
@@ -396,11 +363,7 @@ need to divide the region evenly!)
 Fast R-CNN uses a **multi-task loss** that sums classification and bounding-box loss:
 
 $$
-L(p, u, t^u, v) = L_{cls}(p, u) + \mathbb{1}(u \geq 1)\, L_{box}(t^u, v)
-$$
-
-$$
-L_{cls}(p, u) = -\log p_u \qquad L_{box}(t^u, v) = \sum_{i \in \{x,y,w,h\}} L_1^{smooth}(t_i^u - v_i)
+L(p, u, t^u, v) = \underbrace{L_{cls}(p, u)}_{-\log p_u} + \mathbb{1}(u \geq 1)\underbrace{L_{box}(t^u, v)}_{\sum_{i \in \{x,y,w,h\}} L_1^{smooth}(t_i^u - v_i)}
 $$
 
 where $u$ is the true class label (background class $u = 0$), $p$ is the predicted class-probability distribution, $v$ is the true bounding box, and $t^u$ is the predicted box correction.
@@ -437,23 +400,13 @@ Fast R-CNN is much faster than R-CNN in both training and testing — **but the 
 
 ## 13. Two-Stage Detector 3: Faster R-CNN
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2d0ff64e-f686-42ae-a128-f0dc03c9cdb2" width=600>
+</p>
+
 > **Source:** Ren, S., He, K., Girshick, R. and Sun, J., 2016. *Faster R-CNN: Towards real-time object detection with region proposal networks.* IEEE TPAMI.
 
-**Faster R-CNN** removes the last remaining bottleneck: the external region-proposal algorithm. It inserts a **Region Proposal Network (RPN)** directly **after the last convolutional layer**, so region proposals are generated **inside the network itself** — no external Selective Search needed.
-
-<div align="center">
-
-```text
-image → CNN → feature map ─┬─▶ Region Proposal Network (RPN) ──▶ proposals ─┐
-                            │                                                 │
-                            └─────────────────▶ ROI Pooling ◀─────────────────┘
-                                                    │
-                                                    ▼
-                                     classifier + bounding-box regressor
-                                          (just like Fast R-CNN)
-```
-
-</div>
+**Faster R-CNN** removes the last remaining bottleneck from **Fast R-CNN**: the external region-proposal algorithm. It inserts a **Region Proposal Network (RPN)** directly **after the last convolutional layer**, so region proposals are generated **inside the network itself** — no external Selective Search needed.
 
 > **Analogy:** If Fast R-CNN was like upgrading the kitchen but still relying on a slow external grocery delivery (Section 12.5), Faster R-CNN is like **growing your own vegetable garden right next to the kitchen** — the ingredients (region proposals) are now produced **in-house**, instantly, using the same infrastructure (the shared feature map) that's already there for cooking.
 
@@ -461,11 +414,19 @@ image → CNN → feature map ─┬─▶ Region Proposal Network (RPN) ──�
 
 The RPN slides over the feature map and, at every location (called an **anchor point**), proposes a set of **anchor boxes** — predefined, fixed-size boxes of different **scales** and **aspect ratios**, spread across the whole image.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a62d86a4-577a-4e51-8771-a0424669aa88" width=1000>
+</p>
+
 - **Anchors are translation invariant** — the *same* set of anchor shapes is reused at every location.
-- Typically **9 anchor boxes per anchor point** (3 scales × 3 aspect ratios), to capture objects of different sizes and shapes.
 - For each anchor box, the RPN outputs:
   - **2k scores** → is there an object here or not? (`cls` layer)
   - **4k coordinates** → how should the box be adjusted? (`reg` layer)
+- Typically **9 anchor boxes per anchor point** (3 scales × 3 aspect ratios), to capture objects of different sizes and shapes.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d8426421-d529-4484-b45c-63fe08806478" width=600>
+</p>
 
 > **Analogy:** Anchor boxes are like a photographer who, before even looking at the scene, sets up **9 different picture-frame stencils** of various shapes and sizes (tall/thin, short/wide, square) and holds each one up at every spot in the photo to check "does something interesting fit inside this particular frame shape, here?" Having multiple frame shapes ready in advance means the photographer doesn't miss a tall giraffe just because they were only checking with a wide, short frame.
 
@@ -478,7 +439,7 @@ Each anchor box is assigned a label (**object** or **not**) based on its IoU wit
 | IoU > **0.7** with any ground-truth box | **Positive** |
 | IoU < **0.3** with **all** ground-truth boxes | **Negative** |
 
-A mini-batch of **256 randomly picked anchor boxes** (from the same image) is used per training step, aiming for a **1:1 ratio** of positive to negative anchors. If there are fewer than 128 positives, the batch is **padded with negatives**. The RPN is then trained end-to-end with backpropagation and SGD, minimising:
+A mini-batch of **256 randomly picked anchor boxes** (from the same image) is used per training step, aiming for a **1:1 ratio** of positive to negative anchors. If there are fewer than 128 positives, the batch is **padded with negatives**. The RPN is then trained end-to-end with backpropagation and SGD, minimising the loss with the loss function, where $cls$ is classification and $reg$ is regression:
 
 $$
 L = L_{cls} + L_{reg}
@@ -489,6 +450,10 @@ $$
 ### 13.3 Training of Faster R-CNN
 
 **Original paper's approach — "ugly" alternating optimisation** (4 steps):
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/508bcfda-cc94-4d69-97d7-acf5cef296ed" width=800>
+</p>
 
 1. Train the RPN end-to-end (CNN initialised from an ImageNet pre-trained model).
 2. Train a **separate** Fast R-CNN, also initialised from an ImageNet pre-trained model. At this point, RPN and Fast R-CNN **share no convolution layers**.
@@ -536,23 +501,23 @@ The image is split into an **S × S grid**. Within each grid cell, the model pro
 
 Boxes with a confidence score above a threshold are kept and used to locate objects.
 
-<div align="center">
-
-```text
-S × S grid on input   →   Bounding boxes + confidence   →   Class probability map   →   Final detections
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d13379d4-0fa5-4992-b280-90f8c42b57a9" width=600>
+</p>
 
 > **Analogy:** Imagine dividing a classroom photo into a **7×7 seating chart grid**. Each "seat" in the grid is responsible for reporting: "is there a student sitting roughly here, and if so, who is it and how confident am I?" Combine every seat's report, throw out the low-confidence ones, and you get the full roster of who's in the photo — all figured out in **one single glance** across the whole room, rather than interviewing each seat individually.
 
 ### 14.2 The "Responsible" Predictor
 
-At one grid cell $i$, the model proposes **B** bounding-box candidates. The one with the **highest IoU** with the ground truth becomes the **"responsible" predictor** for that object — it's the only box whose prediction gets trained against that ground truth.
+At one grid cell $i$, the model proposes **B** bounding-box candidates. The one with the **highest IoU** (overlaps the most with the ground truth) becomes the **"responsible" predictor** for that object — it's the only box whose prediction gets trained against that ground truth.
 
 > **Analogy:** If several friends all guess where a hidden treasure is buried near the same general area, only the friend whose guess is **closest** to the actual treasure gets "credit" (positive reinforcement) for the next round — the others aren't punished as harshly, since they weren't the best guess.
 
 ### 14.3 Network Architecture
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0096dc8f-7330-400b-a158-0401a07fc4d2" width=600>
+</p>
 
 The base model resembles **GoogLeNet**, with the inception module replaced by 1×1 and 3×3 conv layers. Two fully connected layers over the whole feature map produce a final prediction of shape:
 
@@ -567,6 +532,10 @@ $$
 $$
 L = L_{cls} + L_{loc}
 $$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0cd68831-a5ba-4fe9-bf23-ea0044d2f330" width=1000>
+</p>
 
 The loss is a sum of squared errors, using two scaling parameters:
 
@@ -591,19 +560,23 @@ The loss is a sum of squared errors, using two scaling parameters:
 
 ## 15. One-Stage Detector 2: SSD
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/da0dc9a8-a3da-44c3-9ac0-0dd0228fe5e8" width=900>
+</p>
+
 > **Source:** Liu, W., Anguelov, D., Erhan, D., Szegedy, C., Reed, S., Fu, C.Y. and Berg, A.C., 2016. *SSD: Single Shot MultiBox Detector.* ECCV.
 
 **SSD (Single Shot Detector)** was one of the first models to use a CNN's **pyramidal feature hierarchy** to efficiently detect objects of **many different sizes** in a single pass — and it ran **both faster and more accurately** than YOLO.
 
-<div align="center">
-
-```text
-Image → Pyramidal feature extraction → Feature maps → Detection head → Scores & boxes → NMS → Prediction
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0f6debe3-37b6-440d-99a3-9b21f979d2e7" width=1000>
+</p>
 
 ### 15.1 Pyramidal Feature Extraction
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0aca974a-5bce-4614-a8ea-6f9f52456411" width=1000>
+</p>
 
 SSD uses **VGG-16 (up to Conv5_3)** as its base network, then stacks progressively **smaller** extra convolutional layers on top: 38×38 → 19×19 → 10×10 → 5×5 → 3×3. **Each feature-map size is tapped for detections** — not just the final, smallest layer.
 
@@ -611,11 +584,19 @@ SSD uses **VGG-16 (up to Conv5_3)** as its base network, then stacks progressive
 
 ### 15.2 Detection Head & Default Boxes
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d719421e-e298-4862-b642-c9a9349cd277" width=1000>
+</p>
+
 At each feature-map location, a small `conv 3×3 × k(c+4)` layer predicts, for each of **k** default (anchor) boxes: **c** class scores + **4** box-offset coordinates.
 
 ### 15.3 Worked Example: Default Boxes and Aspect Ratios (Reading the Dog/Cat Diagram)
 
-The slides show a picture with both a **dog** and a **cat**, alongside two different feature-map grids: an **8×8** grid and a **4×4** grid.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/437364d1-48a0-4714-b123-8f28cc21039b" width=600>
+</p>
+
+A picture with both a **dog** and a **cat** are shown, alongside two different feature-map grids: an **8×8** grid and a **4×4** grid.
 
 - Feature maps at **different levels have different receptive-field sizes**. Anchor boxes on each level are rescaled so that **one feature map is responsible for objects of roughly one particular scale**.
 - In the example: the **dog** (a larger object filling more of the image) can only be detected in the **4×4 feature map** (a "higher," more zoomed-out level, where each cell "sees" a larger patch of the original image).
@@ -639,12 +620,20 @@ $$
 L_{cls} = -\sum_{i \in Pos} x_{ij}^p \log(\hat{c}_i^p) - \sum_{i \in Neg} \log(\hat{c}_i^0), \quad \hat{c}_i^p = \frac{\exp(c_i^p)}{\sum_p \exp(c_i^p)}
 $$
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a9c685b5-6d48-4018-becb-5d45fdbcbaa4">
+</p>
+
 - For **positive matches**, the loss penalises according to the confidence score of the **correct class**.
 - For **negative matches**, the loss penalises according to the confidence score of class **"0"** — meaning "no object here."
 
 ### 15.5 Worked Example: Matching Strategy (Reading the Bicycle Scene)
 
-The slides use a scene with a **person on a bicycle** to illustrate how SSD decides which predicted boxes actually get to influence training.
+A scene with a **person on a bicycle** is taken here to illustrate how SSD decides which predicted boxes actually get to influence training.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f1dadbd6-0861-4daf-abcb-d3ad08dd8178" width=1000>
+</p>
 
 - SSD predictions are classified as **positive matches** or **negative matches**.
 - A prediction is a **positive match** only if its corresponding **default box** (not the predicted box) has IoU > 0.5 with the ground truth.
@@ -669,6 +658,10 @@ Not all negative examples are **equally hard** to classify:
 | **Pure empty background** | "Easy negative" — trivially easy to reject |
 | **Weird noisy texture / partial object** | "Hard negative" — could easily be mistaken for the real object |
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fb1cdca1-a971-4456-918a-7afb0cca54fa" width=600>
+</p>
+
 We can explicitly **find these false-positive "hard negative" samples during training** and deliberately include more of them in the training data, to sharpen the classifier's decision boundary.
 
 > **Analogy:** Imagine training airport security to spot fake passports. Showing them **1,000 obviously blank sheets of paper** (easy negatives) teaches them very little new. But showing them a **cleverly forged passport that almost looks real** (a hard negative) is exactly the kind of tricky example that actually improves their detection skill. Hard negative mining is about **deliberately seeking out the tricky almost-fooled-me examples** and training on those.
@@ -685,19 +678,13 @@ After a detector proposes many overlapping boxes for the **same object**, **NMS*
 2. **Sort** all the bounding boxes by confidence score.
 3. **Discard** boxes with low confidence, and boxes that overlap (high IoU) with an already-kept, higher-confidence box.
 
-<div align="center">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/97826e20-fb61-4ab7-b51b-15c360f9a7df" width=1000>
+</p>
 
-```text
-Before NMS: 4 boxes around the same tick     After NMS: 1 box kept
-
-box A: 0.92  ┐                                box A: 0.92  ✅ (kept — highest score)
-box B: 0.87  │  IoU > 0.5 with box A          box B: 0.87  ❌ (suppressed)
-box C: 0.67  ┘  → suppress B and C            box C: 0.67  ❌ (suppressed)
-box D: 0.88  (different object, low IoU       box D: 0.88  ✅ (kept — different object)
-              with A → keep separately)
-```
-
-</div>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/85e6be4b-eef3-4915-9f6d-56fe3bf06902" width=1000>
+</p>
 
 > **Analogy:** NMS is like a photo-tagging app where **four different friends all tag the exact same person in a group photo with slightly different bounding boxes**. Instead of showing four redundant tags for one person, the app keeps only the **most confident** tag and quietly deletes the overlapping, lower-confidence duplicates — but if there's a *second, separate* person elsewhere in the photo, that person's tag is kept independently, since it doesn't overlap with the first.
 
