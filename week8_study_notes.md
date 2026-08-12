@@ -33,8 +33,6 @@
 23. [Worked Example: Interpreting a Verification Dataset Table](#23-worked-example-interpreting-a-verification-dataset-table)
 24. [Key Takeaways](#24-key-takeaways)
 25. [Glossary](#25-glossary)
-26. [Study Tips for Week 8](#26-study-tips-for-week-8)
-
 
 ---
 
