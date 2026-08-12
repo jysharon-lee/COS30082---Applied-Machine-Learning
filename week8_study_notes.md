@@ -358,6 +358,10 @@ Based on the definition of the loss, every triplet falls into one of **three cat
   <img src="https://github.com/user-attachments/assets/71f15fe3-3bb7-45a3-aaf6-0adeafe695c0" width=600>
 </p>
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/756a6431-52f1-4604-b78e-7ce99196ae4d">
+</p>
+
 Each of these three categories depends on **where the negative sits, relative to the anchor and the positive** — so we can extend the same three labels ("hard," "semi-hard," "easy") to describe **negatives** themselves.
 
 > **Analogy:** Picture painting three concentric circles around a dartboard's bullseye (the anchor). Anything **inside the innermost circle** (closer than the positive) is a **"hard negative"** — dangerously close, an easy mistake to make. The **middle ring** (a bit farther than the positive, but still within the margin) holds **"semi-hard negatives"** — close calls that still deserve some training attention. Everything **outside the margin ring** is an **"easy negative"** — so far from the bullseye that there's no realistic chance of confusing it with the real target, so it's not worth spending training time on.
@@ -397,7 +401,7 @@ Because training with **Easy Triplets** wastes effort (their loss is always 0), 
 
 Once trained, a Siamese/FaceNet-style CNN can be used purely as an **embedding generator** — it converts any face image into a fixed-length numeric vector (an **embedding**), which can then be compared using a **similarity learning metric** and a **threshold** to produce a final prediction.
 
-<p align="center"><img src="https://github.com/user-attachments/assets/ca86ede1-1089-4b12-b5121e75fc1f3b49" width=600></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/1e836e87-3922-4b3d-9a7c-c41a6c6641cf" width=600></p>
 
 This single embedding can power **three different applications**:
 
@@ -430,7 +434,7 @@ $$
 Leverage the **angle** between two vectors. Example: **Cosine similarity**.
 
 $$
-d(x^{(i)}, x^{(j)}) = \cos(\theta) = \frac{\sum_{k=1}^{n} |x_k^{(i)} \cdot x_k^{(i)}|}{\sqrt{\sum_{k=1}^{n} {x_k^{(i)}}^2} \; \sqrt{\sum_{k=1}^{n} {x_k^{(j)}}^2}}
+d(x^{(i)}, x^{(j)}) = \cos(\theta) = \frac{\sum_{k=1}^{n} |x_k^{(i)} \cdot x_k^{(i)}|}{\sqrt{\sum_{k=1}^{n} {x_k^{(i)}}^2} \sqrt{\sum_{k=1}^{n} {x_k^{(j)}}^2}}
 $$
 
 > **Analogy:** Cosine similarity is like comparing two arrows pointing out from the same origin and asking **only** "do they point in roughly the same direction?" — it doesn't care how *long* each arrow is, only their **angle**. Two very short arrows and two very long arrows pointing the exact same direction are considered equally similar.
