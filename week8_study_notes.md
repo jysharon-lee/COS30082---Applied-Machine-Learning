@@ -1,4 +1,4 @@
-# 📗 Week 8 Study Notes: Face Recognition Using Deep Learning
+# 📘 Week 8 Study Notes: Face Recognition Using Deep Learning
 
 > **Course:** COS30082 — Applied Machine Learning
 > **Topic:** Face Recognition Using DL
@@ -13,28 +13,28 @@
 3. [Why Face Detection Matters](#3-why-face-detection-matters)
 4. [Classical (Pre-Deep-Learning) Face Recognition](#4-classical-pre-deep-learning-face-recognition)
 5. [Why Classical Methods Struggle at Scale](#5-why-classical-methods-struggle-at-scale)
-6. [Worked Example: Reading the Milestones-of-Face-Representation Chart](#6-worked-example-reading-the-milestones-of-face-representation-chart)
-7. [One-Shot Learning](#7-one-shot-learning)
-8. [Face Recognition as a One-Shot Learning Problem](#8-face-recognition-as-a-one-shot-learning-problem)
-9. [Why a Standard CNN Classifier Fails Here](#9-why-a-standard-cnn-classifier-fails-here)
-10. [Reframing the Problem: Learning a Similarity Function](#10-reframing-the-problem-learning-a-similarity-function)
-11. [Worked Example: Reading a Similarity-Score Diagram](#11-worked-example-reading-a-similarity-score-diagram)
-12. [The Siamese Network](#12-the-siamese-network)
-13. [The Learning Objective: What Makes a Good Encoding?](#13-the-learning-objective-what-makes-a-good-encoding)
-14. [Triplet Loss](#14-triplet-loss)
-15. [The Learning Objective (With a Margin)](#15-the-learning-objective-with-a-margin)
-16. [The Triplet Loss Function](#16-the-triplet-loss-function)
-17. [Choosing Good Triplets](#17-choosing-good-triplets)
-18. [Triplet Mining: Easy, Hard, and Semi-Hard](#18-triplet-mining-easy-hard-and-semi-hard)
-19. [Worked Example: Calculating the Triplet Loss by Hand](#19-worked-example-calculating-the-triplet-loss-by-hand)
-20. [Offline vs Online Triplet Mining](#20-offline-vs-online-triplet-mining)
-21. [Deploying the Network as an Embedding Generator](#21-deploying-the-network-as-an-embedding-generator)
-22. [Similarity Metrics: How Do We Measure "Distance"?](#22-similarity-metrics-how-do-we-measure-distance)
-23. [Face Verification as Binary Classification](#23-face-verification-as-binary-classification)
-24. [Worked Example: Interpreting a Verification Dataset Table](#24-worked-example-interpreting-a-verification-dataset-table)
-25. [Key Takeaways](#25-key-takeaways)
-26. [Glossary](#26-glossary)
-27. [Study Tips for Week 8](#27-study-tips-for-week-8)
+6. [One-Shot Learning](#6-one-shot-learning)
+7. [Face Recognition as a One-Shot Learning Problem](#7-face-recognition-as-a-one-shot-learning-problem)
+8. [Why a Standard CNN Classifier Fails Here](#8-why-a-standard-cnn-classifier-fails-here)
+9. [Reframing the Problem: Learning a Similarity Function](#9-reframing-the-problem-learning-a-similarity-function)
+10. [Worked Example: Reading a Similarity-Score Diagram](#10-worked-example-reading-a-similarity-score-diagram)
+11. [The Siamese Network](#11-the-siamese-network)
+12. [The Learning Objective: What Makes a Good Encoding?](#12-the-learning-objective-what-makes-a-good-encoding)
+13. [Triplet Loss](#13-triplet-loss)
+14. [The Learning Objective (With a Margin)](#14-the-learning-objective-with-a-margin)
+15. [The Triplet Loss Function](#15-the-triplet-loss-function)
+16. [Choosing Good Triplets](#16-choosing-good-triplets)
+17. [Triplet Mining: Easy, Hard, and Semi-Hard](#17-triplet-mining-easy-hard-and-semi-hard)
+18. [Worked Example: Calculating the Triplet Loss by Hand](#18-worked-example-calculating-the-triplet-loss-by-hand)
+19. [Offline vs Online Triplet Mining](#19-offline-vs-online-triplet-mining)
+20. [Deploying the Network as an Embedding Generator](#20-deploying-the-network-as-an-embedding-generator)
+21. [Similarity Metrics: How Do We Measure "Distance"?](#21-similarity-metrics-how-do-we-measure-distance)
+22. [Face Verification as Binary Classification](#22-face-verification-as-binary-classification)
+23. [Worked Example: Interpreting a Verification Dataset Table](#23-worked-example-interpreting-a-verification-dataset-table)
+24. [Key Takeaways](#24-key-takeaways)
+25. [Glossary](#25-glossary)
+26. [Study Tips for Week 8](#26-study-tips-for-week-8)
+
 
 ---
 
@@ -76,6 +76,7 @@ $$
 | **Problem type** | One-to-one | One-to-many |
 | **Typical use case** | Unlocking your phone, boarding-gate check | Airport watch-list screening, "tag this friend" in photos |
 | **Possible outputs** | "Match" / "No match" | A specific person's ID, or "hasn't seen them before" |
+|| <p align="center"><img src="https://github.com/user-attachments/assets/ac30e122-f205-4fd3-8941-d7d33b25c451" width=600 height=450></p> | <p align="center"><img src="https://github.com/user-attachments/assets/abf9312e-d52a-4b97-9d3f-6b73db9f7590" width=600 height=450></p> |
 
 > **Analogy:** Verification is like a bouncer checking **one** ID card against **one** face — "does this photo match this person, yes or no?" Identification is like a detective walking into a room full of suspects with **only a photo** and having to figure out, by comparing it against **every single person** in the room, which one (if any) is the match. The detective's job is fundamentally harder because the search space is much bigger — the more people (K) in the room, the more comparisons are needed, and the more chances there are for mistaken identity.
 
@@ -102,6 +103,10 @@ Before deep learning took over, face recognition relied on **hand-designed** fea
 
 Eigenfaces treats a whole face image as one long vector and uses **Principal Component Analysis (PCA)** to find the small set of "basis faces" that best explain variation across a training set of faces. Any new face can then be approximately reconstructed as a **weighted combination** of these "eigenfaces."
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9abc5bf1-868f-4fb8-b117-3988013c4fd5" width=600>
+</p>
+
 | Advantage | Disadvantage |
 |---|---|
 | Easy to implement; needs no special facial-feature knowledge beyond the face ID | Sensitive to lighting, shadows, and the scale of the face in the image |
@@ -111,6 +116,10 @@ Eigenfaces treats a whole face image as one long vector and uses **Principal Com
 ### 4.2 Local-Based Features — LBP, SIFT
 
 Instead of treating the whole face as one blob, **Local Binary Pattern (LBP)** and **SIFT** look at small local neighbourhoods of pixels, encode the local texture pattern around each pixel, divide the face into a grid of regions, build a **histogram** for each region, and then **concatenate** all the histograms into one final feature vector.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/00e4a29d-400c-4377-b309-34008b7514cb" width=900>
+</p>
 
 | Advantage | Disadvantage |
 |---|---|
@@ -129,46 +138,7 @@ Instead of treating the whole face as one blob, **Local Binary Pattern (LBP)** a
 
 ---
 
-## 6. Worked Example: Reading the Milestones-of-Face-Representation Chart
-
-The slides show a timeline chart plotting **face-representation quality** (as accuracy on the LFW benchmark) against **time**, tracing four "eras" of feature representation stacked on top of each other:
-
-```text
-Representation
-  ▲                                                          Deepface
-  │                                                          (LFW > 97%)
-  │                                              ● Deepfaces, VGG, Facenet
-Deep                                            /
-learning                                       /  LE
-  │                                            /   (LFW > 82%)
-Shallow                                    ●──/
-learning                        Gabor, LBP /
-  │                            (LFW > 70%)/
-Local                          ●─────────/
-handcraft            Eigenface/
-  │                  (LFW~60%)
-Holistic       ●────/
-learning       │
-  └────────────┴──────────┴──────────┴──────────┴────────▶ Time
-             1991        1997       2010       2014
-```
-
-**How to read a chart like this:**
-
-| Era | Approx. year | Approx. accuracy (LFW) | What it represents |
-|---|---|---|---|
-| **Holistic learning** | 1991 | ~60% | Whole-face statistical methods (e.g. Eigenface) |
-| **Local handcraft** | 1997 | > 70% | Hand-designed local descriptors (Gabor, LBP) |
-| **Shallow learning** | 2010 | > 82% | Learned (but still relatively simple/"shallow") local encodings |
-| **Deep learning** | 2014 | > 97% | Deep CNN-based representations (DeepFace, VGG, FaceNet) |
-
-**The key trend to notice:** each new "era" isn't just a **different** method — it's a method that consistently **pushes accuracy higher**, and the *rate* of improvement accelerates sharply once deep learning arrives around 2012–2014 — the curve gets noticeably steeper in a short span of years, compared to the slower climb from 1991 to 2010.
-
-> **Analogy:** Reading this chart is like looking at a graph of how fast people could travel across a country over history — walking (holistic), then horse and cart (local handcraft), then early cars (shallow learning), then commercial jets (deep learning). What matters isn't just that each new method is "a bit better" — it's that the **jump in capability accelerates** with each generation, and the biggest leap by far happens in the most recent, shortest time window. When you see a chart like this in general, always check **both** axes together: not just "did it improve," but "how much time did that improvement take," since a steep, short jump tells a very different story than a slow, gradual climb.
-
----
-
-## 7. One-Shot Learning
+## 6. One-Shot Learning
 
 **One-shot learning** is a classification task where a model must learn to make correct predictions about **many future examples**, having seen **only one example** (or very few) from each class during training/reference.
 
@@ -180,7 +150,7 @@ $$
 
 ---
 
-## 8. Face Recognition as a One-Shot Learning Problem
+## 7. Face Recognition as a One-Shot Learning Problem
 
 Face recognition is a **textbook real-world example** of one-shot learning:
 
@@ -191,32 +161,28 @@ Face recognition is a **textbook real-world example** of one-shot learning:
 
 ---
 
-## 9. Why a Standard CNN Classifier Fails Here
+## 8. Why a Standard CNN Classifier Fails Here
 
 It's tempting to just train a normal CNN classifier — feed in face images, and let a softmax layer predict "whose face is this?" out of K known people. **This does not work well.** Here's why:
 
-```text
-Known data
-Face ID: 1 ┐
-Face ID: 2 │
-Face ID: 3 ├──▶  Classic CNN model  ──▶  Softmax loss
-Face ID: 4 ┘
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2fadd305-3c3c-4d15-9a9c-d4f89cf138e0" width=1000>
+</p>
 
 | Problem | Explanation |
 |---|---|
 | **Training data is too small** | With only one (or a few) images per person, there isn't nearly enough data to train a robust CNN classifier from scratch |
 | **The output classes aren't fixed** | Every time a new person is registered, the number of output classes (K) **changes** — the final classification layer has to be **redesigned and retrained** from scratch |
 
-```text
-N new people  +  K known people  ──▶  Classic CNN model  ──▶  Softmax loss over (K + N + 1) classes
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/dd03bae9-7292-486d-ae1a-c9de061e02cb" width=600>
+</p>
 
 > **Analogy:** This is like trying to build a school's "who's who" yearbook quiz app by training it as a strict multiple-choice test, where the number of possible answer choices is literally the total number of students. The moment **one new student enrols**, you'd have to throw out the entire quiz and rebuild it with one more answer choice added to every single question — completely impractical for a school (or company, or app) where new people join all the time. We need an approach that doesn't require rebuilding the whole system every time someone new shows up.
 
 ---
 
-## 10. Reframing the Problem: Learning a Similarity Function
+## 9. Reframing the Problem: Learning a Similarity Function
 
 Instead of treating face recognition as "classify this face into one of K fixed classes," one-shot learning reframes it as a **difference-evaluation problem**: learn a function that measures **how different** two face images are.
 
@@ -234,17 +200,13 @@ where $\tau$ (tau) is a chosen **threshold**.
 
 ---
 
-## 11. Worked Example: Reading a Similarity-Score Diagram
+## 10. Worked Example: Reading a Similarity-Score Diagram
 
-The slides show one **reference face** compared against **four other faces**, each connected by an arrow labelled with a distance score $d(img1, img2)$:
+One **reference face** compared against **four other faces** are shown, each connected by an arrow labelled with a distance score $d(img1, img2)$:
 
-```text
-                         d(img1, img2)
-                    16 ──────────────▶  Face A
-Reference face  ──── 9 ──────────────▶  Face B
-   (query)     ──── 0.1 ─────────────▶  Face C   ← smallest distance
-                    25 ──────────────▶  Face D
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/33d541ac-02a0-4cd6-bae1-18b19153eedb" width=600>
+</p>
 
 **How to read this diagram:**
 
@@ -261,17 +223,15 @@ Reference face  ──── 9 ──────────────▶  Fa
 
 ---
 
-## 12. The Siamese Network
+## 11. The Siamese Network
 
 The key architecture behind one-shot learning is called the **Siamese neural network** (from Gregory Koch et al.'s 2015 paper, *"Siamese Neural Networks for One-Shot Image Recognition"*). It became especially popular once **deep convolutional neural networks** were used to process image inputs **in parallel**.
 
 A Siamese network is **not fundamentally different** from any other CNN — it still takes an image as input and encodes its features into a set of numbers. **The difference is in how the output is used.**
 
-```text
-x⁽¹⁾ ──▶ [ CNN layers ] ──▶ [ FC layers ] ──▶ f(x⁽¹⁾)   ─┐
-                                                          ├──▶ Compare the two encodings
-x⁽²⁾ ──▶ [ CNN layers ] ──▶ [ FC layers ] ──▶ f(x⁽²⁾)   ─┘   (both branches share the SAME weights)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7fdbaaf5-1d65-437c-8892-a2d032554784" width=900>
+</p>
 
 Two images are each pushed through **identical, weight-sharing** CNN branches, producing two **encoding vectors** — e.g. 128 numbers each — that represent the two faces in a shared feature space.
 
@@ -279,7 +239,7 @@ Two images are each pushed through **identical, weight-sharing** CNN branches, p
 
 ---
 
-## 13. The Learning Objective: What Makes a Good Encoding?
+## 12. The Learning Objective: What Makes a Good Encoding?
 
 During training, a classic CNN tunes its parameters to associate each image with the **correct class label**. A Siamese network instead tunes its parameters to produce encodings such that the **distance** between two encodings reflects whether the two faces belong to the same person:
 
@@ -303,7 +263,7 @@ $$
 
 ---
 
-## 14. Triplet Loss
+## 13. Triplet Loss
 
 To train the network toward that goal, we use a loss function called **triplet loss**. It trains the network using **three images at once**:
 
@@ -313,13 +273,9 @@ To train the network toward that goal, we use a loss function called **triplet l
 | **Positive (P)** | A **different** photo of the **same** person as the anchor |
 | **Negative (N)** | A photo of a **different** person |
 
-```text
-Before training:                          After training:
-
-Anchor ●───▶ ● Negative (close)            Anchor ●─────────────▶ ● Negative (far)
-       │                                          │
-       └───▶ ● Positive (also close)              └──▶ ● Positive (very close)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/883d9cec-06da-49b9-94d0-c4f49127ad65" width=600>
+</p>
 
 After training, encodings of the **positive** example should sit **close** to the anchor, while encodings of the **negative** example should sit **farther away**.
 
@@ -327,12 +283,16 @@ After training, encodings of the **positive** example should sit **close** to th
 
 ---
 
-## 15. The Learning Objective (With a Margin)
+## 14. The Learning Objective (With a Margin)
 
 Using the anchor/positive/negative pair, the goal is:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/85ba8999-bc85-4f58-b269-03b1e15ddf88" width=800>
+</p>
+
 $$
-d(A,P) = \lVert f(A) - f(P) \rVert^2 \;\; \leq \;\; d(A,N) = \lVert f(A) - f(N) \rVert^2
+d(A,P) = \lVert f(A) - f(P) \rVert^2 \leq d(A,N) = \lVert f(A) - f(N) \rVert^2
 $$
 
 $$
@@ -344,7 +304,7 @@ $$
 **The fix:** add a **margin** ($\alpha$) that forces a real gap between the two distances:
 
 $$
-\lVert f(A)-f(P) \rVert^2 - \lVert f(A)-f(N) \rVert^2 + margin \;\leq\; 0
+\lVert f(A)-f(P) \rVert^2 - \lVert f(A)-f(N) \rVert^2 + margin \leq 0
 $$
 
 The margin defines **how far apart** the dissimilar pair must be, relative to the similar pair, in order to properly distinguish the two.
@@ -353,12 +313,12 @@ The margin defines **how far apart** the dissimilar pair must be, relative to th
 
 ---
 
-## 16. The Triplet Loss Function
+## 15. The Triplet Loss Function
 
 Given three images $A$, $P$, and $N$, the triplet loss is:
 
 $$
-L(A, P, N) = \max\Big(\lVert f(A)-f(P) \rVert^2 - \lVert f(A)-f(N) \rVert^2 + \alpha,\; 0\Big)
+L(A, P, N) = \max\Big(\lVert f(A)-f(P) \rVert^2 - \lVert f(A)-f(N) \rVert^2 + \alpha, 0\Big)
 $$
 
 - **Sample training set example:** 10,000 pictures of 1,000 people.
@@ -368,7 +328,7 @@ $$
 
 ---
 
-## 17. Choosing Good Triplets
+## 16. Choosing Good Triplets
 
 If $A$, $P$, and $N$ are chosen **completely randomly** from a large dataset, the inequality
 
@@ -378,13 +338,13 @@ $$
 
 is **easily satisfied** almost automatically — a randomly picked negative is very likely to already look nothing like the anchor, so the model gets **little useful learning signal** from most random triplets.
 
-**Solution:** deliberately choose triplets that are **"hard" to train on**, to increase learning efficiency — specifically, choose examples where $d(A,P)$ is **close to** $d(A,N)$. *(Refer to the FaceNet paper: Schroff, Kalenichenko & Philbin, 2015.)*
+**Solution:** deliberately choose triplets that are **"hard" to train on**, to increase learning efficiency — specifically, choose examples where $d(A,P)$ is **close to** $d(A,N)$.
 
 > **Analogy:** Randomly quizzing a geography student with "Is Antarctica cold, or is Antarctica the same as the Sahara Desert?" teaches them almost nothing — the answer is obvious even before thinking. A genuinely useful quiz question picks two things that are **actually close and easy to confuse** — like "Is this Portugal or Spain?" Triplet selection works the same way: to actually sharpen the model, we need to specifically hunt for triplets where the "wrong" answer is deceptively close to the "right" one, not ones where the answer is already painfully obvious.
 
 ---
 
-## 18. Triplet Mining: Easy, Hard, and Semi-Hard
+## 17. Triplet Mining: Easy, Hard, and Semi-Hard
 
 Based on the definition of the loss, every triplet falls into one of **three categories**:
 
@@ -394,20 +354,9 @@ Based on the definition of the loss, every triplet falls into one of **three cat
 | **Hard triplet** | $d(A,N) < d(A,P)$ | The negative is actually **closer** to the anchor than the positive is — a serious mistake, big loss |
 | **Semi-hard triplet** | $d(A,P) < d(A,N) < d(A,P) + margin$ | The negative isn't closer than the positive, but it's still **too close** — small positive loss |
 
-```text
-                Easy negatives
-              ╭──────────────────╮
-              │  Semi-hard        │
-              │  negatives        │
-              │  ╭─────────────╮  │
-              │  │ Hard        │  │
-              │  │ negatives   │  │
-              │  │      ●a  ●p │  │◀── margin
-              │  ╰─────────────╯  │
-              ╰──────────────────╯
-        Regions of embedding space, relative to
-        the anchor (a) and the positive (p)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/71f15fe3-3bb7-45a3-aaf6-0adeafe695c0" width=600>
+</p>
 
 Each of these three categories depends on **where the negative sits, relative to the anchor and the positive** — so we can extend the same three labels ("hard," "semi-hard," "easy") to describe **negatives** themselves.
 
@@ -415,7 +364,7 @@ Each of these three categories depends on **where the negative sits, relative to
 
 ---
 
-## 19. Worked Example: Calculating the Triplet Loss by Hand
+## 18. Worked Example: Calculating the Triplet Loss by Hand
 
 Let's use a fixed **margin ($\alpha$) of 0.2** and walk through three different triplets, the same way we'd trace through any formula step by step.
 
@@ -431,7 +380,7 @@ Let's use a fixed **margin ($\alpha$) of 0.2** and walk through three different 
 
 ---
 
-## 20. Offline vs Online Triplet Mining
+## 19. Offline vs Online Triplet Mining
 
 Because training with **Easy Triplets** wastes effort (their loss is always 0), an important design decision is **how** to select the hard/semi-hard triplets used for training:
 
@@ -444,15 +393,11 @@ Because training with **Easy Triplets** wastes effort (their loss is always 0), 
 
 ---
 
-## 21. Deploying the Network as an Embedding Generator
+## 20. Deploying the Network as an Embedding Generator
 
 Once trained, a Siamese/FaceNet-style CNN can be used purely as an **embedding generator** — it converts any face image into a fixed-length numeric vector (an **embedding**), which can then be compared using a **similarity learning metric** and a **threshold** to produce a final prediction.
 
-```text
-Face 1 ──▶ [ CNN ] ──▶ embedding  ─┐
-                                    ├──▶ [ Similarity metric ] ──▶ [ Threshold ] ──▶ Prediction
-Face 2 ──▶ [ CNN ] ──▶ embedding  ─┘        (e.g. Manhattan distance)
-```
+<p align="center"><img src="https://github.com/user-attachments/assets/ca86ede1-1089-4b12-b5121e75fc1f3b49" width=600></p>
 
 This single embedding can power **three different applications**:
 
@@ -466,11 +411,11 @@ This single embedding can power **three different applications**:
 
 ---
 
-## 22. Similarity Metrics: How Do We Measure "Distance"?
+## 21. Similarity Metrics: How Do We Measure "Distance"?
 
 There are **three broad families** of similarity/distance metrics used to compare two embedding vectors $x^{(i)}$ and $x^{(j)}$.
 
-### 22.1 Cardinality-Based Metrics
+### 21.1 Cardinality-Based Metrics
 
 Leverage the **union and intersection** of the two vectors being compared. Example: **Jaccard similarity**.
 
@@ -480,7 +425,7 @@ $$
 
 > **Analogy:** Like comparing two people's music playlists by asking, "**out of all the songs either of you has**, how many do you **both** have in common?" — the more overlap relative to the combined total, the more similar your taste in music.
 
-### 22.2 Orientation-Based Metrics
+### 21.2 Orientation-Based Metrics
 
 Leverage the **angle** between two vectors. Example: **Cosine similarity**.
 
@@ -490,7 +435,7 @@ $$
 
 > **Analogy:** Cosine similarity is like comparing two arrows pointing out from the same origin and asking **only** "do they point in roughly the same direction?" — it doesn't care how *long* each arrow is, only their **angle**. Two very short arrows and two very long arrows pointing the exact same direction are considered equally similar.
 
-### 22.3 Distance-Based Metrics
+### 21.3 Distance-Based Metrics
 
 Leverage the **average distance** between corresponding elements of the two vectors. These include:
 
@@ -504,16 +449,13 @@ Leverage the **average distance** between corresponding elements of the two vect
 
 ---
 
-## 23. Face Verification as Binary Classification
+## 22. Face Verification as Binary Classification
 
 Triplet loss is **one** way to train a face-recognition network. There's a second, simpler way: treat it as a **straight binary classification problem**.
 
-```text
-x⁽ⁱ⁾ ──▶ [ CNN layers ] ──▶ f(x⁽ⁱ⁾)  ─┐
-                                        ├──▶ [ Sigmoid ] ──▶ ŷ   (0 = different, 1 = same)
-x⁽ʲ⁾ ──▶ [ CNN layers ] ──▶ f(x⁽ʲ⁾)  ─┘
-     (both branches share the SAME weights — this is still a Siamese network)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b4b1f533-0cf6-4e77-92dd-c2f6ac7a1b22" width=1000>
+</p>
 
 We compute the embeddings of an **image pair** (e.g. 128-dimensional or more) using a Siamese network, then feed both embeddings into a **logistic regression** unit with a final **sigmoid** layer:
 
@@ -527,9 +469,9 @@ where the subtraction represents the **Manhattan distance** between $f(x^{(i)})$
 
 ---
 
-## 24. Worked Example: Interpreting a Verification Dataset Table
+## 23. Worked Example: Interpreting a Verification Dataset Table
 
-The slides show a small training table for the binary-classification approach:
+A small training table for the binary-classification approach is shown below:
 
 | $x$ (image pair) | $y$ (label) | Interpretation |
 |---|---|---|
@@ -543,7 +485,7 @@ The slides show a small training table for the binary-classification approach:
 
 ---
 
-## 25. Key Takeaways
+## 24. Key Takeaways
 
 > [!IMPORTANT]
 > **The core things to remember from Week 8:**
@@ -563,7 +505,7 @@ The slides show a small training table for the binary-classification approach:
 
 ---
 
-## 26. Glossary
+## 25. Glossary
 
 | Term | Definition |
 |------|-----------|
