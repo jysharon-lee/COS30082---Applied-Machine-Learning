@@ -121,24 +121,24 @@ This is the **simplest** visualization approach: directly visualize the hidden n
 
 ### 6.1 The Five Steps
 
-1. Train a network
+#### 1. Train a network
    
    <p align="center">
   <img src="https://github.com/user-attachments/assets/4c3cbb77-496a-44c1-b2c1-602b2ff78f79">
 </p>
 
-2. Feed images into the network
+#### 2. Feed images into the network
    
    <p align="center">
   <img src="https://github.com/user-attachments/assets/00df5bbe-d7a2-47c0-a878-0a7df8305f0c">
 </p>
 
-3. Observe the activation of some neuron
+#### 3. Observe the activation of some neuron
    <p align="center">
   <img src="https://github.com/user-attachments/assets/3d3db396-5d3b-4da8-9fa3-ef76ed338b0b">
 </p>
 
-4. Record images that maximally activate the neuron
+#### 4. Record images that maximally activate the neuron
    
 <table align="center">
 <tr>
@@ -174,7 +174,7 @@ A grid of the top-activating image patches for neurons at **five different depth
 
 > **Analogy:** This progression is exactly like how a child learns to read. First they learn individual **letters** (Layer 1: edges, colours). Then they learn how letters combine into **syllables** (Layer 2: corners, simple shapes). Then they recognise **whole words** (Layer 3: textures, repeated patterns). Then they start recognising **specific meaningful phrases** (Layer 4: object parts like "dog face"). And finally they can read and understand **entire sentences** (Layer 5: whole objects) without having to sound out every single letter.
 
-5. Analyse the similar pattern in those images
+#### 5. Analyse the similar pattern in those images
 
 Concretely, for a convolution layer with **512 filters**, each filter produces its own **feature map** (e.g. 512 filters of size 14×14×3 each produce a 7×7×1 output map). We pick one specific neuron inside one specific feature map, run many images through the network, and simply **keep a record** of which images light that neuron up the most.
 
@@ -454,25 +454,25 @@ $$
 
 ### 12.2 Steps of Optimization
 
-Step 1: Start with a random noise image
+#### Step 1: Start with a random noise image
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f67453bd-282d-428e-a403-7ee69e721831" width=600>
 </p>
 
-Step 2: Forward pass: Compute the activation a(x) at the chosen neuron
+#### Step 2: Forward pass: Compute the activation a(x) at the chosen neuron
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/c94cd74d-fee7-4a85-808e-362a7a392829" width=600>
 </p>
 
-Step 3: Backward pass: Backprop to find the gradient of the activation w.r.t x
+#### Step 3: Backward pass: Backprop to find the gradient of the activation w.r.t x
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/32226afa-e5a9-4315-a56c-f289f128ac2b" width=600>
 </p>
 
-Step 4: Nudge the image:  x ← x + α · (gradient) then repeat steps 2-4 until the image causes high activation
+#### Step 4: Nudge the image:  x ← x + α · (gradient) then repeat steps 2-4 until the image causes high activation
 
 The key update rule is:
 
