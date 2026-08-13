@@ -65,7 +65,7 @@ A simple story to separate two ways of "knowing" something. **A father has two k
 
 One day the father takes them to a tiny zoo with just **lions** and **elephants**. Afterwards, he points to an animal and asks: *"Is this a lion or an elephant?"*
 
-- **Sharon** mentally re-draws both a lion and an elephant from memory, compares the animal in front of her to her two drawings, and picks whichever drawing is the closest match. She answers **"Lion"** — this is a **Generative Model**: she has learned what each class *actually looks like* (he can "regenerate" it), and classifies by comparing to his own generated version.
+- **Sharon** mentally re-draws both a lion and an elephant from memory, compares the animal in front of her to her two drawings, and picks whichever drawing is the closest match. She answers **"Lion"** — this is a **Generative Model**: she has learned what each class *actually looks like* (she can "regenerate" it), and classifies by comparing to his own generated version.
 - **Ivan** never bothered learning what a full lion or elephant looks like — he only picked up a handful of *distinguishing features* (trunk vs. mane, size, ears) and uses those differences directly. He also answers **"Lion"** — this is a **Discriminative Model**: he draws a decision boundary between classes without ever needing to know what a "complete" lion looks like.
 
 Both of them get the same right answer, but they got there in **completely different ways**.
@@ -311,14 +311,16 @@ An auto-encoder is two networks trained **together**:
   <img src="https://github.com/user-attachments/assets/de9756ef-4b64-4ca1-b223-878e6bfb6d9a" width=600>
 </p> 
 
-- An **Encoder** compresses a high-dimensional input (e.g. an image) down into a compact, low-dimensional **code**.
-- A **Decoder** takes that code and tries to **reconstruct** the original input as closely as possible.
-
 $$
 \text{Encoder}(x) = c \quad \longrightarrow \quad \text{Decoder}(c) \approx x
 $$
 
-Once trained, **the Decoder alone is a Generator** — feed it any code vector, and it will produce a plausible-looking output, without needing a Discriminator at all.
+- An **Encoder** compresses a high-dimensional input (e.g. an image) down into a compact, low-dimensional **Code (c) / bottleneck**.
+- A **Decoder** takes that code (c) / bottleneck and tries to **reconstruct** the original input as closely as possible.
+
+
+
+Once trained, **the decoder alone is a Generator** — feed it any code vector, and it will produce a plausible-looking output, without needing a Discriminator at all.
 
 > **Analogy:** Think of the auto-encoder like learning **shorthand note-taking and then reading your notes back out loud**. The Encoder is you, in a lecture, **compressing** a long spoken sentence down into a handful of quick shorthand symbols. The Decoder is you, later, **expanding** those symbols back into a full sentence. If you get good enough at both directions, your "expansion" skill (the Decoder) can even be reused on shorthand notes you never actually took — i.e. it becomes a general-purpose generator of sentences from symbols.
 
@@ -483,7 +485,7 @@ $$
 **Image-to-Image translation** takes an input image and outputs a corresponding image in a different domain — e.g., turning a segmentation-label map into a photorealistic street scene, a black-and-white photo into colour, a day photo into a night photo, an aerial photo into a map, or a hand-drawn sketch into a photo of a bag or shoe.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/78ffe676-5111-4fcc-b231-390d3ee28938" width=600>
+  <img src="https://github.com/user-attachments/assets/78ffe676-5111-4fcc-b231-390d3ee28938">
 </p>
 
 Just like text-to-image, a **plain supervised approach** (train a network to minimise pixel distance to one target photo) produces **blurry** results, for the same averaging reason as before.
@@ -491,7 +493,7 @@ Just like text-to-image, a **plain supervised approach** (train a network to min
 **Using a GAN instead:** the Generator takes the input image (plus optionally some noise $z$) and produces an output image; the Discriminator judges whether that output image is a **real, convincing example of the target domain** (and, in the conditional-GAN style, whether it's a good *match* for the input). Adding a small extra "as close as possible" term on top of the adversarial loss (**GAN + close**) can further nudge the output to stay faithful to the specific input, rather than just "any realistic-looking output."
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/31ff24cf-6d21-467f-a11c-c246087eabf5" width=600>
+  <img src="https://github.com/user-attachments/assets/31ff24cf-6d21-467f-a11c-c246087eabf5">
 </p>
 
 | Approach | Typical Result |
@@ -511,13 +513,13 @@ Conditional GANs generalise well beyond images:
 - **Speech Enhancement:** the Generator takes a **noisy** speech spectrogram and produces a **cleaned-up** version; the Discriminator is shown pairs of (output, noisy input) or (clean, noisy input) and judges whether the *pairing* looks like a genuine "cleaned this specific noisy clip" relationship or a fake one.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/31ff24cf-6d21-467f-a11c-c246087eabf5" width=1000>
+  <img src="https://github.com/user-attachments/assets/03bf86e9-94a0-4e48-829e-bfe447bb72ba">
 </p>
 
 - **Video Generation:** the Generator takes in the last several frames $t_{1:n}$ of a video and predicts the **next frame** $t_{n+1}$; the Discriminator is shown the full sequence $t_{1:n+1}$ (with either the *real* next frame or the *generated* one appended) and judges whether that **last frame** looks like a real, natural continuation or a generated/fake one.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a0b5f8d1-92a9-4d5e-a0e5-090bc58ea6d1" width=1000>
+  <img src="https://github.com/user-attachments/assets/a0b5f8d1-92a9-4d5e-a0e5-090bc58ea6d1">
 </p>
 
 > **Analogy:** Speech enhancement with a conditional GAN is like a noise-cancelling audio engineer whose work is graded not just on "does the output sound clean?" but on **"does this clean output still sound like the same voice/sentence as the noisy recording it came from?"** Video-frame generation is like being shown a short video clip with the last second **cut off**, and being asked to guess what happens next in a way that feels like a natural, un-jarring continuation — a good guess flows smoothly; a bad one feels like an abrupt jump-cut.
