@@ -1,4 +1,4 @@
-# 📘 Week 10 Study Notes: Generative Deep Learning (GANs)
+<img width="1216" height="112" alt="image" src="https://github.com/user-attachments/assets/9627e849-ac5b-42ba-80fb-e73c3edf48a5" /><img width="596" height="660" alt="image" src="https://github.com/user-attachments/assets/b5f79d10-8e36-4861-983f-7b19ebef694c" /><img width="532" height="528" alt="image" src="https://github.com/user-attachments/assets/5c4105e1-11ce-4d09-952c-b113ebb2b8a6" /><img width="532" height="531" alt="image" src="https://github.com/user-attachments/assets/35c651d7-b3f3-4dec-b429-48104a11b8d6" /># 📘 Week 10 Study Notes: Generative Deep Learning (GANs)
 
 > **Course:** COS30082 — Applied Machine Learning
 > **Topic:** Generative Deep Learning — Generative Adversarial Networks (GANs)
@@ -61,7 +61,7 @@ $$
 
 ## 2. Generative vs Discriminative — A Story
 
-The slides tell a simple story to separate two ways of "knowing" something. **A father has two kids, Kid A and Kid B.** Kid A learns *everything in depth* about what he sees. Kid B only learns the *differences* between things.
+A simple story to separate two ways of "knowing" something. **A father has two kids, Kid A and Kid B.** Kid A learns *everything in depth* about what he sees. Kid B only learns the *differences* between things.
 
 One day the father takes them to a tiny zoo with just **lions** and **elephants**. Afterwards, he points to an animal and asks: *"Is this a lion or an elephant?"*
 
@@ -78,6 +78,7 @@ Both kids get the same right answer, but they got there in **completely differen
 
 | | **Generative Model** | **Discriminative Model** |
 |---|---|---|
+| **Model representation** |<p align="center"><img src="https://github.com/user-attachments/assets/f71053b8-d055-4c33-8585-3474add02d70" width=600></p> | <p align="center"><img src="https://github.com/user-attachments/assets/7fe43266-20cf-4122-8b04-4eef92721175" width=600></p> |
 | **Informally** | Can *generate* new data instances | *Discriminates* between kinds of data instances |
 | **Formally** | Captures the **joint probability** $p(x, y)$, or just $p(x)$ if there are no labels | Captures the **conditional probability** $p(y \mid x)$ |
 | **What it "knows"** | The full shape of each class (how the data is distributed) | Only the boundary that separates classes |
@@ -110,9 +111,22 @@ G: z \rightarrow x, \qquad z \sim \text{(some simple distribution, e.g. Normal)}
 $$
 
 - **Image generation example:** feed a vector like $[0.5, -0.3, \dots, 0.1]$ into the Generator, and it outputs a full anime-style face image.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7fe43266-20cf-4122-8b04-4eef92721175" width=600>
+</p>
+
 - **Sentence generation example:** feed the *same kind* of random vector in, and instead of pixels, the Generator outputs a sentence like *"Good morning"* or *"Thank you very much."*
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e511bb7c-1528-4e98-b04b-bec95d8c59c0" width=600>
+</p>
+
 **Each dimension of the input vector can end up controlling a different characteristic of the output** — for example, one dimension might end up controlling *hair texture*, another might control *how open the mouth is*, purely because that's the structure the Generator learned to be useful during training.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d4e251f1-ee37-413f-97f3-951894c7dba2" width=900>
+</p>
 
 > **Analogy:** Think of the input vector as a set of **sliders on a character-creation screen** in a video game (like adjusting hair length, eye colour, mouth shape). You didn't design those sliders yourself — the Generator "discovered," through training, that certain slider combinations reliably produce certain visual features. Turning one slider slightly (say, from 0.2 to 0.8 in the "hair texture" dimension) smoothly changes that one feature in the output face, without necessarily touching anything else.
 
@@ -131,23 +145,19 @@ $$
 
 For example, a real, crisp anime face might get a score of **1.0**, while an early, blurry, noisy Generator output might get a score of **0.1**.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f4ceba91-1ded-4c2a-994c-3640c2d4bf19" width=600>
+</p>
+
 > **Analogy:** The Discriminator is like a **restaurant food critic** who doesn't cook anything themselves — they just taste a dish and give it a score out of 10. A perfectly plated, authentic dish scores near the top; a clumsy imitation with the wrong texture and taste scores near the bottom. The critic never needs to know *how* to cook to be good at spotting a bad imitation.
 
 ---
 
 ## 7. Generator + Discriminator Working Together
 
-When trained together over many rounds, the Generator's outputs steadily improve because it's constantly getting feedback from an ever-improving Discriminator. The slides show this with a **manga (anime face) generation** example: a new Generator (V1) produces images, a Discriminator (V1) judges them; then the Discriminator is *upgraded* (V2, V3...) as the Generator's fakes get better, so it never falls behind.
+When trained together over many rounds, the Generator's outputs steadily improve because it's constantly getting feedback from an ever-improving Discriminator. **Manga (anime face) generation** example: a new Generator (V1) produces images, a Discriminator (V1) judges them; then the Discriminator is *upgraded* (V2, V3...) as the Generator's fakes get better, so it never falls behind.
 
-```text
-Generator V1 ──► images ──► Discriminator V1 (easy to fool, early game)
-      │
-      ▼ (learns from feedback)
-Generator V1 ──► better images ──► Discriminator V2 (harder to fool)
-      │
-      ▼ (learns from feedback)
-Generator V1 ──► even better images ──► Discriminator V3 (hardest to fool)
-```
+<p align="center"><img src="https://github.com/user-attachments/assets/30e19108-e0a5-4279-bfc4-91528bc35c3a" width=800></p>
 
 > **Analogy:** Picture a video game where a **boss (Discriminator) levels up every time the player (Generator) beats it**. If the boss never got stronger, the player would stop improving once they found one easy trick. Because the boss keeps getting tougher, the player is constantly pushed to develop **genuinely better** strategies — not just tricks that work against a weak, outdated opponent.
 
@@ -158,9 +168,13 @@ Generator V1 ──► even better images ──► Discriminator V3 (hardest to
 GAN training alternates between two steps, over and over, in every iteration:
 
 **Step 1: Fix the Generator, update the Discriminator.**
-- Sample real objects from the database and label them **1** (real).
-- Sample random vectors, run them through the (frozen) Generator to get fake objects, and label them **0** (fake).
+- Sample real objects from the database and label them **1** (real object).
+- Sample random vectors, run them through the (frozen) Generator to get fake objects, and label them **0** (fake/generated object).
 - Update $D$ so it gets better at telling these two groups apart.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b65f99b1-9f83-4c4d-a8f6-341d8d054fcc" width=600>
+</p>
 
 **Step 2: Fix the Discriminator, update the Generator.**
 - Sample new random vectors, run them through the Generator to get fake objects.
@@ -175,7 +189,7 @@ GAN training alternates between two steps, over and over, in every iteration:
 
 Initialise parameters $\theta_d$ for $D$ and $\theta_g$ for $G$. In each iteration:
 
-**Learning D** (maximise $\tilde{V}$ — we *want* $D(\text{real}) \to 1$ and $D(\text{fake}) \to 0$):
+**Learning D** (maximise $\tilde{V}$ — we *want* $D(\text{real objects}) \to 1$ and $D(\text{fake objects}) \to 0$):
 
 $$
 \tilde{V} = \frac{1}{m}\sum_{i=1}^m \log D(x^{(i)}) + \frac{1}{m}\sum_{i=1}^m \log\left(1 - D(\tilde{x}^{(i)})\right), \qquad \tilde{x}^{(i)} = G(z^{(i)})
@@ -203,14 +217,14 @@ $$
 
 ## 10. Worked Example: Reading the Manga Generation Results Across Epochs
 
-The slides show the *same* GAN's output at four checkpoints: **epoch 1, epoch 10, epoch 200, and epoch 300**. This is a great habit to build: whenever you're shown a "before/after training" grid of generated images, read it the same deliberate way you'd read any other performance chart.
+The *same* GAN's output is shown at four checkpoints: **epoch 1, epoch 10, epoch 200, and epoch 300**. This is a great habit to build: whenever you're shown a "before/after training" grid of generated images, read it the same deliberate way you'd read any other performance chart.
 
-| Epoch | What you'd typically see | How to interpret it |
-|---|---|---|
-| **1st epoch** | A grid of pink/purple static-like blobs — no recognisable faces at all | The Generator is still close to random; it hasn't learned any real structure yet, and the Discriminator is easily telling these apart from real faces |
-| **10th epoch** | Blurry but face-*shaped* blobs — eyes and hair regions start to emerge | The Generator has picked up on the **coarse, big-picture structure** (a face has eyes near the top, hair around the edges), but fine detail is still missing |
-| **200th epoch** | Recognisable anime faces, but colours and details are sometimes a bit off or inconsistent | The Generator now nails the overall structure and is refining finer details, textures, and colour consistency |
-| **300th epoch** | Sharper, more consistent, more varied faces | Both networks have had time to co-evolve — G produces convincing detail, and D is strict enough to have forced that improvement |
+| Epoch | Figure | What you'd typically see | How to interpret it |
+|---|---|---|---|
+| **1st epoch** | <p align="center"><img src="https://github.com/user-attachments/assets/c84ff4f5-5236-460c-a1b2-5891218ed045" width=500></p> | A grid of pink/purple static-like blobs — no recognisable faces at all | The Generator is still close to random; it hasn't learned any real structure yet, and the Discriminator is easily telling these apart from real faces |
+| **10th epoch** | <p align="center"><img src="https://github.com/user-attachments/assets/df497c90-1c67-47d6-87d9-3a72f1802126" width=500></p> | Blurry but face-*shaped* blobs — eyes and hair regions start to emerge | The Generator has picked up on the **coarse, big-picture structure** (a face has eyes near the top, hair around the edges), but fine detail is still missing |
+| **200th epoch** | <p align="center"><img src="https://github.com/user-attachments/assets/9f3c0025-c3f7-464f-a1fd-9d8ee1292e43" width=500></p> | Recognisable anime faces, but colours and details are sometimes a bit off or inconsistent | The Generator now nails the overall structure and is refining finer details, textures, and colour consistency |
+| **300th epoch** | <p align="center"><img src="https://github.com/user-attachments/assets/ea2e4ce0-57c8-476f-a942-fc7bf994e511" width=500></p> | Sharper, more consistent, more varied faces | Both networks have had time to co-evolve — G produces convincing detail, and D is strict enough to have forced that improvement |
 
 **How to read this kind of grid in general:** don't just ask "does it look good?" — ask **what specific level of detail changed** between checkpoints. Early epochs usually fix **global structure** first (is there a face-shaped blob at all?) before **local detail** (are the eyes sharp? is the colour right?) improves later. This mirrors how the Discriminator itself improves — early on it can only tell "definitely fake blob" from "real face," so that's the only signal the Generator gets; later, once the big picture is solved, the Discriminator starts penalising finer flaws, which is the only way the Generator can be pushed to fix them.
 
@@ -231,11 +245,16 @@ Machine learning, at its core, is about finding a function $f: x \rightarrow y$.
 GAN-style generation (images, sentences) falls squarely into **structured learning**, because the output isn't just one number or one label — it's a whole *composed object* where every part needs to make sense **together**.
 
 **Examples of structured output:**
-- **Machine Translation:** $x = $ "She very loves cooking" $\rightarrow$ $y = $ a grammatically coherent Japanese sentence.
-- **Speech Recognition:** $x = $ an audio waveform $\rightarrow$ $y = $ a full transcribed sentence.
-- **Chat-bot:** $x = $ "Hello, how are you?" $\rightarrow$ $y = $ "Thank you, I am fine."
+- **Machine Translation:** $x = \text{"She very loves cooking"}$ → $y = \text{a grammatically coherent Japanese sentence}$
+- **Speech Recognition:** $x = \text{an audio waveform}$ → $y = \text{a full transcribed sentence}$
+- **Chat-bot:** $x = \text{"Hello, how are you?"}$ → $y = \text{"Thank you, I am fine."}$
 - **Image-to-Image translation:** turning building labels into a photorealistic facade, black-and-white photos into colour, day scenes into night scenes, or sketches into photos.
+  
+  <p align="center"><img src="https://github.com/user-attachments/assets/0b0842f9-e5ba-49cd-a21d-89488268c22b" width=600></p>
+  
 - **Text-to-Image translation:** turning a sentence description into a matching picture.
+
+  <p align="center"><img src="https://github.com/user-attachments/assets/4ceb779c-2c97-4e09-b83d-a1b863c573ec" width=600></p>
 
 > **Analogy:** Predicting a single class label is like answering **"true or false"** on a quiz — one clean answer, done. Structured learning is like being asked to **write an entire essay** — every sentence has to individually make sense **and** connect logically to the sentences around it. You can't just generate word 1, then word 2, then word 3 completely independently and hope they add up to something coherent; the *whole thing* has to hang together.
 
@@ -264,9 +283,9 @@ GANs address both challenges above by combining **two complementary viewpoints**
 | **Generator** | **Bottom-up** | Learns to generate the object piece by piece, at the component level |
 | **Discriminator** | **Top-down** | Evaluates the **whole** object at once, and can therefore judge whether all the pieces fit together |
 
-$$
-\text{Bottom-Up (Generator)} + \text{Top-Down (Discriminator)} = \text{Generative Adversarial Network}
-$$
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/72f3a1fe-c0b7-4245-9327-e2b03ffe127d" width=800>
+</p>
 
 > **Analogy:** This is like a construction site with **two different roles**. The **bricklayer (Generator)** works bottom-up, placing one brick at a time. Left alone, a bricklayer without an overall blueprint might build a wall that's locally neat but globally the wrong shape. The **building inspector (Discriminator)** works top-down — they don't lay a single brick themselves, but they walk around the *finished* structure and judge whether it looks like a real, structurally sound building overall. By feeding the inspector's top-down verdict back to the bricklayer, the bricklayer starts placing bricks that **add up to something coherent**, not just locally plausible.
 
@@ -279,6 +298,11 @@ A natural question: could the Generator just learn by itself, without a Discrimi
 **The problem:** the Generator needs matching pairs of (code vector → correct output) to learn from directly — but where would those "correct" random codes come from? One classic answer is the **auto-encoder**.
 
 An auto-encoder is two networks trained **together**:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/de9756ef-4b64-4ca1-b223-878e6bfb6d9a" width=600>
+</p> 
+
 - An **Encoder** compresses a high-dimensional input (e.g. an image) down into a compact, low-dimensional **code**.
 - A **Decoder** takes that code and tries to **reconstruct** the original input as closely as possible.
 
@@ -294,9 +318,13 @@ Once trained, **the Decoder alone is a Generator** — feed it any code vector, 
 
 ## 15. Worked Example: Reading the Pixel-Error Diagram
 
-Auto-encoders sound like a clean solution — so why do we still need a Discriminator? The slides illustrate the core weakness with a simple worked example, using an image of a hand-drawn digit "2."
+Auto-encoders sound like a clean solution — so why do we still need a Discriminator? The core weakness with a simple worked example is illustrated, using an image of a hand-drawn digit "2."
 
 **Setup:** the Generator produces an image that's supposed to match a target digit "2." The training signal is a pixel-by-pixel loss: "make the generated image **as close as possible**, pixel-by-pixel, to the target."
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/08d27e52-5eb8-4756-a81f-e13bdfbc4fd1" width=1000>
+</p>
 
 | Error type | Description | Pixel-wise loss | Does it *look* like a real "2"? |
 |---|---|---|---|
@@ -318,7 +346,19 @@ The flip side of Section 14: could the **Discriminator** learn by itself, withou
 
 **The Discriminator is a function $D: x \rightarrow \mathbb{R}$** that outputs a "how good/real is this?" score. Compared to the Generator's bottom-up, pixel-by-pixel approach, the Discriminator can more naturally catch relationships between components through **top-down evaluation** — for instance, a small learnable CNN filter can be trained specifically to check for **isolated, out-of-place pixels**, which is exactly the kind of relationship a pure pixel-by-pixel loss (Section 15) misses.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c403125d-8d6a-4744-b504-dd3d0f53540b" width=1000>
+</p>
+
 **The catch:** a Discriminator trained only on **real images** will happily learn to just output "1" (real) for everything, since it's never been shown anything to contrast against.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c403125d-8d6a-4744-b504-dd3d0f53540b" width=1000>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b9b3f2f4-4612-4d0c-9739-d45830fffc0b" width=1000>
+</p>
 
 $$
 \boxed{\text{Discriminator training needs negative (fake) samples to be meaningful}}
@@ -376,6 +416,10 @@ Some datasets come with extra information — like a class label or a text descr
 
 **Why not just use plain supervised learning for this (e.g. text $\rightarrow$ image)?** Because a network trained with a simple "get as close as possible" loss to a single target image tends to produce a **blurry average** of many plausible outputs. For example, given the word "Train," many different real train photos are all valid targets — a supervised network trying to satisfy all of them simultaneously ends up outputting something like the **statistical average** of all those trains, which looks like a vague, blurry blob rather than any single, sharp, realistic photo.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/259c30a0-42dc-461f-9a56-f876002a1e3d" width=1000>
+</p>
+
 > **Analogy:** Imagine asking 20 different artists to each draw "a train," then **overlaying all 20 drawings on top of each other** and averaging the ink density at every point. The result wouldn't look like any single train — it'd be a smudgy blur, because different artists put the chimney, windows, and wheels in slightly different spots, and averaging washes all those specific, sharp details away. That's exactly what happens when a network is trained to minimise *average* pixel distance to many valid answers at once.
 
 ### Conditional GAN (cGAN) — Fixing This with a Smarter Discriminator
@@ -386,6 +430,10 @@ $$
 \tilde{x} = G(c, z)
 $$
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ff658449-ee32-447c-abeb-ee2e60d476f6" width=800>
+</p>
+
 If the Discriminator only checks "is $x$ real or not," the Generator can get away with producing **realistic-looking images that completely ignore the condition** $c$ — because the Discriminator was never taught to check whether the image actually *matches* the given text.
 
 **The fix:** feed the Discriminator **both** $c$ and $x$ together, and train it to output a score representing **both** "is $x$ real?" **and** "does $x$ actually match $c$?"
@@ -393,6 +441,10 @@ If the Discriminator only checks "is $x$ real or not," the Generator can get awa
 $$
 D(c, x) \rightarrow \text{scalar}
 $$
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5aed4c8a-a27f-40bd-8ae8-3b10cb6e50e5">
+</p>
 
 | Pair type | Example | Label |
 |---|---|---|
@@ -426,9 +478,17 @@ $$
 
 **Image-to-Image translation** takes an input image and outputs a corresponding image in a different domain — e.g., turning a segmentation-label map into a photorealistic street scene, a black-and-white photo into colour, a day photo into a night photo, an aerial photo into a map, or a hand-drawn sketch into a photo of a bag or shoe.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/78ffe676-5111-4fcc-b231-390d3ee28938" width=600>
+</p>
+
 Just like text-to-image, a **plain supervised approach** (train a network to minimise pixel distance to one target photo) produces **blurry** results, for the same averaging reason as before.
 
 **Using a GAN instead:** the Generator takes the input image (plus optionally some noise $z$) and produces an output image; the Discriminator judges whether that output image is a **real, convincing example of the target domain** (and, in the conditional-GAN style, whether it's a good *match* for the input). Adding a small extra "as close as possible" term on top of the adversarial loss (**GAN + close**) can further nudge the output to stay faithful to the specific input, rather than just "any realistic-looking output."
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/31ff24cf-6d21-467f-a11c-c246087eabf5" width=600>
+</p>
 
 | Approach | Typical Result |
 |---|---|
@@ -445,7 +505,16 @@ Just like text-to-image, a **plain supervised approach** (train a network to min
 Conditional GANs generalise well beyond images:
 
 - **Speech Enhancement:** the Generator takes a **noisy** speech spectrogram and produces a **cleaned-up** version; the Discriminator is shown pairs of (output, noisy input) or (clean, noisy input) and judges whether the *pairing* looks like a genuine "cleaned this specific noisy clip" relationship or a fake one.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/31ff24cf-6d21-467f-a11c-c246087eabf5" width=1000>
+</p>
+
 - **Video Generation:** the Generator takes in the last several frames $t_{1:n}$ of a video and predicts the **next frame** $t_{n+1}$; the Discriminator is shown the full sequence $t_{1:n+1}$ (with either the *real* next frame or the *generated* one appended) and judges whether that **last frame** looks like a real, natural continuation or a generated/fake one.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a0b5f8d1-92a9-4d5e-a0e5-090bc58ea6d1" width=1000>
+</p>
 
 > **Analogy:** Speech enhancement with a conditional GAN is like a noise-cancelling audio engineer whose work is graded not just on "does the output sound clean?" but on **"does this clean output still sound like the same voice/sentence as the noisy recording it came from?"** Video-frame generation is like being shown a short video clip with the last second **cut off**, and being asked to guess what happens next in a way that feels like a natural, un-jarring continuation — a good guess flows smoothly; a bad one feels like an abrupt jump-cut.
 
@@ -455,17 +524,33 @@ Conditional GANs generalise well beyond images:
 
 So far, conditional GANs assumed we have **paired data** — e.g., a black-and-white photo *and* its correct colour version, side by side. But often we only have **two separate, unpaired collections**: photos in Domain $X$ (e.g. real photographs) and images in Domain $Y$ (e.g. Monet-style paintings), with **no example that says "this exact photo corresponds to this exact painting."** This is the setting for **style transfer**.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3a6f9368-3f84-4f08-b8cd-ee485ad90f73" width=600>
+</p>
+
 **The naive "direct transformation" approach:** train a Generator $G_{X \to Y}$ to take an image from $X$ and output something that a Discriminator $D_Y$ believes belongs to domain $Y$.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8d86fdc4-c78a-4364-9e92-27420dd52b73" width=600>
+</p>
+
 **The problem this runs into:** the Discriminator $D_Y$ only ever checks **"does this output look like it belongs to domain Y?"** — it never checks whether the output still has anything to do with the **specific input image** that was fed in. This opens the door for the Generator to essentially **ignore the input entirely** and just learn to output *some* generic, convincing Domain-Y-looking image every time, regardless of what photo it was given.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/161b295c-8921-4ae5-baa1-c516790acf47" width=600>
+</p>
 
 $$
 \boxed{\text{Input might get ignored} \;\Rightarrow\; \text{output looks like domain } Y \text{, but bears no relation to the specific input}}
 $$
 
-**Two partial fixes mentioned in the slides:**
+**Two partial fixes:**
 1. **Simpler generator network design** — a Generator with less capacity/flexibility is naturally forced to keep the output more closely tied to the input, since it doesn't have the "room" to fabricate something unrelated.
 2. **A pre-trained encoder as a feature-preservation check** — feed *both* the original input and the Generator's output through the same pre-trained encoder network, and add a loss term that keeps their encoded features **as close as possible**. This explicitly forces the output to preserve the input's core content, even while changing its *style*.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/815a70ce-1a61-458e-8409-8167bdbe65c8" width=1500>
+</p>
 
 > **Analogy:** Imagine hiring a translator to translate your diary from English into French, but you can **only check the French output on its own** — you never compare it back to your original diary. A lazy (or dishonest) translator could hand you back **any well-written French text about their day**, and you'd have no way to catch that it has nothing to do with what you actually wrote — as long as it *reads like fluent French*, it passes the check. That's the "input might get ignored" trap: judging only the output's *style* (fluent French / Domain Y) without ever verifying it's still faithful to the *content* of the specific input.
 
@@ -481,11 +566,11 @@ $$
 
 Take an image from Domain $X$, translate it to Domain $Y$ using $G_{X \to Y}$, then **translate it back** to Domain $X$ using $G_{Y \to X}$. The result should be **as close as possible** to the *original* starting image.
 
-$$
-x \;\xrightarrow{G_{X \to Y}}\; \tilde{y} \;\xrightarrow{G_{Y \to X}}\; x' \qquad \text{Cycle-consistency loss: make } x' \approx x
-$$
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4fab09f9-36b9-4d2e-a28a-2006573691d7" width=600>
+</p>
 
-The same check is also done in the opposite direction, starting from a real Domain-$Y$ image, translating to $X$ and back to $Y$. On top of this, ordinary Discriminators $D_X$ and $D_Y$ still check that each translated image looks convincingly like it belongs to its target domain.
+The same check is also done in the opposite direction, starting from a real Domain $Y$ image, translating to $X$ and back to $Y$. On top of this, ordinary Discriminators $D_X$ and $D_Y$ still check that each translated image looks convincingly like it belongs to its target domain.
 
 **Why this fixes the "ignoring the input" problem:** if $G_{X \to Y}$ threw away all the specific information about the input photo and just output *some generic* Domain-Y-looking image every time, then $G_{Y \to X}$ would have **no way to reliably reconstruct the original input** from that generic output — because all the input-specific details needed for a faithful round trip would already be lost. The cycle-consistency loss directly **punishes** that information loss, forcing both Generators to preserve the input's core content while still changing its style.
 
