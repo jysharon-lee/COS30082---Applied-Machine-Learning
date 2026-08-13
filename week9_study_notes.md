@@ -346,6 +346,7 @@ A photo of a ginger kitten, alongside its saliency map rendered at increasing co
 <p align="center">
   <em>Saliency map of a ginger kitten sitting on the grass</em>
 </p>
+
 - The **original photo** shows a whole kitten sitting on grass.
 - The **saliency map** highlights certain pixels in **bright blue/white**, while the rest fades to near-black.
 - The brightest regions cluster tightly around the kitten's **eyes**.
