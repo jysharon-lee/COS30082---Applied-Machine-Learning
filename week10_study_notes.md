@@ -1,4 +1,4 @@
-<img width="1216" height="112" alt="image" src="https://github.com/user-attachments/assets/9627e849-ac5b-42ba-80fb-e73c3edf48a5" /><img width="596" height="660" alt="image" src="https://github.com/user-attachments/assets/b5f79d10-8e36-4861-983f-7b19ebef694c" /><img width="532" height="528" alt="image" src="https://github.com/user-attachments/assets/5c4105e1-11ce-4d09-952c-b113ebb2b8a6" /><img width="532" height="531" alt="image" src="https://github.com/user-attachments/assets/35c651d7-b3f3-4dec-b429-48104a11b8d6" /># 📘 Week 10 Study Notes: Generative Deep Learning (GANs)
+# 📘 Week 10 Study Notes: Generative Deep Learning (GANs)
 
 > **Course:** COS30082 — Applied Machine Learning
 > **Topic:** Generative Deep Learning — Generative Adversarial Networks (GANs)
@@ -65,10 +65,18 @@ A simple story to separate two ways of "knowing" something. **A father has two k
 
 One day the father takes them to a tiny zoo with just **lions** and **elephants**. Afterwards, he points to an animal and asks: *"Is this a lion or an elephant?"*
 
-- **Kid A** mentally re-draws both a lion and an elephant from memory, compares the animal in front of him to his two drawings, and picks whichever drawing is the closest match. He answers **"Lion"** — this is a **Generative Model**: he has learned what each class *actually looks like* (he can "regenerate" it), and classifies by comparing to his own generated version.
-- **Kid B** never bothered learning what a full lion or elephant looks like — he only picked up a handful of *distinguishing features* (trunk vs. mane, size, ears) and uses those differences directly. He also answers **"Lion"** — this is a **Discriminative Model**: he draws a decision boundary between classes without ever needing to know what a "complete" lion looks like.
+- **Sharon** mentally re-draws both a lion and an elephant from memory, compares the animal in front of him to his two drawings, and picks whichever drawing is the closest match. He answers **"Lion"** — this is a **Generative Model**: he has learned what each class *actually looks like* (he can "regenerate" it), and classifies by comparing to his own generated version.
+- **Ivan** never bothered learning what a full lion or elephant looks like — he only picked up a handful of *distinguishing features* (trunk vs. mane, size, ears) and uses those differences directly. He also answers **"Lion"** — this is a **Discriminative Model**: he draws a decision boundary between classes without ever needing to know what a "complete" lion looks like.
 
-Both kids get the same right answer, but they got there in **completely different ways**.
+Both of them get the same right answer, but they got there in **completely different ways**.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/43248135-890f-458c-b061-3c46a956f97b">
+</p>
+
+<p align="center">
+  <em>Sharon (left image) vs Ivan (right image)</em>
+</p>
 
 > **Analogy in simpler terms:** Imagine two ways to tell a fake $50 note from a real one. Kid A (generative) has studied real $50 notes so closely that he could **draw one from memory** — he spots a fake because it doesn't match his mental "template." Kid B (discriminative) never learned to draw a note at all — he just memorised 3–4 quick tells (paper texture, watermark angle, colour-shifting ink) and checks only those. Kid B is faster and often just as accurate, but he'd be **useless if you asked him to draw a $50 note from scratch** — he genuinely doesn't know what the "whole" note looks like, only the differences that matter for telling real from fake.
 
@@ -353,10 +361,6 @@ The flip side of Section 14: could the **Discriminator** learn by itself, withou
 **The catch:** a Discriminator trained only on **real images** will happily learn to just output "1" (real) for everything, since it's never been shown anything to contrast against.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c403125d-8d6a-4744-b504-dd3d0f53540b" width=1000>
-</p>
-
-<p align="center">
   <img src="https://github.com/user-attachments/assets/b9b3f2f4-4612-4d0c-9739-d45830fffc0b" width=1000>
 </p>
 
@@ -571,6 +575,10 @@ Take an image from Domain $X$, translate it to Domain $Y$ using $G_{X \to Y}$, t
 </p>
 
 The same check is also done in the opposite direction, starting from a real Domain $Y$ image, translating to $X$ and back to $Y$. On top of this, ordinary Discriminators $D_X$ and $D_Y$ still check that each translated image looks convincingly like it belongs to its target domain.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/53769025-0bcb-49bc-b109-aec0a9af9985" width=600>
+</p>
 
 **Why this fixes the "ignoring the input" problem:** if $G_{X \to Y}$ threw away all the specific information about the input photo and just output *some generic* Domain-Y-looking image every time, then $G_{Y \to X}$ would have **no way to reliably reconstruct the original input** from that generic output — because all the input-specific details needed for a faithful round trip would already be lost. The cycle-consistency loss directly **punishes** that information loss, forcing both Generators to preserve the input's core content while still changing its style.
 
