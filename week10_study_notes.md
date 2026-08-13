@@ -61,11 +61,11 @@ $$
 
 ## 2. Generative vs Discriminative — A Story
 
-A simple story to separate two ways of "knowing" something. **A father has two kids, Kid A and Kid B.** Kid A learns *everything in depth* about what he sees. Kid B only learns the *differences* between things.
+A simple story to separate two ways of "knowing" something. **A father has two kids, Sharon and Ivan.** Sharon learns *everything in depth* about what she sees. Ivan only learns the *differences* between things.
 
 One day the father takes them to a tiny zoo with just **lions** and **elephants**. Afterwards, he points to an animal and asks: *"Is this a lion or an elephant?"*
 
-- **Sharon** mentally re-draws both a lion and an elephant from memory, compares the animal in front of him to his two drawings, and picks whichever drawing is the closest match. He answers **"Lion"** — this is a **Generative Model**: he has learned what each class *actually looks like* (he can "regenerate" it), and classifies by comparing to his own generated version.
+- **Sharon** mentally re-draws both a lion and an elephant from memory, compares the animal in front of her to her two drawings, and picks whichever drawing is the closest match. She answers **"Lion"** — this is a **Generative Model**: she has learned what each class *actually looks like* (he can "regenerate" it), and classifies by comparing to his own generated version.
 - **Ivan** never bothered learning what a full lion or elephant looks like — he only picked up a handful of *distinguishing features* (trunk vs. mane, size, ears) and uses those differences directly. He also answers **"Lion"** — this is a **Discriminative Model**: he draws a decision boundary between classes without ever needing to know what a "complete" lion looks like.
 
 Both of them get the same right answer, but they got there in **completely different ways**.
