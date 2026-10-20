@@ -190,3 +190,70 @@ def run_experiment(name, tag="", limit_batches=None, **overrides):
 
     print(f"\n{run} TEST | top1 {te['top1']:.4f} | top5 {te['top5']:.4f} | macro-F1 {macro_f1:.4f}")
     return summary
+
+# --- Mixup & CutMix Helper ---
+def mixup_cutmix_batch(x, y, num_classes=200, mixup_alpha=0.8, cutmix_alpha=1.0, prob=0.5):
+    """Applies Mixup or CutMix with probability `prob` per batch."""
+    if np.random.rand() > prob:
+        # One-hot encode without mixing
+        y_onehot = torch.zeros(y.size(0), num_classes, device=y.device).scatter_(1, y.unsqueeze(1), 1.0)
+        return x, y_onehot
+
+    # Convert targets to one-hot for soft target mixing
+    y_onehot = torch.zeros(y.size(0), num_classes, device=y.device).scatter_(1, y.unsqueeze(1), 1.0)
+    
+    lam = np.random.beta(mixup_alpha, mixup_alpha) if np.random.rand() < 0.5 else np.random.beta(cutmix_alpha, cutmix_alpha)
+    perm = torch.randperm(x.size(0))
+    y_mixed = lam * y_onehot + (1 - lam) * y_onehot[perm]
+
+    if np.random.rand() < 0.5:
+        # Mixup (blend pixel intensities)
+        x_mixed = lam * x + (1 - lam) * x[perm]
+    else:
+        # CutMix (cut and paste a bounding box)
+        x_mixed = x.clone()
+        B, C, H, W = x.shape
+        cut_w = int(W * np.sqrt(1 - lam))
+        cut_h = int(H * np.sqrt(1 - lam))
+        cx = np.random.randint(W)
+        cy = np.random.randint(H)
+        x1 = np.clip(cx - cut_w // 2, 0, W)
+        y1 = np.clip(cy - cut_h // 2, 0, H)
+        x2 = np.clip(cx + cut_w // 2, 0, W)
+        y2 = np.clip(cy + cut_h // 2, 0, H)
+        x_mixed[:, :, y1:y2, x1:x2] = x[perm, :, y1:y2, x1:x2]
+        # Adjust lambda to exact box area
+        lam_adj = 1 - ((x2 - x1) * (y2 - y1) / (W * H))
+        y_mixed = lam_adj * y_onehot + (1 - lam_adj) * y_onehot[perm]
+
+    return x_mixed, y_mixed
+
+
+# --- Assignment Per-Class Accuracy Metric ---
+def compute_avg_per_class_acc(preds, targets, num_classes=200):
+    """
+    Computes Average accuracy per class: Ave = (1/C) * sum(T_i)
+    as specified in Section 4 of the assignment brief.
+    """
+    accs = []
+    for c in range(num_classes):
+        mask = (targets == c)
+        if mask.sum() > 0:
+            accs.append((preds[mask] == targets[mask]).mean())
+    return float(np.mean(accs))
+
+# Inside train_one_epoch loop:
+x, y = _to_device(x, y)
+x, y_soft = mixup_cutmix_batch(x, y, num_classes=CFG.NUM_CLASSES, prob=0.5)
+
+optimizer.zero_grad(set_to_none=True)
+with torch.autocast("cuda", dtype=torch.float16):
+    out = model(x)
+    # PyTorch CrossEntropyLoss natively supports soft target distributions (y_soft)
+    loss = torch.nn.functional.cross_entropy(out, y_soft, label_smoothing=hp["label_smoothing"])
+
+
+# In test evaluation:
+avg_per_class = compute_avg_per_class_acc(te["preds"], te["targets"], CFG.NUM_CLASSES)
+summary["test_avg_per_class_acc"] = avg_per_class
+print(f"\n{run} TEST | top1 {te['top1']:.4f} | avg_per_class {avg_per_class:.4f} | top5 {te['top5']:.4f}")
