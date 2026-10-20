@@ -24,7 +24,7 @@ class _Config:
     VAL_FRAC = 0.15
     BATCH_SIZE = 32                      # T4 (16GB) + AMP: 32 is safe, try 64 for ResNet/EffNet
     NUM_WORKERS = min(8, os.cpu_count() or 2)
-    UNIFORM_RES = True                   # True: all models 224px | False: EffNet-B2 at native 260px
+    UNIFORM_RES = False                  # False: EffNet-B2 at native 260px, ResNet/Swin at 224px
 
 
 CFG = _Config()

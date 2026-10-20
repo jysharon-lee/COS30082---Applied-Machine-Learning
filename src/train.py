@@ -18,42 +18,23 @@ DEFAULTS = dict(
     weight_decay=0.05,
     warmup_epochs=2,
     label_smoothing=0.1,
-    mixup_prob=0.5,
+    mixup_prob=0.0,       # 0.0 default; 0.2-0.3 for gentle Mixup
     patience=8,           # early stopping on validation top-1
     grad_clip=1.0,
 )
 
 
-def mixup_cutmix_batch(x, y, num_classes=200, mixup_alpha=0.8, cutmix_alpha=1.0, prob=0.5):
-    """Applies Mixup or CutMix with probability `prob` per batch."""
+def mixup_cutmix_batch(x, y, num_classes=200, mixup_alpha=0.2, prob=0.0):
+    """Applies gentle Mixup (no CutMix) with probability `prob` to avoid occluding fine-grained bird features."""
     if prob <= 0 or np.random.rand() > prob:
         y_onehot = torch.zeros(y.size(0), num_classes, device=y.device).scatter_(1, y.unsqueeze(1), 1.0)
         return x, y_onehot
 
     y_onehot = torch.zeros(y.size(0), num_classes, device=y.device).scatter_(1, y.unsqueeze(1), 1.0)
-    lam = np.random.beta(mixup_alpha, mixup_alpha) if np.random.rand() < 0.5 else np.random.beta(cutmix_alpha, cutmix_alpha)
+    lam = np.random.beta(mixup_alpha, mixup_alpha)
     perm = torch.randperm(x.size(0))
     y_mixed = lam * y_onehot + (1 - lam) * y_onehot[perm]
-
-    if np.random.rand() < 0.5:
-        # Mixup (blend pixel intensities)
-        x_mixed = lam * x + (1 - lam) * x[perm]
-    else:
-        # CutMix (cut and paste a bounding box)
-        x_mixed = x.clone()
-        B, C, H, W = x.shape
-        cut_w = int(W * np.sqrt(1 - lam))
-        cut_h = int(H * np.sqrt(1 - lam))
-        cx = np.random.randint(W)
-        cy = np.random.randint(H)
-        x1 = np.clip(cx - cut_w // 2, 0, W)
-        y1 = np.clip(cy - cut_h // 2, 0, H)
-        x2 = np.clip(cx + cut_w // 2, 0, W)
-        y2 = np.clip(cy + cut_h // 2, 0, H)
-        x_mixed[:, :, y1:y2, x1:x2] = x[perm, :, y1:y2, x1:x2]
-        lam_adj = 1.0 - ((x2 - x1) * (y2 - y1) / (W * H))
-        y_mixed = lam_adj * y_onehot + (1.0 - lam_adj) * y_onehot[perm]
-
+    x_mixed = lam * x + (1 - lam) * x[perm]
     return x_mixed, y_mixed
 
 
@@ -96,14 +77,17 @@ def _to_device(x, y):
 
 
 def train_one_epoch(model, loader, optimizer, scheduler, scaler, grad_clip,
-                    label_smoothing=0.1, mixup_prob=0.5, limit_batches=None):
+                    label_smoothing=0.1, mixup_prob=0.0, limit_batches=None):
     model.train()
     loss_sum, correct, n = 0.0, 0, 0
     for i, (x, y) in enumerate(loader):
         if limit_batches and i >= limit_batches:
             break
         x, y = _to_device(x, y)
-        x, y_soft = mixup_cutmix_batch(x, y, num_classes=CFG.NUM_CLASSES, prob=mixup_prob)
+        if mixup_prob > 0:
+            x, y_soft = mixup_cutmix_batch(x, y, num_classes=CFG.NUM_CLASSES, prob=mixup_prob)
+        else:
+            y_soft = y
 
         optimizer.zero_grad(set_to_none=True)
         with torch.autocast("cuda", dtype=torch.float16):
@@ -123,7 +107,8 @@ def train_one_epoch(model, loader, optimizer, scheduler, scaler, grad_clip,
 
 
 @torch.no_grad()
-def evaluate(model, loader, criterion=None):
+def evaluate(model, loader, criterion=None, tta=False):
+    """Evaluates the model. If tta=True, averages logits of original and horizontally flipped images."""
     model.eval()
     loss_sum, top1, top5, n = 0.0, 0, 0, 0
     all_pred, all_true = [], []
@@ -131,8 +116,15 @@ def evaluate(model, loader, criterion=None):
         x, y = _to_device(x, y)
         with torch.autocast("cuda", dtype=torch.float16):
             out = model(x)
+            if tta:
+                # Test-Time Augmentation (TTA) via horizontal flip
+                x_flip = torch.flip(x, dims=[-1])
+                out_flip = model(x_flip)
+                out = (out + out_flip) / 2.0
+
             if criterion is not None:
                 loss_sum += criterion(out, y).item() * y.size(0)
+
         top5_idx = out.topk(5, dim=1).indices
         top1 += (top5_idx[:, 0] == y).sum().item()
         top5 += (top5_idx == y.unsqueeze(1)).any(1).sum().item()
@@ -154,10 +146,46 @@ def _atomic_save(obj, path: Path):
     tmp.replace(path)   # avoids a corrupt checkpoint if Colab disconnects mid-write
 
 
+def evaluate_checkpoint(name: str, tag: str = "", ckpt_type: str = "best", tta: bool = True):
+    """
+    Evaluates an already saved checkpoint on the test set.
+    Provides standard test evaluation and Test-Time Augmentation (TTA) in one go.
+    """
+    run = f"{name}{('_' + tag) if tag else ''}"
+    ckpt_path = CFG.CKPT_DIR / f"{run}_{ckpt_type}.pth"
+    if not ckpt_path.exists():
+        raise FileNotFoundError(f"Checkpoint not found at: {ckpt_path}")
+
+    seed_everything()
+    _, _, test_loader = make_loaders(name)
+    model = build_model(name)
+    model.load_state_dict(torch.load(ckpt_path, map_location=device, weights_only=False))
+
+    eval_criterion = nn.CrossEntropyLoss()
+    print(f"\n==================== Evaluating {run} ({ckpt_type}) ====================")
+
+    # 1. Standard evaluation
+    te_std = evaluate(model, test_loader, eval_criterion, tta=False)
+    print(f"Standard Test : Top-1 = {te_std['top1']:.4f} ({te_std['top1']*100:.2f}%) | "
+          f"Per-Class = {te_std['avg_per_class']:.4f} ({te_std['avg_per_class']*100:.2f}%) | "
+          f"Top-5 = {te_std['top5']:.4f}")
+
+    # 2. TTA evaluation
+    if tta:
+        te_tta = evaluate(model, test_loader, eval_criterion, tta=True)
+        gain = (te_tta["top1"] - te_std["top1"]) * 100
+        gain_pc = (te_tta["avg_per_class"] - te_std["avg_per_class"]) * 100
+        print(f"With TTA (Flip): Top-1 = {te_tta['top1']:.4f} ({te_tta['top1']*100:.2f}%) | "
+              f"Per-Class = {te_tta['avg_per_class']:.4f} ({te_tta['avg_per_class']*100:.2f}%) | "
+              f"Top-5 = {te_tta['top5']:.4f} [Gain: {gain:+.2f}% Top-1, {gain_pc:+.2f}% Per-Class]")
+        return te_std, te_tta
+
+    return te_std
+
+
 def run_experiment(name, tag="", limit_batches=None, **overrides):
     """Train one model end-to-end, checkpoint every epoch, resume automatically,
-    then evaluate the best checkpoint on the test set.
-    tag: suffix for file names (use tag='smoke' for quick tests, tag='aug' for augmented)."""
+    then evaluate the best checkpoint on the test set (with and without TTA)."""
     hp = {**DEFAULTS, **overrides}
     run = f"{name}{('_' + tag) if tag else ''}"
     CFG.CKPT_DIR.mkdir(parents=True, exist_ok=True)
@@ -196,9 +224,9 @@ def run_experiment(name, tag="", limit_batches=None, **overrides):
         tr_loss, tr_acc = train_one_epoch(model, train_loader, optimizer, scheduler,
                                           scaler, hp["grad_clip"],
                                           label_smoothing=hp["label_smoothing"],
-                                          mixup_prob=hp.get("mixup_prob", 0.5),
+                                          mixup_prob=hp.get("mixup_prob", 0.0),
                                           limit_batches=limit_batches)
-        va = evaluate(model, val_loader, eval_criterion)
+        va = evaluate(model, val_loader, eval_criterion, tta=False)
         secs = time.time() - t0
 
         row = dict(epoch=epoch + 1, train_loss=tr_loss, train_acc=tr_acc, val_loss=va["loss"],
@@ -230,13 +258,16 @@ def run_experiment(name, tag="", limit_batches=None, **overrides):
             break
 
     # ---- Final test evaluation with the best checkpoint ----
-    model.load_state_dict(torch.load(best_path, map_location=device))
-    te = evaluate(model, test_loader, eval_criterion)
+    model.load_state_dict(torch.load(best_path, map_location=device, weights_only=False))
+    te = evaluate(model, test_loader, eval_criterion, tta=False)
+    te_tta = evaluate(model, test_loader, eval_criterion, tta=True)
     macro_f1 = f1_score(te["targets"], te["preds"], average="macro")
+
     summary = dict(
         model=name, params_m=round(total_m, 2), best_val_top1=best_acc,
         test_top1=te["top1"], test_avg_per_class=te["avg_per_class"],
         test_top5=te["top5"], test_macro_f1=macro_f1,
+        test_tta_top1=te_tta["top1"], test_tta_avg_per_class=te_tta["avg_per_class"],
         epochs_run=len(history),
         avg_epoch_sec=float(np.mean([h["epoch_sec"] for h in history])),
         peak_gpu_mem_gb=round(torch.cuda.max_memory_allocated() / 1e9, 2),
@@ -246,5 +277,7 @@ def run_experiment(name, tag="", limit_batches=None, **overrides):
         json.dump(summary, f, indent=2)
     np.savez(CFG.RESULTS_DIR / f"{run}_test_preds.npz", preds=te["preds"], targets=te["targets"])
 
-    print(f"\n{run} TEST | top1 {te['top1']:.4f} | avg_per_class {te['avg_per_class']:.4f} | top5 {te['top5']:.4f} | macro-F1 {macro_f1:.4f}")
+    print(f"\n{run} TEST | top1 {te['top1']:.4f} (TTA: {te_tta['top1']:.4f}) | "
+          f"avg_per_class {te['avg_per_class']:.4f} (TTA: {te_tta['avg_per_class']:.4f}) | "
+          f"top5 {te['top5']:.4f} | macro-F1 {macro_f1:.4f}")
     return summary
