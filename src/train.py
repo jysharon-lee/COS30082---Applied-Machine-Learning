@@ -19,7 +19,8 @@ DEFAULTS = dict(
     warmup_epochs=2,
     label_smoothing=0.1,
     mixup_prob=0.0,       # 0.0 default; 0.2-0.3 for gentle Mixup
-    patience=8,           # early stopping on validation top-1
+    layer_decay=1.0,      # Set < 1.0 (e.g. 0.85) to enable Layer-Wise Learning Rate Decay (LLRD) for Swin-T
+    patience=8,           # Early stopping on validation top-1
     grad_clip=1.0,
 )
 
@@ -51,15 +52,62 @@ def compute_avg_per_class_acc(preds, targets, num_classes=200):
     return float(np.mean(accs))
 
 
-def make_optimizer(model, name, lr_backbone, lr_head, weight_decay):
+def get_swin_layer_id(param_name: str) -> int:
+    """
+    Maps Swin-T parameter names to hierarchical stage IDs (0 to 4):
+      0: Stage 1 & Patch Embedding (low-level edges and colors)
+      1: Stage 2 (textures / local patterns)
+      2: Stage 3 (complex parts / shapes)
+      3: Stage 4 & Final LayerNorm (high-level semantic representation)
+      4: Classification Head
+    """
+    if param_name.startswith("head"):
+        return 4
+    if param_name.startswith("norm") or param_name.startswith("features.7"):
+        return 3
+    if param_name.startswith("features.5") or param_name.startswith("features.6"):
+        return 2
+    if param_name.startswith("features.3") or param_name.startswith("features.4"):
+        return 1
+    return 0  # features.0, 1, 2
+
+
+def make_optimizer(model, name, lr_backbone, lr_head, weight_decay, layer_decay=1.0):
     key = HEAD_KEY[name]
-    head, backbone = [], []
-    for n, p in model.named_parameters():
-        if p.requires_grad:
-            (head if n.startswith(key) else backbone).append(p)
-    return torch.optim.AdamW(
-        [{"params": backbone, "lr": lr_backbone}, {"params": head, "lr": lr_head}],
-        weight_decay=weight_decay)
+    if name == "swin_t" and layer_decay < 1.0:
+        groups = {i: [] for i in range(5)}
+        for n, p in model.named_parameters():
+            if not p.requires_grad:
+                continue
+            lid = get_swin_layer_id(n)
+            groups[lid].append(p)
+
+        param_groups = [
+            {"params": groups[4], "lr": lr_head, "name": "head"},
+        ]
+        # Deeper stages (3) down to shallow stages (0)
+        for i in range(3, -1, -1):
+            decay_factor = layer_decay ** (3 - i)
+            param_groups.append({
+                "params": groups[i],
+                "lr": lr_backbone * decay_factor,
+                "name": f"stage_{i+1}",
+            })
+        print(f"[LLRD] Swin-T layer decay active (decay={layer_decay:.2f}): "
+              f"Head={lr_head:.1e} | Stage4={lr_backbone:.1e} | "
+              f"Stage3={lr_backbone*layer_decay:.1e} | "
+              f"Stage2={lr_backbone*(layer_decay**2):.1e} | "
+              f"Stage1={lr_backbone*(layer_decay**3):.1e}")
+        return torch.optim.AdamW(param_groups, weight_decay=weight_decay)
+    else:
+        head, backbone = [], []
+        for n, p in model.named_parameters():
+            if p.requires_grad:
+                (head if n.startswith(key) else backbone).append(p)
+        return torch.optim.AdamW(
+            [{"params": backbone, "lr": lr_backbone, "name": "backbone"},
+             {"params": head, "lr": lr_head, "name": "head"}],
+            weight_decay=weight_decay)
 
 
 def make_scheduler(optimizer, total_steps, warmup_steps):
@@ -200,7 +248,8 @@ def run_experiment(name, tag="", limit_batches=None, **overrides):
     total_m, _ = count_params(model)
 
     steps_per_epoch = len(train_loader)
-    optimizer = make_optimizer(model, name, hp["lr_backbone"], hp["lr_head"], hp["weight_decay"])
+    optimizer = make_optimizer(model, name, hp["lr_backbone"], hp["lr_head"], hp["weight_decay"],
+                               layer_decay=hp.get("layer_decay", 1.0))
     scheduler = make_scheduler(optimizer, hp["epochs"] * steps_per_epoch, hp["warmup_epochs"] * steps_per_epoch)
     scaler = torch.amp.GradScaler("cuda")
     eval_criterion = nn.CrossEntropyLoss()
@@ -229,9 +278,10 @@ def run_experiment(name, tag="", limit_batches=None, **overrides):
         va = evaluate(model, val_loader, eval_criterion, tta=False)
         secs = time.time() - t0
 
+        head_lr = next((g["lr"] for g in optimizer.param_groups if g.get("name") == "head"), optimizer.param_groups[-1]["lr"])
         row = dict(epoch=epoch + 1, train_loss=tr_loss, train_acc=tr_acc, val_loss=va["loss"],
                    val_top1=va["top1"], val_avg_per_class=va["avg_per_class"], val_top5=va["top5"],
-                   epoch_sec=secs, lr_head=optimizer.param_groups[1]["lr"])
+                   epoch_sec=secs, lr_head=head_lr)
         history.append(row)
 
         improved = va["top1"] > best_acc
