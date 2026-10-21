@@ -240,4 +240,4 @@ with gr.Blocks(title="CUB-200 Bird Classifier") as demo:
         """)
 
 if __name__ == "__main__":
-    demo.launch(theme=THEME, css=CUSTOM_CSS)
+    demo.launch(theme=THEME, css=CUSTOM_CSS, share=True)
