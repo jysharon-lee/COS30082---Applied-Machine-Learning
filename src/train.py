@@ -218,6 +218,11 @@ def evaluate_checkpoint(name: str, tag: str = "", ckpt_type: str = "best", tta: 
           f"Per-Class = {te_std['avg_per_class']:.4f} ({te_std['avg_per_class']*100:.2f}%) | "
           f"Top-5 = {te_std['top5']:.4f}")
 
+    # Save test predictions for confusion matrix / error analysis
+    CFG.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    np.savez(CFG.RESULTS_DIR / f"{run}_test_preds.npz", preds=te_std["preds"], targets=te_std["targets"])
+    print(f"Saved test predictions to: {CFG.RESULTS_DIR / f'{run}_test_preds.npz'}")
+
     # 2. TTA evaluation
     if tta:
         te_tta = evaluate(model, test_loader, eval_criterion, tta=True)
