@@ -25,8 +25,8 @@ DEFAULTS = dict(
 )
 
 
-def mixup_cutmix_batch(x, y, num_classes=200, mixup_alpha=0.2, prob=0.0):
-    """Applies gentle Mixup (no CutMix) with probability `prob` to avoid occluding fine-grained bird features."""
+def mixup_batch(x, y, num_classes=200, mixup_alpha=0.2, prob=0.0):
+    """Applies gentle Mixup with probability `prob` to avoid occluding fine-grained bird features."""
     if prob <= 0 or np.random.rand() > prob:
         y_onehot = torch.zeros(y.size(0), num_classes, device=y.device).scatter_(1, y.unsqueeze(1), 1.0)
         return x, y_onehot
@@ -133,7 +133,7 @@ def train_one_epoch(model, loader, optimizer, scheduler, scaler, grad_clip,
             break
         x, y = _to_device(x, y)
         if mixup_prob > 0:
-            x, y_soft = mixup_cutmix_batch(x, y, num_classes=CFG.NUM_CLASSES, prob=mixup_prob)
+            x, y_soft = mixup_batch(x, y, num_classes=CFG.NUM_CLASSES, prob=mixup_prob)
         else:
             y_soft = y
 
