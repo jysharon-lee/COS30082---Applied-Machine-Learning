@@ -10,9 +10,9 @@ import torch
 import torch.nn as nn
 from torchvision import models, transforms
 
-# -----------------------------------------------------------------------------
+
 # 1. Path & Label Setup
-# -----------------------------------------------------------------------------
+
 BASE_DIR = Path(__file__).resolve().parent
 
 def locate_file(filename):
@@ -28,9 +28,9 @@ if not CLASS_MAP_PATH.exists():
 with open(CLASS_MAP_PATH, "r") as f:
     CLASS_NAMES = json.load(f)
 
-# -----------------------------------------------------------------------------
+
 # 2. Multi-Model Architecture Loader & Registry
-# -----------------------------------------------------------------------------
+
 MODEL_SPECS = {
     "Swin-T (Champion ViT)": {
         "file": "swin_t_best.pth",
@@ -117,9 +117,9 @@ TRANSFORMS = {
     260: get_transform(260),
 }
 
-# -----------------------------------------------------------------------------
+
 # 3. Explainable AI: Universal Grad-CAM Heatmap
-# -----------------------------------------------------------------------------
+
 def compute_attention_heatmap(model, input_tensor, target_class_idx, orig_image, spec):
     try:
         features, gradients = [], []
@@ -177,9 +177,9 @@ def compute_attention_heatmap(model, input_tensor, target_class_idx, orig_image,
         print(f"Heatmap computation notice: {e}")
         return None
 
-# -----------------------------------------------------------------------------
+
 # 4. Inference Logic
-# -----------------------------------------------------------------------------
+
 def classify_bird(image, selected_arch):
     if image is None:
         return "", None, None, ""
@@ -234,9 +234,9 @@ def classify_bird(image, selected_arch):
     latency_str = f"Architecture: {selected_arch} | Resolution: {res}px | Latency: {elapsed_ms:.1f} ms (PyTorch CPU)"
     return callout_html, heatmap_img, predictions, latency_str
 
-# -----------------------------------------------------------------------------
+
 # 5. High-Contrast Dark-Mode Compatible CSS & UI
-# -----------------------------------------------------------------------------
+
 CUSTOM_CSS = """
 body, .gradio-container {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

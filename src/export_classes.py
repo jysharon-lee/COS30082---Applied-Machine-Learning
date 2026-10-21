@@ -12,12 +12,12 @@ with open(train_txt, "r") as f:
         img_name, label = line.rsplit(" ", 1)
         label_idx = int(label)
         if label_idx not in classes:
-            # Format "Black_footed_Albatross_0019_..." -> "Black-footed Albatross"
+            # Format
             species_raw = "_".join(img_name.split("_")[:-2])
             clean_name = species_raw.replace("_", " ")
             classes[label_idx] = clean_name
 
-# Sort in order 0 to 199
+# Sort in order
 sorted_classes = [classes[i] for i in range(len(classes))]
 with open("classes.json", "w") as f:
     json.dump(sorted_classes, f, indent=2)

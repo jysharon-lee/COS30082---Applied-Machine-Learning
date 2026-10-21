@@ -12,7 +12,7 @@ MODEL_RES = {"resnet101": 224, "efficientnet_b2": 260, "swin_t": 224}
 
 
 def build_image_index(root: Path):
-    """basename -> full path, so images can live anywhere under DATA_ROOT."""
+    """basename = full path, so images can live anywhere under DATA_ROOT."""
     idx = {}
     for p in Path(root).rglob("*"):
         if p.suffix.lower() in {".jpg", ".jpeg", ".png"}:
@@ -37,7 +37,7 @@ class BirdDataset(Dataset):
         self.samples, self.missing = [], []
         for name, label in items:
             path = img_index.get(name)
-            if path is None:  # e.g. train.txt entries ending in "xxx.jpg"
+            if path is None:  # train.txt entries ending in "xxx.jpg"
                 self.missing.append(name)
             else:
                 self.samples.append((path, label))

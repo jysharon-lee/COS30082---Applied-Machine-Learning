@@ -69,7 +69,7 @@ def get_swin_layer_id(param_name: str) -> int:
         return 2
     if param_name.startswith("features.3") or param_name.startswith("features.4"):
         return 1
-    return 0  # features.0, 1, 2
+    return 0  # features 0, 1, 2
 
 
 def make_optimizer(model, name, lr_backbone, lr_head, weight_decay, layer_decay=1.0):
@@ -307,7 +307,7 @@ def run_experiment(name, tag="", limit_batches=None, **overrides):
             print(f"Early stopping: no val improvement for {hp['patience']} epochs.")
             break
 
-    # ---- Final test evaluation with the best checkpoint ----
+    # Final test evaluation with the best checkpoint
     model.load_state_dict(torch.load(best_path, map_location=device, weights_only=False))
     te = evaluate(model, test_loader, eval_criterion, tta=False)
     te_tta = evaluate(model, test_loader, eval_criterion, tta=True)
