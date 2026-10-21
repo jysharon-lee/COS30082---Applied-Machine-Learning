@@ -40,7 +40,6 @@ All models were evaluated under identical data partitions (85% train / 15% strat
 | **Swin-T (LLRD + TTA)** | Hierarchical ViT + TTA | 27.7 M | 224 px | 84.80% | — | — | **+0.91% gain** from Test-Time Augmentation |
 | **Swin-T (Champion)** | **Hierarchical ViT** | **27.7 M** | **224 px** | **86.05%** | **85.78%** | **96.10%** | **Champion Model** (highest accuracy across all metrics) |
 
-*Metric Formula: Average Per-Class Accuracy is computed as $Ave = \frac{1}{C}\sum_{i=1}^C T_i$, where $C = 200$ and $T_i$ is the accuracy for class $i$.*
 
 ---
 
