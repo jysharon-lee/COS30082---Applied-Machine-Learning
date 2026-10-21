@@ -4,199 +4,243 @@ from pathlib import Path
 from PIL import Image
 import gradio as gr
 import numpy as np
+import matplotlib
 import matplotlib.cm as cm
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
 
 # -----------------------------------------------------------------------------
-# 1. Model & Label Loading (Robust path resolution)
+# 1. Path & Label Setup
 # -----------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name == "src" else BASE_DIR
 
-CLASS_MAP_PATH = BASE_DIR / "classes.json" if (BASE_DIR / "classes.json").exists() else PROJECT_ROOT / "classes.json"
-CKPT_PATH = BASE_DIR / "swin_t_best.pth" if (BASE_DIR / "swin_t_best.pth").exists() else PROJECT_ROOT / "swin_t_best.pth"
+def locate_file(filename):
+    for p in [BASE_DIR / filename, BASE_DIR.parent / filename, Path(filename)]:
+        if p.exists():
+            return p
+    return BASE_DIR / filename
 
+CLASS_MAP_PATH = locate_file("classes.json")
 if not CLASS_MAP_PATH.exists():
     raise FileNotFoundError(f"Missing 'classes.json'. Looked in: {CLASS_MAP_PATH}")
 
 with open(CLASS_MAP_PATH, "r") as f:
     CLASS_NAMES = json.load(f)
 
+# -----------------------------------------------------------------------------
+# 2. Multi-Model Architecture Loader & Registry
+# -----------------------------------------------------------------------------
+MODEL_SPECS = {
+    "Swin-T (Champion ViT)": {
+        "file": "swin_t_best.pth",
+        "res": 224,
+        "acc": "86.05%",
+        "builder": lambda: models.swin_t(weights=None),
+        "head_attr": "head",
+        "cam_target": lambda m: m.features[7],
+        "is_vit": True,
+    },
+    "ResNet-101 (Deep CNN)": {
+        "file": "resnet101_best.pth",
+        "res": 224,
+        "acc": "84.50%",
+        "builder": lambda: models.resnet101(weights=None),
+        "head_attr": "fc",
+        "cam_target": lambda m: m.layer4,
+        "is_vit": False,
+    },
+    "EfficientNet-B2 (Native 260px)": {
+        "file": "efficientnet_b2_native260_best.pth",
+        "alt_file": "efficientnet_b2_best.pth",
+        "res": 260,
+        "acc": "84.70%",
+        "builder": lambda: models.efficientnet_b2(weights=None),
+        "head_attr": "classifier",
+        "cam_target": lambda m: m.features[-1],
+        "is_vit": False,
+    },
+}
 
-def load_classifier(ckpt_path: Path):
-    model = models.swin_t(weights=None)
-    model.head = nn.Linear(model.head.in_features, len(CLASS_NAMES))
+LOADED_MODELS = {}
 
-    if ckpt_path.exists():
-        state_dict = torch.load(ckpt_path, map_location=torch.device("cpu"), weights_only=False)
+def get_model(arch_name):
+    if arch_name in LOADED_MODELS:
+        return LOADED_MODELS[arch_name]
+
+    spec = MODEL_SPECS[arch_name]
+    m = spec["builder"]()
+
+    # Modify classification head for 200 classes
+    head_attr = spec["head_attr"]
+    if head_attr == "classifier":
+        m.classifier[1] = nn.Linear(m.classifier[1].in_features, len(CLASS_NAMES))
+    elif head_attr == "fc":
+        m.fc = nn.Linear(m.fc.in_features, len(CLASS_NAMES))
+    elif head_attr == "head":
+        m.head = nn.Linear(m.head.in_features, len(CLASS_NAMES))
+
+    # Locate checkpoint
+    ckpt_file = locate_file(spec["file"])
+    if not ckpt_file.exists() and "alt_file" in spec:
+        ckpt_file = locate_file(spec["alt_file"])
+
+    is_loaded = False
+    if ckpt_file.exists():
+        state_dict = torch.load(ckpt_file, map_location=torch.device("cpu"), weights_only=False)
         if "model" in state_dict:
             state_dict = state_dict["model"]
-        model.load_state_dict(state_dict)
+        m.load_state_dict(state_dict)
+        is_loaded = True
+        print(f"Loaded {arch_name} from {ckpt_file}")
     else:
-        print(f"Warning: Checkpoint '{ckpt_path}' not found! Running in demo uninitialized mode.")
+        print(f"Notice: Checkpoint for {arch_name} not found at {ckpt_file}.")
 
-    model.eval()
-    return model
+    m.eval()
+    LOADED_MODELS[arch_name] = (m, is_loaded, spec["res"])
+    return LOADED_MODELS[arch_name]
 
+# Preload default champion model
+get_model("Swin-T (Champion ViT)")
 
-MODEL = load_classifier(CKPT_PATH)
+# Transforms
+def get_transform(resolution):
+    return transforms.Compose([
+        transforms.Resize(int(resolution * 1.14)),
+        transforms.CenterCrop(resolution),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
 
-EVAL_TRANSFORM = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-])
-
-# -----------------------------------------------------------------------------
-# 2. Explainable AI: Grad-CAM Saliency Heatmap for Swin-T
-# -----------------------------------------------------------------------------
-def compute_attention_heatmap(model, input_tensor, target_class_idx, orig_image):
-    """
-    Computes class-activation map (Grad-CAM) at Stage 4 of Swin-T
-    and overlays it onto the original image.
-    """
-    features, gradients = [], []
-
-    def f_hook(module, inp, out):
-        features.append(out)
-
-    def b_hook(module, grad_in, grad_out):
-        gradients.append(grad_out[0])
-
-    # Hook into deepest Swin Transformer block (Stage 4)
-    target_layer = model.features[7]
-    h_f = target_layer.register_forward_hook(f_hook)
-    h_b = target_layer.register_full_backward_hook(b_hook)
-
-    model.zero_grad()
-    x = input_tensor.clone().detach().requires_grad_(True)
-    out = model(x)
-    loss = out[0, target_class_idx]
-    loss.backward()
-
-    h_f.remove()
-    h_b.remove()
-
-    if not features or not gradients:
-        return orig_image.resize((224, 224))
-
-    feat = features[0]   # Shape: (1, 7, 7, 768)
-    grad = gradients[0]  # Shape: (1, 7, 7, 768)
-
-    weights = grad.mean(dim=(1, 2), keepdim=True)
-    cam = (weights * feat).sum(dim=-1).squeeze(0)
-    cam = torch.relu(cam)
-    cam = (cam - cam.min()) / (cam.max() - cam.min() + 1e-8)
-
-    # Upsample heatmap from 7x7 to 224x224
-    cam_up = torch.nn.functional.interpolate(
-        cam.unsqueeze(0).unsqueeze(0), size=(224, 224), mode="bilinear", align_corners=False
-    ).squeeze().detach().numpy()
-
-    # Map to heatmap colors (inferno colormap)
-    colormap = cm.get_cmap("inferno")
-    heatmap = colormap(cam_up)[:, :, :3]
-
-    # Blend with original resized image
-    base_img = np.array(orig_image.resize((224, 224)).convert("RGB")) / 255.0
-    overlay = 0.52 * base_img + 0.48 * heatmap
-    overlay = np.clip(overlay, 0.0, 1.0)
-    return Image.fromarray((overlay * 255).astype(np.uint8))
-
+TRANSFORMS = {
+    224: get_transform(224),
+    260: get_transform(260),
+}
 
 # -----------------------------------------------------------------------------
-# 3. Main Inference Logic (with OOD Uncertainty Detection)
+# 3. Explainable AI: Universal Grad-CAM Heatmap
 # -----------------------------------------------------------------------------
-OOD_CONFIDENCE_THRESHOLD = 30.0  # Percentage threshold for OOD warning
+def compute_attention_heatmap(model, input_tensor, target_class_idx, orig_image, spec):
+    try:
+        features, gradients = [], []
 
-def classify_bird(image):
+        def f_hook(module, inp, out):
+            features.append(out)
+
+        def b_hook(module, grad_in, grad_out):
+            gradients.append(grad_out[0])
+
+        target_layer = spec["cam_target"](model)
+        h_f = target_layer.register_forward_hook(f_hook)
+        h_b = target_layer.register_full_backward_hook(b_hook)
+
+        model.zero_grad()
+        x = input_tensor.clone().detach().requires_grad_(True)
+        out = model(x)
+        loss = out[0, target_class_idx]
+        loss.backward()
+
+        h_f.remove()
+        h_b.remove()
+
+        if not features or not gradients:
+            return orig_image.resize((spec["res"], spec["res"]))
+
+        if spec["is_vit"]:
+            weights = gradients[0].mean(dim=(1, 2), keepdim=True)
+            cam = (weights * features[0]).sum(dim=-1).squeeze(0)
+        else:
+            weights = gradients[0].mean(dim=(2, 3), keepdim=True)
+            cam = (weights * features[0]).sum(dim=1).squeeze(0)
+
+        cam = torch.relu(cam)
+        cam = (cam - cam.min()) / (cam.max() - cam.min() + 1e-8)
+
+        cam_up = torch.nn.functional.interpolate(
+            cam.unsqueeze(0).unsqueeze(0),
+            size=(spec["res"], spec["res"]),
+            mode="bilinear",
+            align_corners=False,
+        ).squeeze().detach().numpy()
+
+        try:
+            colormap = matplotlib.colormaps["inferno"]
+        except Exception:
+            colormap = cm.get_cmap("inferno")
+        heatmap = colormap(cam_up)[:, :, :3]
+
+        base_img = np.array(orig_image.resize((spec["res"], spec["res"])).convert("RGB")) / 255.0
+        overlay = 0.52 * base_img + 0.48 * heatmap
+        overlay = np.clip(overlay, 0.0, 1.0)
+        return Image.fromarray((overlay * 255).astype(np.uint8))
+    except Exception as e:
+        print(f"Heatmap computation notice: {e}")
+        return None
+
+# -----------------------------------------------------------------------------
+# 4. Inference Logic
+# -----------------------------------------------------------------------------
+def classify_bird(image, selected_arch):
     if image is None:
-        return None, None, {}, "No image provided."
+        return "", None, {}, "No image provided."
+
+    model, is_loaded, res = get_model(selected_arch)
+    spec = MODEL_SPECS[selected_arch]
+
+    if not is_loaded:
+        warn_html = f"""
+        <div style="background-color: rgba(234, 179, 8, 0.15); border: 1px solid rgba(234, 179, 8, 0.5); border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; color: #FEF08A;">
+            <strong>Checkpoint Notice:</strong> The checkpoint for <strong>{selected_arch}</strong> (<code>{spec['file']}</code>) was not found in <code>src/</code>.
+            Please download <code>{spec['file']}</code> from your Google Drive into the <code>src/</code> directory to evaluate this model.
+        </div>
+        """
+        return warn_html, None, {}, f"Model {selected_arch} weights missing in src/"
 
     start_time = time.perf_counter()
     rgb_image = image.convert("RGB")
-    tensor = EVAL_TRANSFORM(rgb_image).unsqueeze(0)
+    tf = TRANSFORMS[res]
+    tensor = tf(rgb_image).unsqueeze(0)
 
     with torch.no_grad():
-        logits = MODEL(tensor)
+        logits = model(tensor)
         probs = torch.softmax(logits, dim=1)[0]
 
     elapsed_ms = (time.perf_counter() - start_time) * 1000
 
     top5_probs, top5_indices = torch.topk(probs, k=5)
-    top1_idx = top5_indices[0].item()
-    top1_species = CLASS_NAMES[top1_idx]
+    top1_species = CLASS_NAMES[top5_indices[0].item()]
     top1_conf = top5_probs[0].item() * 100
 
-    # 1. Generate Grad-CAM Heatmap
-    heatmap_img = compute_attention_heatmap(MODEL, tensor, top1_idx, rgb_image)
-
-    # 2. Top-5 Distribution Dictionary
+    # Predictions dictionary for Gradio Label
     predictions = {
         CLASS_NAMES[idx.item()]: float(prob.item())
         for idx, prob in zip(top5_indices, top5_probs)
     }
 
-    # 3. Out-of-Distribution (OOD) / Uncertainty Check
-    if top1_conf < OOD_CONFIDENCE_THRESHOLD:
-        status_html = f"""
-        <div class="card-ood">
-            <div class="callout-header">Uncertainty Notice</div>
-            <div class="ood-title">Potential Out-of-Distribution Input</div>
-            <div class="ood-desc">
-                Maximum model confidence is {top1_conf:.1f}%, which falls below the reliability threshold ({OOD_CONFIDENCE_THRESHOLD:.0f}%).
-                The input may not belong to the 200 North American CUB-200 species, or contains heavy visual occlusion.
-            </div>
-            <div class="ood-sub">Top candidate: <strong>{top1_species}</strong> ({top1_conf:.1f}%)</div>
+    # Generate Attention Heatmap for the selected architecture
+    heatmap_img = compute_attention_heatmap(model, tensor, top5_indices[0].item(), rgb_image, spec)
+
+    callout_html = f"""
+    <div style="background-color: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 18px 20px; margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #94A3B8; font-weight: 700;">Top Prediction</span>
+            <span style="font-size: 0.75rem; letter-spacing: 0.05em; background: rgba(56, 189, 248, 0.15); color: #38BDF8; padding: 2px 8px; border-radius: 4px; font-weight: 600;">{selected_arch.split()[0]}</span>
         </div>
-        """
-    else:
-        status_html = f"""
-        <div class="card-success">
-            <div class="callout-header">Primary Taxonomy Classification</div>
-            <div class="species-title">{top1_species}</div>
-            <div class="conf-badge">{top1_conf:.2f}% Confidence Interval</div>
-        </div>
-        """
+        <div style="font-size: 1.6rem; font-weight: 800; color: #F8FAFC; margin: 4px 0;">{top1_species}</div>
+        <div style="font-size: 1.05rem; color: #38BDF8; font-weight: 700;">{top1_conf:.2f}% Confidence Score</div>
+    </div>
+    """
 
-    latency_str = f"Inference Latency: {elapsed_ms:.1f} ms (PyTorch CPU)"
-    return status_html, heatmap_img, predictions, latency_str
-
+    latency_str = f"Architecture: {selected_arch} | Resolution: {res}px | Latency: {elapsed_ms:.1f} ms (PyTorch CPU)"
+    return callout_html, heatmap_img, predictions, latency_str
 
 # -----------------------------------------------------------------------------
-# 4. Curated Example Images (Discovered dynamically)
-# -----------------------------------------------------------------------------
-def get_example_images():
-    search_dirs = [PROJECT_ROOT / "AML Assignment 1" / "Train", BASE_DIR / "AML Assignment 1" / "Train"]
-    target_names = ["Cardinal", "Blue_Jay", "Baltimore_Oriole", "Mallard", "Laysan_Albatross"]
-    found_examples = []
-
-    for s_dir in search_dirs:
-        if s_dir.exists():
-            for target in target_names:
-                matches = list(s_dir.glob(f"{target}*"))
-                if matches and matches[0].exists():
-                    found_examples.append([str(matches[0])])
-            if found_examples:
-                break
-    return found_examples
-
-
-EXAMPLE_IMAGES = get_example_images()
-
-# -----------------------------------------------------------------------------
-# 5. UI Layout & High-Contrast Adaptive CSS
+# 5. High-Contrast Dark-Mode Compatible CSS & UI
 # -----------------------------------------------------------------------------
 CUSTOM_CSS = """
-/* Global Typography */
 body, .gradio-container {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
-
-/* Header Banner with high contrast */
 .header-box {
     padding: 12px 0 22px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
@@ -215,8 +259,6 @@ body, .gradio-container {
     margin-top: 6px;
     line-height: 1.5;
 }
-
-/* Metric Cards */
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -244,58 +286,6 @@ body, .gradio-container {
     margin-top: 4px;
     font-weight: 600;
 }
-
-/* Primary Result Callout */
-.card-success {
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid rgba(56, 189, 248, 0.35);
-    border-radius: 8px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-}
-.card-ood {
-    background: rgba(45, 20, 20, 0.85);
-    border: 1px solid rgba(239, 68, 68, 0.45);
-    border-radius: 8px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-}
-.callout-header {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #94A3B8;
-    font-weight: 700;
-}
-.species-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #F8FAFC !important;
-    margin: 6px 0;
-}
-.conf-badge {
-    font-size: 0.95rem;
-    color: #38BDF8;
-    font-weight: 700;
-}
-.ood-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #FCA5A5 !important;
-    margin: 4px 0;
-}
-.ood-desc {
-    font-size: 0.88rem;
-    color: #E2E8F0;
-    line-height: 1.45;
-    margin-top: 4px;
-}
-.ood-sub {
-    font-size: 0.88rem;
-    color: #F87171;
-    margin-top: 8px;
-}
-
 @media (max-width: 768px) {
     .metrics-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -314,7 +304,7 @@ with gr.Blocks(title="CUB-200 Bird Classifier") as demo:
     gr.HTML("""
     <div class="header-box">
         <h1 class="header-title">Caltech-UCSD Birds 200 Classification System</h1>
-        <div class="header-sub">Fine-grained multi-class taxonomy inference using a hierarchical Swin Transformer (Swin-T).</div>
+        <div class="header-sub">Fine-grained multi-class taxonomy inference with Explainable AI and multi-architecture evaluation.</div>
     </div>
 
     <div class="metrics-grid">
@@ -332,7 +322,7 @@ with gr.Blocks(title="CUB-200 Bird Classifier") as demo:
         </div>
         <div class="metric-box">
             <div class="metric-num">Swin-T</div>
-            <div class="metric-desc">Backbone Architecture</div>
+            <div class="metric-desc">Champion Backbone</div>
         </div>
     </div>
     """)
@@ -342,57 +332,57 @@ with gr.Blocks(title="CUB-200 Bird Classifier") as demo:
         with gr.Column(scale=5):
             input_image = gr.Image(
                 type="pil",
-                label="Input Image (Upload or Select Benchmark Example)",
+                label="Input Image",
                 sources=["upload", "clipboard"],
                 height=320,
+            )
+            # Multi-Model Architecture Comparator Dropdown
+            selected_model = gr.Dropdown(
+                choices=list(MODEL_SPECS.keys()),
+                value="Swin-T (Champion ViT)",
+                label="Select Architecture for Inference",
+                info="Toggle between distinct model families evaluated in the assignment."
             )
             with gr.Row():
                 btn_clear = gr.Button("Clear", variant="secondary")
                 btn_submit = gr.Button("Classify Image", variant="primary")
 
-            # Feature #5: Clickable Example Gallery
-            if EXAMPLE_IMAGES:
-                gr.Examples(
-                    examples=EXAMPLE_IMAGES,
-                    inputs=input_image,
-                    label="Curated Benchmark Examples (Click to Evaluate)",
-                    examples_per_page=5,
-                )
-
         with gr.Column(scale=5):
-            # Feature #3: Top result callout or OOD Uncertainty Warning
-            output_status = gr.HTML(label="Classification Status")
-
+            output_callout = gr.HTML(label="Primary Result")
             with gr.Tabs():
                 with gr.TabItem("Top 5 Predictions"):
                     output_label = gr.Label(num_top_classes=5, label="Probability Distribution")
                 with gr.TabItem("Model Attention (XAI)"):
-                    # Feature #1: Attention / Saliency Heatmap
-                    output_heatmap = gr.Image(type="pil", label="Swin-T Stage 4 Attention Heatmap (Grad-CAM)")
-                    gr.Markdown("Visual representation of where the Swin Transformer focused attention to distinguish fine-grained features (beak, crown, plumage).")
+                    output_heatmap = gr.Image(type="pil", label="Visual Attention Saliency Heatmap (Grad-CAM)")
+                    gr.Markdown("Visual saliency representation illustrating the anatomical regions (e.g. beak shape, wing bars, crown crest) that drove the selected model's prediction.")
 
             output_latency = gr.Markdown(value="", elem_id="latency-text")
 
     # Wire Events
     btn_submit.click(
         fn=classify_bird,
-        inputs=[input_image],
-        outputs=[output_status, output_heatmap, output_label, output_latency],
+        inputs=[input_image, selected_model],
+        outputs=[output_callout, output_heatmap, output_label, output_latency],
     )
     input_image.change(
         fn=classify_bird,
-        inputs=[input_image],
-        outputs=[output_status, output_heatmap, output_label, output_latency],
+        inputs=[input_image, selected_model],
+        outputs=[output_callout, output_heatmap, output_label, output_latency],
+    )
+    selected_model.change(
+        fn=classify_bird,
+        inputs=[input_image, selected_model],
+        outputs=[output_callout, output_heatmap, output_label, output_latency],
     )
     btn_clear.click(
-        fn=lambda: (None, None, None, {}, ""),
+        fn=lambda: (None, "", None, {}, ""),
         inputs=[],
-        outputs=[input_image, output_status, output_heatmap, output_label, output_latency],
+        outputs=[input_image, output_callout, output_heatmap, output_label, output_latency],
     )
 
     # Technical Notes Drawer
     with gr.Accordion("Technical Specifications & Model Benchmarks", open=False):
-        gr.Markdown(r"""
+        gr.Markdown("""
         ### Experimental Results Summary (CUB-200-2011)
         The following benchmarks were evaluated across 200 fine-grained bird species under identical data partitions:
 
@@ -403,9 +393,9 @@ with gr.Blocks(title="CUB-200 Bird Classifier") as demo:
         | **Swin-T (Champion Model)** | **27.7 M** | **224 px** | **86.05%** | **85.78%** | **96.10%** |
 
         ### Optimization Details
-        - **Objective:** Cross-Entropy Loss with Label Smoothing ($\epsilon = 0.1$).
-        - **Optimizer:** AdamW ($\beta_1=0.9, \beta_2=0.999$, Weight Decay $= 0.05$).
-        - **Scheduler:** Cosine Annealing with 2-epoch linear warmup.
+        - **Objective:** Cross-Entropy Loss with Label Smoothing (smoothing factor: 0.1)
+        - **Optimizer:** AdamW (beta1: 0.9, beta2: 0.999, weight decay: 0.05)
+        - **Scheduler:** Cosine Annealing with 2-epoch linear warmup
         """)
 
 if __name__ == "__main__":
