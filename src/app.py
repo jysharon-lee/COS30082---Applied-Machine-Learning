@@ -182,7 +182,7 @@ def compute_attention_heatmap(model, input_tensor, target_class_idx, orig_image,
 # -----------------------------------------------------------------------------
 def classify_bird(image, selected_arch):
     if image is None:
-        return "", None, {}, "No image provided."
+        return "", None, None, ""
 
     model, is_loaded, res = get_model(selected_arch)
     spec = MODEL_SPECS[selected_arch]
@@ -344,7 +344,7 @@ with gr.Blocks(title="CUB-200 Bird Classifier") as demo:
                 info="Toggle between distinct model families evaluated in the assignment."
             )
             with gr.Row():
-                btn_clear = gr.Button("Clear", variant="secondary")
+                btn_clear = gr.ClearButton(value="Clear", variant="secondary")
                 btn_submit = gr.Button("Classify Image", variant="primary")
 
         with gr.Column(scale=5):
@@ -374,11 +374,8 @@ with gr.Blocks(title="CUB-200 Bird Classifier") as demo:
         inputs=[input_image, selected_model],
         outputs=[output_callout, output_heatmap, output_label, output_latency],
     )
-    btn_clear.click(
-        fn=lambda: (None, "", None, {}, ""),
-        inputs=[],
-        outputs=[input_image, output_callout, output_heatmap, output_label, output_latency],
-    )
+    # Wire ClearButton to reset input and all output panels cleanly
+    btn_clear.add([input_image, output_callout, output_heatmap, output_label, output_latency])
 
     # Technical Notes Drawer
     with gr.Accordion("Technical Specifications & Model Benchmarks", open=False):
