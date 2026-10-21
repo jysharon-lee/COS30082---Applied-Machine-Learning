@@ -119,11 +119,10 @@ To launch the interactive Gradio web application locally:
 python src/app.py
 ```
 
-- **Local Interface:** Open [http://127.0.0.1:7860](http://127.0.0.1:7860) in your web browser.
-- **Public Share Tunnel:** Gradio will print a temporary public `https://xxxx.gradio.live` link in the terminal (configured with `share=True`), ready for remote demonstration.
+- **Running on public URL:** In your terminal, open [http://something-something.gradio.live] in your web browser.
 
 ### Features of the Web Application:
-- **Interactive Classification:** Drag and drop any image or test sample to receive instant predictions with latency metrics.
+- **Interactive Classification:** Upload any image or test sample to receive instant predictions with latency metrics.
 - **Top-5 Probability Distribution:** Visualizes calibrated confidence scores across candidate classes.
 - **Explainable AI (XAI):** Renders Stage-4 Grad-CAM saliency heatmaps highlighting anatomical bird regions (beak, crest, wing bars).
 - **Multi-Model Comparator:** Toggle between Swin-T, ResNet-101, and EfficientNet-B2 to compare model decisions side-by-side.
