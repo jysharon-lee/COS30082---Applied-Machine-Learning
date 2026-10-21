@@ -56,14 +56,13 @@ class BirdDataset(Dataset):
 
 
 def get_transforms(res: int):
-    # Fine-grained friendly augmentation: keeps bird morphology intact without occlusions
     train_tf = transforms.Compose([
-        transforms.RandomResizedCrop(res, scale=(0.7, 1.0)),
+        transforms.RandomResizedCrop(res, scale=(0.5, 1.0)),
         transforms.RandomHorizontalFlip(),
-        transforms.ColorJitter(brightness=0.15, contrast=0.15, saturation=0.15),
-        transforms.RandAugment(num_ops=1, magnitude=6),
+        transforms.TrivialAugmentWide(),  # State-of-the-art auto-augmentation, no tuning required
         transforms.ToTensor(),
         transforms.Normalize(IMNET_MEAN, IMNET_STD),
+        transforms.RandomErasing(p=0.2, scale=(0.02, 0.2)), # Helps model not over-rely on a single patch
     ])
     eval_tf = transforms.Compose([
         transforms.Resize(int(res * 1.14)),
