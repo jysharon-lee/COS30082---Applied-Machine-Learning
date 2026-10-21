@@ -54,7 +54,7 @@ MODEL_SPECS = {
         "file": "efficientnet_b2_native260_best.pth",
         "alt_file": "efficientnet_b2_best.pth",
         "res": 260,
-        "acc": "84.70%",
+        "acc": "82.06%",
         "builder": lambda: models.efficientnet_b2(weights=None),
         "head_attr": "classifier",
         "cam_target": lambda m: m.features[-1],
