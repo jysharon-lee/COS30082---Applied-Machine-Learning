@@ -21,9 +21,9 @@ The project includes advanced training schemes (Layer-Wise Learning Rate Decay, 
 
 ## Live Deployments & Media
 
-- **Interactive Web Application:** `https://[your-active-link].gradio.live` *(or run locally via `python src/app.py`)*
-- **Video Presentation (10 Minutes):** `[Your YouTube Presentation URL]`
-- **Official 4-Page Report:** Available in `docs/` or submitted via Canvas.
+- **Interactive Web Application:** run locally via `python src/app.py`)
+- **Video Presentation (10 Minutes):** `https://youtu.be/CtkWqzMota4`
+- **Official 4-Page Report:** submitted via Canvas.
 
 ---
 
